@@ -52,9 +52,13 @@ export default function SearchOverlay({
         animate={{ y: 0, opacity: 1, scale: 1 }}
         exit={{ y: -16, opacity: 0, scale: 0.96 }}
         transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-        className="relative z-10 w-full max-w-lg"
+        className="relative z-10 w-full max-w-lg
+          sm:px-4 sm:pt-[5vh]
+          px-0 max-sm:max-w-full max-sm:h-full max-sm:flex max-sm:flex-col"
       >
-        <div className="bg-[#0f1011] rounded-2xl overflow-hidden border border-[#23252a]/80 shadow-[0_16px_48px_-12px_rgba(0,0,0,0.6)]">
+        <div className="bg-[#0f1011] sm:rounded-2xl overflow-hidden border border-[#23252a]/80
+          shadow-[0_16px_48px_-12px_rgba(0,0,0,0.6)]
+          max-sm:rounded-none max-sm:border-x-0 max-sm:border-t-0 max-sm:h-full max-sm:flex max-sm:flex-col">
           <div className="flex items-center gap-3 px-5 py-4 border-b border-[#23252a]/60">
             <svg className="w-4 h-4 text-[#62666d]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
