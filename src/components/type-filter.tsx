@@ -49,6 +49,77 @@ function buildTypeCounts(entries: MemoryEntry[]): TypeCount[] {
   }));
 }
 
+function FilterChip({
+  icon,
+  label,
+  count,
+  isActive,
+  activeColor,
+  onToggle,
+  delay,
+}: {
+  icon: string;
+  label: string;
+  count: number;
+  isActive: boolean;
+  activeColor: string;
+  onToggle: () => void;
+  delay: number;
+}) {
+  return (
+    <motion.button
+      initial={{ opacity: 0, y: 8, scale: 0.92 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{
+        type: 'spring',
+        stiffness: 300,
+        damping: 22,
+        delay,
+      }}
+      whileHover={{ scale: 1.04, y: -1 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={onToggle}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '6px',
+        flexShrink: 0,
+        scrollSnapAlign: 'start',
+        padding: '7px 13px',
+        borderRadius: '9999px',
+        cursor: 'pointer',
+        border: isActive
+          ? `1px solid ${activeColor}55`
+          : '1px solid rgba(35,37,42,0.6)',
+        backgroundColor: isActive
+          ? `${activeColor}0d`
+          : 'transparent',
+        color: isActive ? activeColor : '#52525b',
+        fontSize: '11px',
+        fontWeight: 600,
+        textTransform: 'uppercase',
+        letterSpacing: '0.06em',
+        transition: 'border-color 0.2s, background-color 0.2s, color 0.2s',
+      }}
+    >
+      <span style={{ fontSize: '13px', lineHeight: 1, opacity: isActive ? 1 : 0.7 }}>
+        {icon}
+      </span>
+      <span>{label}</span>
+      <span
+        style={{
+          fontSize: '9px',
+          fontWeight: 700,
+          opacity: 0.5,
+          marginLeft: '1px',
+        }}
+      >
+        {count}
+      </span>
+    </motion.button>
+  );
+}
+
 export default function TypeFilter({
   entries,
   activeType,
@@ -59,212 +130,56 @@ export default function TypeFilter({
   onTypeChange: (type: string | null) => void;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
-
   const types = buildTypeCounts(entries);
-
-  const updateScrollIndicators = () => {
-    const el = scrollRef.current;
-    if (!el) return;
-    setCanScrollLeft(el.scrollLeft > 4);
-    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
-  };
-
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    updateScrollIndicators();
-    el.addEventListener('scroll', updateScrollIndicators);
-    const ro = new ResizeObserver(updateScrollIndicators);
-    ro.observe(el);
-    return () => {
-      el.removeEventListener('scroll', updateScrollIndicators);
-      ro.disconnect();
-    };
-  }, [types]);
-
-  const chipVariants = {
-    hidden: { opacity: 0, y: 12, scale: 0.9 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        type: 'spring' as const,
-        stiffness: 200,
-        damping: 18,
-        delay: i * 0.04,
-      },
-    }),
-  } as const;
 
   return (
     <div
       style={{
         position: 'relative',
         width: '100%',
-        padding: '4px 0',
       }}
     >
-      {/* Scroll-fade edge indicators */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          bottom: 0,
-          width: 32,
-          zIndex: 2,
-          pointerEvents: 'none',
-          background: canScrollLeft
-            ? 'linear-gradient(to right, rgba(7,7,8,0.85) 0%, transparent 100%)'
-            : 'transparent',
-          transition: 'background 0.3s ease',
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          bottom: 0,
-          width: 32,
-          zIndex: 2,
-          pointerEvents: 'none',
-          background: canScrollRight
-            ? 'linear-gradient(to left, rgba(7,7,8,0.85) 0%, transparent 100%)'
-            : 'transparent',
-          transition: 'background 0.3s ease',
-        }}
-      />
-
-      {/* Scrollable chip container */}
       <div
         ref={scrollRef}
         style={{
           display: 'flex',
-          gap: '8px',
+          gap: '6px',
           overflowX: 'auto',
           overflowY: 'hidden',
           scrollSnapType: 'x mandatory',
-          scrollBehavior: 'smooth',
           WebkitOverflowScrolling: 'touch',
-          padding: '4px 0',
+          padding: '6px 0',
           scrollbarWidth: 'none',
         }}
         className="no-scrollbar"
       >
-        {/* All chip */}
-        <motion.button
-          key="all"
-          custom={0}
-          initial="hidden"
-          animate="visible"
-          variants={chipVariants}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => onTypeChange(null)}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            flexShrink: 0,
-            scrollSnapAlign: 'start',
-            borderRadius: '9999px',
-            fontSize: '11px',
-            fontWeight: 600,
-            textTransform: 'uppercase',
-            letterSpacing: '0.06em',
-            padding: '8px 14px',
-            cursor: 'pointer',
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-            border: activeType === null ? '1px solid rgba(245,158,11,0.6)' : '1px solid rgba(35,37,42,0.8)',
-            backgroundColor: activeType === null ? 'rgba(245,158,11,0.12)' : 'rgba(15,16,17,0.85)',
-            color: activeType === null ? '#f59e0b' : '#62666d',
-            boxShadow: activeType === null ? '0 0 16px rgba(245,158,11,0.2)' : 'none',
-            transition: 'border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease',
-          }}
-        >
-          <span style={{ fontSize: '14px', lineHeight: 1 }}>{TYPE_EMOJIS.all}</span>
-          <span>Tous</span>
-          <span
-            style={{
-              fontSize: '10px',
-              opacity: 0.6,
-              marginLeft: '2px',
-            }}
-          >
-            {entries.length}
-          </span>
-        </motion.button>
+        <FilterChip
+          icon={TYPE_EMOJIS.all}
+          label="Tous"
+          count={entries.length}
+          isActive={activeType === null}
+          activeColor="#f59e0b"
+          onToggle={() => onTypeChange(null)}
+          delay={0}
+        />
 
-        {/* Type chips */}
         {types.map((t, i) => (
-          <motion.button
+          <FilterChip
             key={t.id}
-            custom={i + 1}
-            initial="hidden"
-            animate="visible"
-            variants={chipVariants}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => onTypeChange(activeType === t.id ? null : t.id)}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              flexShrink: 0,
-              scrollSnapAlign: 'start',
-              borderRadius: '9999px',
-              fontSize: '11px',
-              fontWeight: 600,
-              textTransform: 'uppercase',
-              letterSpacing: '0.06em',
-              padding: '8px 14px',
-              cursor: 'pointer',
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)',
-              border: activeType === t.id
-                ? `1px solid ${t.color}66`
-                : '1px solid rgba(35,37,42,0.8)',
-              backgroundColor: activeType === t.id
-                ? `${t.color}18`
-                : 'rgba(15,16,17,0.85)',
-              color: activeType === t.id ? t.color : '#62666d',
-              boxShadow: activeType === t.id
-                ? `0 0 16px ${t.color}22`
-                : 'none',
-              transition: 'border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease',
-            }}
-          >
-            <span style={{ fontSize: '14px', lineHeight: 1 }}>
-              {TYPE_EMOJIS[t.id] ?? '📄'}
-            </span>
-            <span>{t.label}</span>
-            <span
-              style={{
-                fontSize: '10px',
-                opacity: 0.6,
-                marginLeft: '2px',
-              }}
-            >
-              {t.count}
-            </span>
-          </motion.button>
+            icon={TYPE_EMOJIS[t.id] ?? '📄'}
+            label={t.label}
+            count={t.count}
+            isActive={activeType === t.id}
+            activeColor={t.color}
+            onToggle={() => onTypeChange(activeType === t.id ? null : t.id)}
+            delay={(i + 1) * 0.035}
+          />
         ))}
       </div>
 
-      {/* Hide scrollbar globally */}
       <style>{`
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
     </div>
   );

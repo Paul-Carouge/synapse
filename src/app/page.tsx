@@ -189,7 +189,7 @@ export default function Home() {
       </AnimatePresence>
 
       {/* ── TypeFilter pills — Desktop (top-left) / Mobile (inside drawer) ── */}
-      <div className="hidden lg:block">
+      <div className="hidden lg:block fixed" style={{ top: '80px', left: '24px', zIndex: 10, maxWidth: 'calc(100vw - 300px)' }}>
         <TypeFilter entries={entries} activeType={activeType} onTypeChange={setActiveType} />
       </div>
 
@@ -253,17 +253,29 @@ export default function Home() {
               rounded-t-2xl max-h-[70vh] overflow-y-auto"
             style={{ paddingBottom: 'env(safe-area-inset-bottom, 16px)' }}
           >
-            <div className="sticky top-0 bg-[#0f1011] pt-4 pb-2 flex items-center justify-between border-b border-[#23252a]/40"
+            <div className="sticky top-0 bg-[#0f1011] pt-3 pb-3 flex items-center justify-between border-b border-[#23252a]/40"
               style={{ paddingInline: '20px' }}>
-              <span className="text-xs text-[#8a8f98] font-medium uppercase tracking-[0.06em]">Filtres</span>
+              <span className="text-[10px] font-semibold uppercase tracking-[0.12em]" style={{ color: '#62666d' }}>Filtres</span>
               <motion.button
                 onClick={() => setActiveTab(null)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={buttonTap}
-                style={{ padding: '4px 8px' }}
-                className="text-[10px] text-[#62666d] rounded-md border border-[#23252a]"
+                className="flex items-center gap-1.5"
+                style={{
+                  padding: '6px 10px',
+                  borderRadius: '8px',
+                  backgroundColor: '#1a1a1e',
+                  border: '1px solid #27272a',
+                  color: '#8a8f98',
+                  fontSize: '12px',
+                  fontWeight: 500,
+                }}
               >
-                Fermer
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+                <span>Fermer</span>
               </motion.button>
             </div>
             <div style={{ padding: '20px' }}>
@@ -288,17 +300,29 @@ export default function Home() {
               rounded-t-2xl"
             style={{ paddingBottom: 'env(safe-area-inset-bottom, 16px)' }}
           >
-            <div className="sticky top-0 bg-[#0f1011] pt-4 pb-2 flex items-center justify-between border-b border-[#23252a]/40"
+            <div className="sticky top-0 bg-[#0f1011] pt-3 pb-3 flex items-center justify-between border-b border-[#23252a]/40"
               style={{ paddingInline: '20px' }}>
-              <span className="text-xs text-[#8a8f98] font-medium uppercase tracking-[0.06em]">Statistiques</span>
+              <span className="text-[10px] font-semibold uppercase tracking-[0.12em]" style={{ color: '#62666d' }}>Statistiques</span>
               <motion.button
                 onClick={() => setActiveTab(null)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={buttonTap}
-                style={{ padding: '4px 8px' }}
-                className="text-[10px] text-[#62666d] rounded-md border border-[#23252a]"
+                className="flex items-center gap-1.5"
+                style={{
+                  padding: '6px 10px',
+                  borderRadius: '8px',
+                  backgroundColor: '#1a1a1e',
+                  border: '1px solid #27272a',
+                  color: '#8a8f98',
+                  fontSize: '12px',
+                  fontWeight: 500,
+                }}
               >
-                Fermer
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+                <span>Fermer</span>
               </motion.button>
             </div>
             <div style={{ padding: '20px' }}>
