@@ -60,18 +60,23 @@ export default function SearchOverlay({
           shadow-[0_16px_48px_-12px_rgba(0,0,0,0.6)]
           max-sm:rounded-t-2xl max-sm:border-b max-sm:border-x max-sm:h-full max-sm:flex max-sm:flex-col">
           <div className="flex items-center gap-3 px-5 py-4 border-b border-[#23252a]/60">
-            <svg className="w-4 h-4 text-[#62666d]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-4 h-4 text-[#62666d] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            <input
-              ref={inputRef}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Explorer la mémoire..."
-              className="flex-1 bg-transparent text-sm text-[#f7f8f8] outline-none placeholder-[#62666d]
-                tracking-[0.01em] font-medium
-                focus:ring-0"
-            />
+            <div className="flex-1 relative">
+              <input
+                ref={inputRef}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Explorer la mémoire..."
+                className="w-full bg-[#161718] text-sm text-[#f7f8f8] outline-none placeholder-[#62666d]
+                  tracking-[0.01em] font-medium
+                  rounded-lg px-3 py-2
+                  border border-[#23252a]/50
+                  focus:border-[#f59e0b]/30 focus:bg-[#1a1a1e]
+                  transition-all duration-200"
+              />
+            </div>
             <kbd className="text-[11px] text-[#62666d] px-2 py-0.5 rounded-md border border-[#23252a] font-mono">
               esc
             </kbd>
