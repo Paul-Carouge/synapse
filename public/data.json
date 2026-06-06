@@ -1,0 +1,1253 @@
+[
+  {
+    "id": "mem_20260604_142922_747349",
+    "text": "Le sélecteur auto de Pousse : cartes compactes (72×100), tap pour incrémenter, long-press pour désélectionner, badge ×N. Bouton Placer FilledButton plein-large sous le scroll.",
+    "metadata": {
+      "type": "design",
+      "timestamp": "2026-06-04T14:29:22.747393",
+      "project": "pousse"
+    }
+  },
+  {
+    "id": "mem_20260604_142928_498760",
+    "text": "Paul ne veut pas de labels textuels « plante » ou « espèce » dans les stats de Pousse. Juste les icônes et les nombres : 🌱 X, 🔄 X, ⬜ X Libres. Compteur auto : « 5 · 3 » au lieu de « 5 plantes · 3 espèces ».",
+    "metadata": {
+      "project": "pousse",
+      "type": "preference",
+      "timestamp": "2026-06-04T14:29:28.498780"
+    }
+  },
+  {
+    "id": "mem_20260604_142930_714424",
+    "text": "Pousse : fichier clé lib/presentation/screens/jardin/jardin_screen.dart. Méthode _buildAutoPlantSelector (composant compact), stats bar dans build(), toolbar dans _buildToolbar(). Mode auto activé via _modeAuto booléen.",
+    "metadata": {
+      "project": "pousse",
+      "timestamp": "2026-06-04T14:29:30.714444",
+      "type": "architecture"
+    }
+  },
+  {
+    "id": "mem_20260604_204749_906441",
+    "text": "Leçons projet Économe Flutter : (1) Release GitHub via curl + PAT directement (CI token manque de droits). (2) Renommer : pubspec.yaml name, imports package: dans tous les .dart, Android namespace/applicationId/MainActivity.kt, DB filename, constantes — vérifier avec grep -rn après chaque sed. (3) Toujours git commit + push avant CI. (4) flutter analyze --no-fatal-infos pour info-level. (5) PAT stocké dans .env, lu par contains('GITHUB_TOKEN').",
+    "metadata": {
+      "type": "learning",
+      "project": "econome",
+      "timestamp": "2026-06-04T20:47:49.906462"
+    }
+  },
+  {
+    "id": "mem_20260604_204751_043504",
+    "text": "Stack Flutter Économe : Riverpod, Drift, GoRouter, Material 3 dark. AppId com.econome.app. Projet dans /home/atlas/econome.",
+    "metadata": {
+      "timestamp": "2026-06-04T20:47:51.043525",
+      "type": "architecture",
+      "project": "econome"
+    }
+  },
+  {
+    "id": "mem_20260604_204752_189775",
+    "text": "6 projets Vercel sur compte paul-carouge : terraria-wiki, lootable-wow, my-deal, ibanr, midi-to-webaudio, hyper-mesh.",
+    "metadata": {
+      "project": "vercel",
+      "timestamp": "2026-06-04T20:47:52.189798",
+      "type": "architecture"
+    }
+  },
+  {
+    "id": "mem_20260604_204753_304123",
+    "text": "LinkedIn de Paul : pcarouge (linkedin.com/in/pcarouge). Ne pas utiliser paul-carouge.",
+    "metadata": {
+      "project": "social",
+      "timestamp": "2026-06-04T20:47:53.304144",
+      "type": "preference"
+    }
+  },
+  {
+    "id": "mem_20260604_204754_307777",
+    "text": "Paul a corrigé mon ton : trop familier, pas assez JARVIS. Maintenant : élégant, retenu, litote plutôt qu'attaque, « Monsieur » pour les objections, bref et déclaratif, jamais d'émojis, pas de remplissage. L'ironie dans le sous-entendu, pas dans la pique.",
+    "metadata": {
+      "type": "preference",
+      "project": "orion",
+      "timestamp": "2026-06-04T20:47:54.307798"
+    }
+  },
+  {
+    "id": "mem_20260604_204755_279346",
+    "text": "Paul préfère réponses concises. Analyse COMPLÈTE — traiter tous les sujets. Optimisation plutôt qu'allègement : améliorer l'exécution, pas enlever d'étapes. Stack: Next.js 16, Tailwind v4, Tauri v2, Rust. Design Noir Ambré (zinc-950, amber-500).",
+    "metadata": {
+      "project": "orion",
+      "timestamp": "2026-06-04T20:47:55.279365",
+      "type": "preference"
+    }
+  },
+  {
+    "id": "mem_20260604_204756_273519",
+    "text": "Adresse domicile : 119 rue Saint-Aubert, 62000 Arras, France. Anniversaire Marie : 5 juin.",
+    "metadata": {
+      "type": "preference",
+      "project": "personnel",
+      "timestamp": "2026-06-04T20:47:56.273539"
+    }
+  },
+  {
+    "id": "mem_20260604_205816_029788",
+    "text": "Portfolio Paul Carouge: /opt/data/paul-carouge-portfolio — Next.js 16, Tailwind v4, GSAP, TS. Repo privé Paul-Carouge/paul-carouge-portfolio sur Vercel (paul-carouge-portfolio.vercel.app). Design dark amber/zinc.",
+    "metadata": {
+      "timestamp": "2026-06-04T20:58:16.029810+00:00",
+      "type": "architecture",
+      "content_hash": "9fd98d2ef5ef9c98",
+      "project": "portfolio",
+      "tags": "vercel"
+    }
+  },
+  {
+    "id": "mem_20260604_205818_378662",
+    "text": "6 projets Vercel sur compte paul-carouge : terraria-wiki, lootable-wow, my-deal, ibanr, midi-to-webaudio, hyper-mesh.",
+    "metadata": {
+      "type": "architecture",
+      "project": "vercel",
+      "content_hash": "381ed49a485edeef",
+      "timestamp": "2026-06-04T20:58:18.378686+00:00"
+    }
+  },
+  {
+    "id": "mem_20260604_142929_595816",
+    "text": "Build APK Pousse : flutter=/opt/data/tools/flutter/bin/flutter, ANDROID_HOME=/home/atlas/Android, JAVA_HOME=/home/atlas/tools/jdk21. GitHub releases avec curl -u Paul-Carouge:TOKEN.",
+    "metadata": {
+      "content_hash": "e15a25fcfdb5f00a",
+      "project": "pousse",
+      "type": "system",
+      "timestamp": "2026-06-04T14:29:29.595836"
+    }
+  },
+  {
+    "id": "mem_20260605_030905_700293",
+    "text": "Hermes Agent mis à jour : c0435f4fe → 96cd37e21 (5 juin 2026). 458 fichiers, +16 480 / -10 931. Nouvelles features : TUI desktop amélioré (profile switcher, credential-key-ui), plugin disk-cleanup, gateway Feishu meeting invite, cron parallel pool, web dashboard channels page.",
+    "metadata": {
+      "content_hash": "783a9e4be0dc2a60",
+      "timestamp": "2026-06-05T03:09:05.700313+00:00",
+      "type": "system",
+      "tags": "update",
+      "project": "orion"
+    }
+  },
+  {
+    "id": "mem_20260605_030907_875690",
+    "text": "Plugin ChromaDB opérationnel après mise à jour Hermes. Interface MemoryProvider inchangée. Plugins/memory loader amélioré (synthetic package pour providers externes). 14 entrées dans la base. Memory tool à 10 000 caractères. Config : memory.provider: chromadb.",
+    "metadata": {
+      "content_hash": "511469d0b26d458a",
+      "project": "orion",
+      "timestamp": "2026-06-05T03:09:07.875710+00:00",
+      "type": "system",
+      "tags": "chromadb,verification"
+    }
+  },
+  {
+    "id": "mem_20260605_030913_622097",
+    "text": "Projet Économe (Flutter budget app) : développement terminé avec Nova/Apex/Forge. Release GitHub via curl+PAT (CI manque droits). AppId com.econome.app. Skill flutter-econome-app créée. Stack : Riverpod, Drift, GoRouter, Material 3 dark zinc/amber.",
+    "metadata": {
+      "type": "architecture",
+      "tags": "retro",
+      "content_hash": "7bbec301ff948fb1",
+      "project": "econome",
+      "timestamp": "2026-06-05T03:09:13.622118+00:00"
+    }
+  },
+  {
+    "id": "mem_20260605_052547_573685",
+    "text": "[agent-memory] Argus (orion-team-argus) supprimé de l'équipe Orion le 5 juin 2026. Skill effacée, références retirées d'Atlas. Paul ne veut plus de profil OSINT.",
+    "metadata": {
+      "tags": "agent-memory,assistant_tool",
+      "project": "_builtin",
+      "timestamp": "2026-06-05T05:25:47.573764+00:00",
+      "type": "note",
+      "content_hash": "545e423186cde6cb"
+    }
+  },
+  {
+    "id": "mem_20260605_052822_163315",
+    "text": "[Session turn 3] Q: Orion component c'est un skill pas un membre de l'équipe, et Axium et une très bonne idée mais on n'a pas déjà une personne qui fait ça ? | A: Vous avez raison pour Orion Components — c'est un projet, pas un membre. Je reformulerai à l'avenir.\n\nPour Axiom : c'est une bonne question. Voyons qui couvre quoi dans l'équipe actuelle.\n\n| Membre | Domaine | Vérifie l'architecture ? |\n|--------|---------|--------------------------|\n| **Momus** | Critique design/code/stratégie | Les *",
+    "metadata": {
+      "content_hash": "ccf1291089c062fc",
+      "tags": "auto-sync",
+      "timestamp": "2026-06-05T05:28:22.163332+00:00",
+      "project": "_session",
+      "type": "learning"
+    }
+  },
+  {
+    "id": "mem_20260605_053112_917002",
+    "text": "[agent-memory] Orion Team (12 membres) : Momus (critique), Sentinel (qualité/tests), Aegis (devops), Apex (frontend), Forge (backend), Ferrum (Rust/desktop), Nova (Flutter/mobile), Atlas (recherche), Axiom (architecture/conventions), Vega (SEO YouTube), Spectre (video), Phantom (sécurité). Skills projets (flutter-econome-app, orion-components-dev) rangées dans catégorie projects/.",
+    "metadata": {
+      "tags": "agent-memory,assistant_tool",
+      "project": "_builtin",
+      "timestamp": "2026-06-05T05:31:12.917064+00:00",
+      "type": "note",
+      "content_hash": "da599f916967ce6b"
+    }
+  },
+  {
+    "id": "mem_20260605_053232_458919",
+    "text": "[Session turn 6] Q: Et aussi une question est-ce que tous les dossiers et les choses que tu crées sont rangées proprement ?\n\nOù est-ce que les projets par exemple tu le mets juste à la racine ?\n\nJe me dis que tu devrais vérifier et que si c'est pas le cas est-ce que on ne gagnerait pas à les ranger proprement dans chacun des dossiers avec des noms respectifs que tu pourrais te rappeler pour ensuite faire des recherches plus précises plus tard ?\n\nJ'aimerais avoir ton avis et dis-moi ce que tu en ",
+    "metadata": {
+      "project": "_session",
+      "type": "learning",
+      "timestamp": "2026-06-05T05:32:32.458980+00:00",
+      "content_hash": "c6f160a61029f1c8",
+      "tags": "auto-sync"
+    }
+  },
+  {
+    "id": "mem_20260605_053415_671536",
+    "text": "[agent-memory] Règle de rangement : toute création (skill, script, fichier, dossier, plugin, projet) doit être placée dans une catégorie propre, logique et bien définie. Pas de fichiers à la racine, pas de dossiers orphelins. Chaque chose à sa place, pour que je puisse tout retrouver par recherche ciblée plus tard.",
+    "metadata": {
+      "project": "_builtin",
+      "tags": "agent-memory,assistant_tool",
+      "timestamp": "2026-06-05T05:34:15.671560+00:00",
+      "type": "note",
+      "content_hash": "3e49cb5912ed51f9"
+    }
+  },
+  {
+    "id": "mem_20260605_053911_843295",
+    "text": "[Session turn 9] Q: Aussi j'ai vu que Hermès avait plein de plugins, est-ce que parmi tous ces plugins il y en a qui te ferait envie ou que tu aurais besoin ? Est-ce que tu peux faire une recherche en ligne et ensuite me dire s'il y a des plugins que tu souhaites | A: C'est fait, Monsieur.\n\n- **`security-guidance`** → activé. 25 règles de sécurité me préviendront si j'écris du code dangereux (injections, XSS, crypto faible, pickle, eval).\n- **`spotify`, `observability/langfuse`, `image_gen/*`** ",
+    "metadata": {
+      "type": "learning",
+      "content_hash": "82ca8a4ab8a8de67",
+      "timestamp": "2026-06-05T05:39:11.843342+00:00",
+      "tags": "auto-sync",
+      "project": "_session"
+    }
+  },
+  {
+    "id": "mem_20260605_054817_248945",
+    "text": "Analyse équipe Orion du projet Économe (juin 2026) : 8 membres consultés (Nova, Apex, Forge, Axiom, Momus, Sentinel, Aegis, Phantom). Verdict collectif : MVP fonctionnel mais pas production-ready. 6 problèmes P0 identifiés : (1) migration Drift avec indexes + schemaVersion, (2) extraire resolveCategoryIcon dupliqué, (3) riverpod_annotation + autoDispose, (4) couche Repository manquante + logique métier dans les widgets, (5) zéro test = priorité absolue, (6) chiffrement SQLite, signature release,",
+    "metadata": {
+      "type": "architecture",
+      "project": "econome",
+      "tags": "review,team,roadmap,equipe-orion",
+      "content_hash": "e5651b859cb1ba56",
+      "timestamp": "2026-06-05T05:48:17.249009+00:00"
+    }
+  },
+  {
+    "id": "mem_20260605_060726_712083",
+    "text": "Flutter tests sur ce serveur nécessitent LD_LIBRARY_PATH=/home/atlas/.local/lib:$LD_LIBRARY_PATH car libsqlite3.so.0 existe mais pas libsqlite3.so. Symlink créé dans /home/atlas/.local/lib/libsqlite3.so -> /usr/lib/x86_64-linux-gnu/libsqlite3.so.0. Pour les widget tests utilisant intl DateFormat, setUp() doit appeler initializeDateFormatting dans TestWidgetsFlutterBinding.instance.runAsync() à cause du Timer interne qui entre en conflit avec le framework de test.",
+    "metadata": {
+      "timestamp": "2026-06-05T06:07:26.712105+00:00",
+      "tags": "test,flutter,libsqlite3",
+      "content_hash": "9e7c159cd832bbe6",
+      "project": "econome",
+      "type": "learning"
+    }
+  },
+  {
+    "id": "mem_20260605_060727_955024",
+    "text": "[agent-memory] Flutter tests need LD_LIBRARY_PATH=/home/atlas/.local/lib or libsqlite3.so link. Initialize intl locale data inside runAsync() for widget tests to avoid Timer conflicts.",
+    "metadata": {
+      "content_hash": "55ff4eb3fad6b55b",
+      "timestamp": "2026-06-05T06:07:27.955107+00:00",
+      "project": "_builtin",
+      "tags": "agent-memory,assistant_tool",
+      "type": "note"
+    }
+  },
+  {
+    "id": "mem_20260605_061928_836983",
+    "text": "Release v1.1.0 publiée. Process : (1) flutter build apk --release (PATH, ANDROID_HOME, JAVA_HOME, LD_LIBRARY_PATH), (2) git add -A && git commit, (3) git tag v1.1.0, (4) git push origin main --tags, (5) curl POST /repos/.../releases avec GITHUB_TOKEN du .env, (6) curl POST /repos/.../assets pour upload APK. Release ID=334752519. L'APK fait 61.5MB (signé + minifié).",
+    "metadata": {
+      "tags": "release,workflow,sprint1",
+      "timestamp": "2026-06-05T06:19:28.837075+00:00",
+      "type": "architecture",
+      "content_hash": "fa9b1d2d680dfb58",
+      "project": "econome"
+    }
+  },
+  {
+    "id": "mem_20260605_061952_096587",
+    "text": "[Session turn 3] Q: À chaque sprint je veux que une fois que tous les tests sont passés que tu push sur GitHub et que tu crées une release pour que je puisse le télécharger, on vérifie bien comment tu as fait la dernière fois pour pas qu'il ait soucis | A: Sprint 1 terminé, Monsieur. Voici le résumé de la livraison.\n\n---\n\n## ✅ Sprint 1 — Livré\n\n### Release v1.1.0\n**[github.com/Paul-Carouge/econome/releases/tag/v1.1.0](https://github.com/Paul-Carouge/econome/releases/tag/v1.1.0)**\n\nAPK télécharge",
+    "metadata": {
+      "content_hash": "c5814ef4de2e5bff",
+      "timestamp": "2026-06-05T06:19:52.096609+00:00",
+      "type": "learning",
+      "project": "_session",
+      "tags": "auto-sync"
+    }
+  },
+  {
+    "id": "mem_20260605_065129_537941",
+    "text": "Release v1.2.0 publiée. APK nommé econome-v1.2.0.apk (via ?name= dans l'upload URL). Le fichier build reste app-release.apk, le nom est défini dans l'asset upload. Release ID=334774219. Sentry retiré (conflit Kotlin). sqlcipher retiré également (conflit namespace avec sqlite3_flutter_libs). Les deux sont TODO pour plus tard.",
+    "metadata": {
+      "timestamp": "2026-06-05T06:51:29.538007+00:00",
+      "type": "architecture",
+      "project": "econome",
+      "tags": "release,sprint2,apk-naming",
+      "content_hash": "797d7ab4d1073033"
+    }
+  },
+  {
+    "id": "mem_20260605_065720_751564",
+    "text": "Test runner script at /home/atlas/econome/scripts/run_tests.sh sets LD_LIBRARY_PATH=/home/atlas/.local/lib before running flutter test, because the system libsqlite3.so symlink keeps disappearing (no sudo access). Use ./scripts/run_tests.sh instead of flutter test.",
+    "metadata": {
+      "content_hash": "fd0139dc90fa2986",
+      "type": "system",
+      "tags": "testing,libsqlite3,workaround",
+      "project": "econome",
+      "timestamp": "2026-06-05T06:57:20.751688+00:00"
+    }
+  },
+  {
+    "id": "mem_20260605_072029_137040",
+    "text": "Migration riverpod 2.6 → 3.2 (flutter_riverpod 3.2.1) : (1) Ref subclasses supprimées — utiliser Ref au lieu de FooRef. (2) @riverpod (lowercase) avec Stream/Future ne fonctionne plus avec riverpod_generator 4.0.4-dev.x — utiliser des providers manuels (StreamProvider, FutureProvider, StateProvider). (3) @Riverpod(keepAlive: true) (capital R) fonctionne encore avec codegen pour les providers synchrones. (4) StateProvider déplacé dans package:flutter_riverpod/legacy.dart. (5) AsyncValue.valueOrNu",
+    "metadata": {
+      "type": "learning",
+      "timestamp": "2026-06-05T07:20:29.137107+00:00",
+      "project": "econome",
+      "content_hash": "c90aa88fac99bd2b",
+      "tags": "riverpod,migration,breaking"
+    }
+  },
+  {
+    "id": "mem_20260605_072033_378221",
+    "text": "Release v1.2.0 publiée : https://github.com/Paul-Carouge/econome/releases/tag/v1.2.0 — APK téléchargeable econome-v1.2.0.apk (62.5 MB, signé + minifié). Contenu du sprint : migration riverpod 3.x, corrections bugs critiques (notification ID, fuite timer, init service), déduplication resolveCategoryIcon, export CSV (share_plus), recherche/filtres transactions.",
+    "metadata": {
+      "project": "econome",
+      "type": "architecture",
+      "content_hash": "bf176d8c7e2b9ddd",
+      "tags": "release,v1.2.0",
+      "timestamp": "2026-06-05T07:20:33.378281+00:00"
+    }
+  },
+  {
+    "id": "mem_20260605_072442_115405",
+    "text": "[Session turn 3] Q: Est-ce que tu peux me dire du coup tout ce qu'on a ajouté de nouveau dans l'application ? | A: Certainement, Monsieur. Voici l'inventaire complet de tout ce qui est nouveau dans l'application après ce sprint.\n\n---\n\n## 📦 Sprint 3 — Nouvautés Économe\n\n### ✨ Nouvelles fonctionnalités\n\n**Export CSV** — Nouveau service dédié\n- Bouton d'export dans l'AppBar de l'écran Transactions\n- Génère un fichier CSV avec BOM UTF-8 (compatible Excel)\n- Partage via `share_plus` → email, Drive, M",
+    "metadata": {
+      "content_hash": "d6b132bc0c8182a2",
+      "type": "learning",
+      "timestamp": "2026-06-05T07:24:42.115435+00:00",
+      "tags": "auto-sync",
+      "project": "_session"
+    }
+  },
+  {
+    "id": "mem_20260605_074129_972965",
+    "text": "Release v1.2.1 publiée : corrections retours utilisateur. Filtre catégorie : DropdownButton → ModalBottomSheet style iOS picker. Changement mois : cache données + barre progression + AnimatedSwitcher cross-fade (fini flash blanc). Erreur SQL budget : catch AppException au lieu de rethrow (SnackBar utilisateur). Budget : barre progression (amber/orange/rouge), pourcentage, bannières alerte presque limite/dépassé.",
+    "metadata": {
+      "content_hash": "5be38b2f87cfe400",
+      "type": "architecture",
+      "tags": "release,v1.2.1,retours",
+      "timestamp": "2026-06-05T07:41:29.972987+00:00",
+      "project": "econome"
+    }
+  },
+  {
+    "id": "mem_20260605_074135_723113",
+    "text": "[Session turn 6] Q: Vas-y, tu peux y aller. | A: ✅ **v1.2.1 — Publiée**\n\n**[github.com/Paul-Carouge/econome/releases/tag/v1.2.1](https://github.com/Paul-Carouge/econome/releases/tag/v1.2.1)**\n\nRécapitulatif de tout ce qui est corrigé :\n\n1. **Filtre catégorie** — remplacé par un beau Modal Bottom Sheet style iOS. Fini le menu illisible et collé sur le côté.\n\n2. **Changement de mois** — plus de flash blanc. Les anciennes transactions restent affichées avec une barre de progression discrète, puis u",
+    "metadata": {
+      "tags": "auto-sync",
+      "content_hash": "1be7fc498fd5555b",
+      "type": "learning",
+      "timestamp": "2026-06-05T07:41:35.723229+00:00",
+      "project": "_session"
+    }
+  },
+  {
+    "id": "mem_20260605_074913_280162",
+    "text": "Leçon UI : sur fond dark, un DropdownButton est illisible. Préférer un Modal Bottom Sheet (style iOS picker) pour les sélections longues — fond cohérent, icônes colorées, checkmark de sélection. L'équipe Apex/Nova a validé cette approche.",
+    "metadata": {
+      "timestamp": "2026-06-05T07:49:13.280185+00:00",
+      "content_hash": "93eb1b0dae18ad91",
+      "project": "econome",
+      "tags": "ui,dark-theme,filter",
+      "type": "learning"
+    }
+  },
+  {
+    "id": "mem_20260605_074914_521282",
+    "text": "Leçon performance : pour éviter le flash blanc lors du rechargement d'un StreamProvider (changement de mois), garder un cache des dernières données valides. Pendant le loading, afficher le cache + une barre de progression subtile. Puis AnimatedSwitcher en cross-fade (200ms) pour la transition vers les nouvelles données.",
+    "metadata": {
+      "content_hash": "8421f528b5dcc353",
+      "type": "learning",
+      "timestamp": "2026-06-05T07:49:14.521341+00:00",
+      "tags": "ui,performance,animation",
+      "project": "econome"
+    }
+  },
+  {
+    "id": "mem_20260605_074915_751415",
+    "text": "Leçon erreurs : dans les repositories, NE JAMAIS rethrow une exception. Toujours la capturer et la retourner comme Result.failure(). Sinon l'UI (qui utilise result.when) ne peut pas l'afficher — l'utilisateur voit un crash silencieux. Pattern : on AppException catch (e) { return Failure(e); }",
+    "metadata": {
+      "content_hash": "0b5aa61921e7c3d1",
+      "tags": "architecture,error-handling,repository",
+      "type": "learning",
+      "project": "econome",
+      "timestamp": "2026-06-05T07:49:15.751472+00:00"
+    }
+  },
+  {
+    "id": "mem_20260605_074916_968427",
+    "text": "Leçon budget : un budget sans indicateur visuel de progression ne sert à rien. Ajouter : barre LinearProgressIndicator (dépensé vs limite), texte avec pourcentage, codes couleur amber (<80%) / orange (80-100%) / rouge (>100%), bannières d'alerte quand on approche ou dépasse la limite.",
+    "metadata": {
+      "timestamp": "2026-06-05T07:49:16.968453+00:00",
+      "project": "econome",
+      "tags": "ui,budget,ux",
+      "content_hash": "e0882a21c89662a3",
+      "type": "learning"
+    }
+  },
+  {
+    "id": "mem_20260605_075550_612577",
+    "text": "Bug DAO Budget : Drift insertOnConflictUpdate échouait avec SQLite exception sur certaines versions. Solution : remplacer par lookup explicite (getByMonth) puis update si existe, insert sinon. La méthode explicite est plus fiable que insertOnConflictUpdate quand le companion n'inclut pas tous les champs du conflit.",
+    "metadata": {
+      "project": "econome",
+      "timestamp": "2026-06-05T07:55:50.612652+00:00",
+      "content_hash": "1500c539d5b0fc09",
+      "tags": "dao,bug,upsert",
+      "type": "bug"
+    }
+  },
+  {
+    "id": "mem_20260605_075710_879286",
+    "text": "Règle Drift DAO : ne jamais utiliser insertOnConflictUpdate pour les upserts avec clés composites. Toujours préférer la méthode explicite : getByMonth() → if exists: update() else: insert(). Plus fiable, pas de SQLite exception, compatible toutes versions.",
+    "metadata": {
+      "timestamp": "2026-06-05T07:57:10.879304+00:00",
+      "project": "econome",
+      "content_hash": "6d3583db503eba26",
+      "tags": "drift,dao,best-practice",
+      "type": "learning"
+    }
+  },
+  {
+    "id": "mem_20260605_075712_132878",
+    "text": "Règle UX : ne JAMAIS afficher raw SQL ou messages techniques à l'utilisateur. Toujours catcher et remplacer par un message compréhensible comme « Impossible de modifier le budget. Réessayez. » — via showError() qui utilise showAppToast() avec icône + SnackBar arrondi.",
+    "metadata": {
+      "tags": "ux,error-handling",
+      "type": "learning",
+      "project": "econome",
+      "timestamp": "2026-06-05T07:57:12.132898+00:00",
+      "content_hash": "309ecc6350bd1eb0"
+    }
+  },
+  {
+    "id": "mem_20260605_075713_386718",
+    "text": "[agent-memory] Release workflow: build APK → cp → commit → tag v1.x.x → git push → git push --tags → create release via GitHub API → upload APK asset. Pour les tokens bash, écrire un script .sh séparé ou .py pour éviter les problèmes de quoting. Toujours supprimer l'ancienne release si le tag existe déjà.",
+    "metadata": {
+      "type": "note",
+      "timestamp": "2026-06-05T07:57:13.386774+00:00",
+      "content_hash": "3a503bb9867c8141",
+      "project": "_builtin",
+      "tags": "agent-memory,assistant_tool"
+    }
+  },
+  {
+    "id": "mem_20260605_075718_596084",
+    "text": "[Session turn 9] Q: C'est parfait. Tu peux aussi apprendre de cet événement. | A: C'est fait, Monsieur. Trois leçons retenues :\n\n- **Drift** : ne plus utiliser `insertOnConflictUpdate` — privilégier la méthode explicite (lookup → update/insert). Plus fiable sur toutes les versions SQLite.\n- **UX** : ne jamais exposer de raw SQL à l'utilisateur. Un message simple comme « Impossible de modifier le budget » suffit.\n- **Release** : script bash ou Python séparé pour éviter les problèmes de quoting av",
+    "metadata": {
+      "tags": "auto-sync",
+      "content_hash": "8a05e77d98bb82e7",
+      "project": "_session",
+      "type": "learning",
+      "timestamp": "2026-06-05T07:57:18.596102+00:00"
+    }
+  },
+  {
+    "id": "mem_20260605_080316_021772",
+    "text": "[user-profile] Paul déteste le tiret em \"— \" qui fait trop IA. Ne jamais l'utiliser. Il veut que je sois un assistant singulier et authentique, pas un LLM générique.",
+    "metadata": {
+      "project": "_builtin",
+      "timestamp": "2026-06-05T08:03:16.021827+00:00",
+      "content_hash": "8666bf403dca00e1",
+      "tags": "user-profile,assistant_tool",
+      "type": "preference"
+    }
+  },
+  {
+    "id": "mem_20260605_080322_568644",
+    "text": "[user-profile] Paul Carouge, 26 ans, dev Arras. Fuseau Europe/Paris. GitHub Paul-Carouge. Stack: Next.js 16, Tailwind v4, Tauri v2, Rust, dark zinc/amber. YouTube HePaul 1550 abos. Copine Marie (anniv 5 juin). hepaul.dev@gmail.com. LinkedIn pcarouge. NE JAMAIS utiliser \"— \" (tiret em) — ça fait IA. Être authentique, pas générique.",
+    "metadata": {
+      "timestamp": "2026-06-05T08:03:22.568702+00:00",
+      "project": "_builtin",
+      "content_hash": "68d66ad43458dc49",
+      "type": "preference",
+      "tags": "user-profile,assistant_tool"
+    }
+  },
+  {
+    "id": "mem_20260605_080328_967941",
+    "text": "[user-profile] Paul Carouge, 26 ans, dev Arras. GitHub Paul-Carouge. Stack: Next 16/Tailwind v4/Tauri v2/Rust, zinc-amber. YouTube HePaul 1550 abos. Copine Marie (5 juin). hepaul.dev@gmail.com. LinkedIn pcarouge. Interdit: \"— \" (tireta em) — ça fait IA. Authentique.",
+    "metadata": {
+      "timestamp": "2026-06-05T08:03:28.967955+00:00",
+      "content_hash": "a70802e66225da5b",
+      "type": "preference",
+      "project": "_builtin",
+      "tags": "user-profile,assistant_tool"
+    }
+  },
+  {
+    "id": "mem_20260605_082636_735421",
+    "text": "[agent-memory] Pousse v1.1.0 livrée : release GitHub créée (https://github.com/Paul-Carouge/pousse/releases/tag/v1.1.0), APK pousse-v1.1.0.apk (58.6 MB). Migration Riverpod 2→3 (StateNotifier→Notifier), Drift 2.28→2.33, go_router 14→17, google_fonts 6→8. 44 dépendances mises à jour.",
+    "metadata": {
+      "tags": "agent-memory,assistant_tool",
+      "project": "_builtin",
+      "timestamp": "2026-06-05T08:26:36.735444+00:00",
+      "type": "note",
+      "content_hash": "c797440350c714a1"
+    }
+  },
+  {
+    "id": "mem_20260605_082644_043797",
+    "text": "Pousse v1.1.0 : migration Riverpod 2→3 complète (StateNotifierProvider→NotifierProvider, StateNotifier→Notifier, build() method remplace constructor, ref.read au lieu de champ _db). Drift 2.28→2.33 (sqlite3 direct, plus de sqlite3_flutter_libs). go_router 14→17. google_fonts 6→8. json_annotation/serializable upgraded. Nouvelles features : FilterCatalogue provider avec chips catégorie/exposition/eau/saison, indicateurs compat grille (bordures colorées), surlignage voisines, AnimatedScale/Animated",
+    "metadata": {
+      "timestamp": "2026-06-05T08:26:44.043854+00:00",
+      "project": "pousse",
+      "type": "architecture",
+      "tags": "architecture,migration,release",
+      "content_hash": "311b4f4b48662947"
+    }
+  },
+  {
+    "id": "mem_20260605_084800_982071",
+    "text": "[Session 20260605_081] J'ai exploré l'ensemble du codebase. Voici mon analyse.\n\n## État des lieux\n\nL'application tient debout — architecture propre, 30 plantes seedées, base Drift fonctionnelle, placement automatique opérationnel. Mais plusieurs axes mériteraient attention.\n\n---\n\n## Améliorations suggérées\n\n### UX & Visue | Tout est livré, Monsieur. Voici le rapport.\n\n---\n\n## ✅ Pousse v1.1.0 — Livraison terminée\n\n### Release\n**[github.com/Paul-Carouge/pousse/releases/tag/v1.1.0](https://github.c",
+    "metadata": {
+      "content_hash": "2510bb961e63ccad",
+      "type": "learning",
+      "timestamp": "2026-06-05T08:48:00.982096+00:00",
+      "project": "_session",
+      "tags": "session-end,auto"
+    }
+  },
+  {
+    "id": "mem_20260605_090923_642946",
+    "text": "Projet Vectr créé et déployé : application web de vectorisation d'images PNG→SVG. Stack: Next.js 16 + Tailwind v4 + Flask Python API + VTracer (Python bindings pyo3). Design zinc+amber dark mode. Logo V-mark (pixel→courbe). Déployé sur Vercel à https://vectr-eta.vercel.app. API Python serverless avec vtracer. SEO complet : Open Graph, JSON-LD, meta tags fr/en. Attribution Paul Carouge avec GitHub (Paul-Carouge) et LinkedIn (pcarouge).",
+    "metadata": {
+      "tags": "architecture,deployment",
+      "type": "architecture",
+      "content_hash": "48126c8a4e346ec2",
+      "timestamp": "2026-06-05T09:09:23.642965+00:00",
+      "project": "vectr"
+    }
+  },
+  {
+    "id": "mem_20260605_091636_985907",
+    "text": "Vectr 100% client-side WASM. Architecture: VTracer compilé Rust→WASM via wasm-pack. Le WASM lit direct canvas#frame et écrit dans svg#svg. Zéro backend, zéro API, zéro Python. Site statique sur Vercel. Images ne quittent pas le navigateur. 214KB WASM binary. Les paramètres sont passés en JSON string au WASM (converter_params).",
+    "metadata": {
+      "timestamp": "2026-06-05T09:16:36.985969+00:00",
+      "type": "architecture",
+      "content_hash": "c55ab8d72bca795a",
+      "tags": "architecture,important",
+      "project": "vectr"
+    }
+  },
+  {
+    "id": "mem_20260605_091645_762006",
+    "text": "[Session turn 3] Q: Comment tu as fait pour tout mettre sur Vercelle et que ça n'appelle pas d'éléments plus tard? Je veux que ce soit indépendant.\n\nAussi actuellement quand je clique sur Vectoriser, ça me met Unexpected token '<', \"<!doctype \"... is not valid JSON\n\nVois tout ça parce que tu m'as parlé de Python etc mais j'espère que tu n'as pas fait de backend Python que tu fais tourner sur la machine et que tu essaies de récupérer. Car moi je veux vraiment une solution indépendante que je peux",
+    "metadata": {
+      "project": "_session",
+      "tags": "auto-sync",
+      "content_hash": "5dad81458bd38176",
+      "type": "learning",
+      "timestamp": "2026-06-05T09:16:45.762067+00:00"
+    }
+  },
+  {
+    "id": "mem_20260605_091756_678295",
+    "text": "[agent-memory] GitHub Token de Paul : stocké dans /home/atlas/.hermes/.env, variable GITHUB_TOKEN. Utiliser un script Python pour le lire (subprocess + lecture fichier) ou source .env avant curl. Pour créer des repos GitHub ou faire des opérations API, toujours lire ce fichier.",
+    "metadata": {
+      "tags": "agent-memory,assistant_tool",
+      "type": "note",
+      "project": "_builtin",
+      "timestamp": "2026-06-05T09:17:56.678361+00:00",
+      "content_hash": "cacc0b0c3aa58fca"
+    }
+  },
+  {
+    "id": "mem_20260605_094334_093802",
+    "text": "[agent-memory] Vecura (ex-Vectr) : application web de vectorisation d'images PNG/JPG/WebP -> SVG. 100% client-side WASM via VTracer. Repo GitHub: Paul-Carouge/Vecura. Site: https://vecura-app.vercel.app. Design: fond #0C0C0E, indigo-500 primary, rose-400 accent, stone neutrals. Logo: carré coupé en deux (pixels indigo gauche, courbes Bézier rose droite). 5 presets fonctionnels : Photo, Poster, N&B, Pixel Art, Polygon. Export SVG et PNG 2x. Stack: Next.js 16 + Tailwind v4. Variable FIX: mode 'pix",
+    "metadata": {
+      "project": "_builtin",
+      "timestamp": "2026-06-05T09:43:34.093820+00:00",
+      "type": "note",
+      "tags": "agent-memory,assistant_tool",
+      "content_hash": "44363e5fbce2357a"
+    }
+  },
+  {
+    "id": "mem_20260605_094335_250977",
+    "text": "Vecura app: VTracer WASM critical fixes. (1) mode 'pixel' n'existe pas dans VTracer WASM -> doit etre 'none'. (2) BinaryImageConverter n'a PAS les champs hierarchical, color_precision, layer_difference -> les filtrer du JSON. (3) clustering_mode est une decision JS, pas un champ WASM -> ne pas l'envoyer dans le JSON. Nouveau nom: Vecura. Nouveau logo: carre coupe en deux (pixels indigo / courbes rose). Palette: #0C0C0E bg, indigo-500/#6366F1 primary, rose-400/#F472B6 accent. URL: https://vecura-",
+    "metadata": {
+      "project": "vecura",
+      "type": "architecture",
+      "timestamp": "2026-06-05T09:43:35.251031+00:00",
+      "content_hash": "008bc6b8ffe06153",
+      "tags": "wasm,vtracer,fix,presets,rename"
+    }
+  },
+  {
+    "id": "mem_20260605_094345_650234",
+    "text": "[agent-memory] Vecura (ex-Vectr) : application web de vectorisation d'images PNG/JPG/WebP -> SVG via VTracer WASM. 100% client-side. Repo: Paul-Carouge/Vecura. Site: vecura-app.vercel.app. Design: #0C0C0E fond, indigo-500 primary, rose-400 accent. Palette Noctis. Logo: carre pixels/Bezier coupe en deux.",
+    "metadata": {
+      "project": "_builtin",
+      "type": "note",
+      "content_hash": "11a325f0d685bdbf",
+      "timestamp": "2026-06-05T09:43:45.650258+00:00",
+      "tags": "agent-memory,assistant_tool"
+    }
+  },
+  {
+    "id": "mem_20260605_101630_905488",
+    "text": "[Session turn 3] Q: J'aimerais que tu te configures pour activer le mode vision pour voir les images, j'ai vu que avec Hermes on peut activer le vision analyse intégré | A: La vision est déjà intégrée à Hermes, Monsieur. Voici l'état actuel :\n\n```yaml\n# config.yaml (lignes 173-176)\nauxiliary:\n  vision:\n    provider: auto    # sélectionne automatiquement un modèle de vision\n    model: ''\n```\n\n**Comment ça fonctionne :**\n\n1. Vous envoyez une image via Telegram\n2. Hermes la sauvegarde dans `~/.herm",
+    "metadata": {
+      "content_hash": "26a136db26d5b898",
+      "tags": "auto-sync",
+      "type": "learning",
+      "timestamp": "2026-06-05T10:16:30.905527+00:00",
+      "project": "_session"
+    }
+  },
+  {
+    "id": "mem_20260605_103504_022484",
+    "text": "[Session turn 6] Q: [The user sent an image but I couldn't quite see it this time (>_<) You can try looking at it yourself with vision_analyze using image_url: /home/atlas/.hermes/image_cache/img_070412879a4d.jpg]\n\nOn peut tester, est ce que tu vois cette image ? | A: Config corrigée. Résumons :\n\n```yaml\nauxiliary.vision:\n  provider: openrouter\n  model:   google/gemini-3.5-flash   ← existe bien, vision native\n  api_key: (depuis ~/.hermes/.env)   ← OPENROUTER_API_KEY\n```\n\nLe problème était le nom",
+    "metadata": {
+      "content_hash": "86dda7b1b8a52613",
+      "timestamp": "2026-06-05T10:35:04.022560+00:00",
+      "project": "_session",
+      "type": "learning",
+      "tags": "auto-sync"
+    }
+  },
+  {
+    "id": "mem_20260605_104537_889581",
+    "text": "[Session turn 9] Q: C'est bien une feuille ! | A: Ah ! La vision fonctionne parfaitement alors. Gemma-4 a correctement décrit votre image — je pensais que c'était un screenshot de Vecura et j'ai cru à une hallucination.\n\nLa configuration est donc validée :\n\n```\n✅ Vision auxiliaire active\n✅ OpenRouter → google/gemma-4-31b-it:free (0€)\n✅ Images Telegram → description textuelle → contexte Orion\n```\n\nJe peux maintenant voir vos screenshots. Envoyez-moi ce que vous voulez me montrer.",
+    "metadata": {
+      "tags": "auto-sync",
+      "type": "learning",
+      "content_hash": "ae8fcb6013bb8b35",
+      "project": "_session",
+      "timestamp": "2026-06-05T10:45:37.889603+00:00"
+    }
+  },
+  {
+    "id": "mem_20260605_104752_856722",
+    "text": "[Session 20260605_084] Tout est livré et déployé, Monsieur. Voici le résumé de la refonte complète.\n\n---\n\n## Refonte complète — Ce qui a changé\n\n### Nouveau backend WASM headless\n\nL'ancien WASM dépendait du DOM (`canvas#frame`, `svg#svg`). Le nouveau est 100% headless :\n\n```typescript\n// Avant : dépendance au DOM, tick-ba | Déployé, Monsieur. `https://vecura-tool.vercel.app`\n\n## Le problème\n\nLe crate `vtracer` 0.6.5 a sa PROPRE couche de conversion interne. `Config` prend des valeurs brutes, pui",
+    "metadata": {
+      "project": "_session",
+      "type": "learning",
+      "content_hash": "7d4acee480c718f3",
+      "timestamp": "2026-06-05T10:47:52.856740+00:00",
+      "tags": "session-end,auto"
+    }
+  },
+  {
+    "id": "mem_20260605_121537_631268",
+    "text": "[Session turn 6] Q: Bah regarde l'heure, il est quatorze heures quatorze, là y'a toujours rien. | A: Prochain essai à **12:22 UTC, soit 14h22**. J'ai retiré les vieux crons qui polluaient et je n'ai pas retenté entre-temps, pour laisser la fenêtre de rate limit se refermer proprement.\n\nLe cron `ssl-issuance` est prêt. Vous devriez recevoir la notification dans environ 7 minutes.",
+    "metadata": {
+      "type": "learning",
+      "tags": "auto-sync",
+      "timestamp": "2026-06-05T12:15:37.631322+00:00",
+      "content_hash": "4559c97af4acc9d7",
+      "project": "_session"
+    }
+  },
+  {
+    "id": "mem_20260605_135527_188269",
+    "text": "[Session turn 3] Q: Je suis en train d'ajouter le tout dans Coulify avec server. Il me demande le name, description, IP, Adresse, Port, User, Private Key, et Private Key. Tu peux me la mettre ici, je sais pas quoi mettre. | A: Bien sûr, Monsieur. Voici les informations exactes à remplir :\n\n**Name :** `localhost`\n**Description :** *(laissez vide)*\n**IP Address/Domain :** `localhost`\n**Port :** `22`\n**User :** `atlas`\n**Private Key :** sélectionnez le bouton pour ajouter une nouvelle clé, puis col",
+    "metadata": {
+      "project": "_session",
+      "timestamp": "2026-06-05T13:55:27.188346+00:00",
+      "tags": "auto-sync",
+      "content_hash": "2c6284887edb8d81",
+      "type": "learning"
+    }
+  },
+  {
+    "id": "mem_20260605_152509_487172",
+    "text": "[agent-memory] TODO: placeholder pour suppression",
+    "metadata": {
+      "type": "note",
+      "tags": "agent-memory,assistant_tool",
+      "project": "_builtin",
+      "timestamp": "2026-06-05T15:25:09.487192+00:00",
+      "content_hash": "5b97aae56001a8e6"
+    }
+  },
+  {
+    "id": "mem_20260605_153034_475983",
+    "text": "[Session turn 12] Q: Je t'autorise uniquement pour cette fois à aller les supprimer de ChromaDB. | A: C'est fait, Monsieur.\n\n- **23 entrées ChromaDB supprimées** — toutes les mentions de Coolify, Supabase, Flowsint, Cloudflare tunnel, credentials, configurations et sessions associées.\n- **63 entrées restantes** — vos projets (Économe, Pousse, Vecura), l'équipe Orion, les workflows mémoire, VTracer, etc.\n- **Mémoire courte** — déjà nettoyée (12 entrées supprimées)\n- **Machine** — propre (aucun fi",
+    "metadata": {
+      "content_hash": "da81d12aad224072",
+      "timestamp": "2026-06-05T15:30:34.476054+00:00",
+      "project": "_session",
+      "type": "learning",
+      "tags": "auto-sync"
+    }
+  },
+  {
+    "id": "mem_20260605_155436_381675",
+    "text": "[Session turn 15] Q: Est-ce que c'est un intérêt de supprimer tes sessions ? | A: Honnêtement ? Pas vraiment, Monsieur.\n\nCe qui a de la valeur — vos préférences, les décisions techniques, les workflows éprouvés — est dans ChromaDB et dans mes skills. L'historique de session n'est qu'un journal de bord brut que j'utilise pour *session_search* quand vous me demandez « qu'est-ce qu'on avait fait sur X ? ». Un confort, pas une nécessité.\n\nDans votre cas précis, je comprends l'intention : couper les ",
+    "metadata": {
+      "tags": "auto-sync",
+      "type": "learning",
+      "project": "_session",
+      "content_hash": "e7ec205a94d9858c",
+      "timestamp": "2026-06-05T15:54:36.381735+00:00"
+    }
+  },
+  {
+    "id": "mem_20260605_155620_716891",
+    "text": "[agent-memory] Archivage sessions : script ~/.hermes/scripts/archive-sessions.py. Cron job (40e30e3e6992) tous les jours à 4h UTC (6h Paris). Archive les sessions >14 jours dans ~/.hermes/archive/state-YYYY-MM.db. Commande restore : python3 ~/.hermes/scripts/archive-sessions.py restore <session_id>. Liste archive : python3 ~/.hermes/scripts/archive-sessions.py list.",
+    "metadata": {
+      "timestamp": "2026-06-05T15:56:20.716954+00:00",
+      "tags": "agent-memory,assistant_tool",
+      "project": "_builtin",
+      "type": "note",
+      "content_hash": "77bc3c0ee5a17128"
+    }
+  },
+  {
+    "id": "mem_20260605_160423_295244",
+    "text": "[Session 20260605_104] J'ai un inventaire complet de tout ce qui a été installé. Avant d'exécuter la destruction, une question importante.\n\n---\n\n**Le tunnel Cloudflare `orion-tunnel`** a été créé spécifiquement pour exposer Coolify et Supabase en HTTPS. Mais il pourrait aussi servir pour d'autres projets à l'avenir (Flows | Noté pour Flowsint. Avant de tout exécuter, vous ne m'avez pas répondu sur le **tunnel Cloudflare `orion-tunnel`** — est-ce que je le supprime aussi, ou je le garde ? | Une q",
+    "metadata": {
+      "timestamp": "2026-06-05T16:04:23.295272+00:00",
+      "project": "_session",
+      "tags": "session-end,auto",
+      "type": "learning",
+      "content_hash": "42c59efec9fc6569"
+    }
+  },
+  {
+    "id": "mem_20260605_161111_695254",
+    "text": "[Session turn 3] Q: On va abandonner ce projet alors tu peux supprimer cette conversation | A: Aucune entrée ChromaDB associée à Open CoDesign — rien à purger. Le sujet est clos.",
+    "metadata": {
+      "timestamp": "2026-06-05T16:11:11.695274+00:00",
+      "tags": "auto-sync",
+      "content_hash": "46d58814045af5b5",
+      "project": "_session",
+      "type": "learning"
+    }
+  },
+  {
+    "id": "mem_20260605_182030_522977",
+    "text": "[agent-memory] Komit v0.1.0 livré : https://github.com/Paul-Carouge/komit/releases/tag/v0.1.0. APK komit-v0.1.0.apk (58.3 MB). App Flutter suivi d'habitudes avec : CRUD habitudes (couleur, icône), objectifs multiples/paliers, heatmap verticale 31×12 cliquable, streaks, notes/reminders, thème dark émeraude+violet. Stack : Flutter 3.44, Riverpod 3.2 manuel, Drift 2.33, GoRouter 17.3, flutter_local_notifications 21.0. Projet dans /home/atlas/projects/komit.",
+    "metadata": {
+      "type": "note",
+      "content_hash": "ea366637e738d172",
+      "project": "_builtin",
+      "tags": "agent-memory,assistant_tool",
+      "timestamp": "2026-06-05T18:20:30.523060+00:00"
+    }
+  },
+  {
+    "id": "mem_20260605_182031_541615",
+    "text": "[agent-memory] Komit build notes : key.properties dans android/ avec release.keystore. coreLibraryDesugaring nécessaire pour flutter_local_notifications. Drift 2.33 requiert @TableIndex sur les classes de table (pas dans AppDatabase). Les providers Riverpod manuels utilisent FutureProvider.family pour les familles et StateProvider/StateNotifier depuis flutter_riverpod (legacy non nécessaire).",
+    "metadata": {
+      "timestamp": "2026-06-05T18:20:31.541693+00:00",
+      "tags": "agent-memory,assistant_tool",
+      "project": "_builtin",
+      "type": "note",
+      "content_hash": "cee052b5e97b94cf"
+    }
+  },
+  {
+    "id": "mem_20260605_182032_544422",
+    "text": "Komit — App de suivi d'habitudes Flutter, v0.1.0 livrée. Release GitHub : https://github.com/Paul-Carouge/komit/releases/tag/v0.1.0. APK 58.3 MB. Architecture : Drift 4 tables (habits, habit_goals, habit_logs, notes), Riverpod manuel, GoRouter, thème dark émeraude+violet. Features : CRUD habitudes, paliers multiples, heatmap verticale 31×12, streaks, notes/reminders.",
+    "metadata": {
+      "project": "komit",
+      "content_hash": "6411561ef4f86cb2",
+      "tags": "flutter,release,v0.1.0",
+      "type": "architecture",
+      "timestamp": "2026-06-05T18:20:32.544479+00:00"
+    }
+  },
+  {
+    "id": "mem_20260605_184648_139116",
+    "text": "[agent-memory] Komit v0.2.0 livré : https://github.com/Paul-Carouge/komit/releases/tag/v0.2.0. Améliorations : barre de recherche, archive/supprimer dans l'UI, édition préremplie, 19 tests unitaires (DAOs, streak, heatmap), stats réelles calculées depuis les logs. Flutter analyze: 0 erreur.",
+    "metadata": {
+      "project": "_builtin",
+      "tags": "agent-memory,assistant_tool",
+      "type": "note",
+      "timestamp": "2026-06-05T18:46:48.139136+00:00",
+      "content_hash": "918ef448ef62ba13"
+    }
+  },
+  {
+    "id": "mem_20260605_184652_857015",
+    "text": "[Session turn 3] Q: Améliore moi tout ça | A: Fait, Monsieur. **Komit v0.2.0** est en ligne.\n\n**[github.com/Paul-Carouge/komit/releases/tag/v0.2.0](https://github.com/Paul-Carouge/komit/releases/tag/v0.2.0)**\n\n### Ce qui a été corrigé\n\n| Problème | Correction |\n|----------|-----------|\n| Pas de recherche | SearchBar Material 3 avec filtrage temps réel via `habitDao.search()` |\n| Archive/delete inaccessibles | Menu contextuel avec Archiver + Supprimer (dialog de confirmation) |\n| Formulaire d'édi",
+    "metadata": {
+      "timestamp": "2026-06-05T18:46:52.857048+00:00",
+      "project": "_session",
+      "tags": "auto-sync",
+      "content_hash": "470e3c1725094914",
+      "type": "learning"
+    }
+  },
+  {
+    "id": "mem_20260605_190502_056655",
+    "text": "[agent-memory] Komit v0.3.0 livré : https://github.com/Paul-Carouge/komit/releases/tag/v0.3.0. Refonte design \"Tide\" par Apex : palette teal(#14B8A6)/corail(#FB923C)/ambre(#FBBF24) sur charbon chaud(#0F0F0F). Remplace l'émeraude+violet. ThemeData enrichi, HabitCard repensée, heatmap cellule today en corail, badges streaks recolorés.",
+    "metadata": {
+      "project": "_builtin",
+      "type": "note",
+      "tags": "agent-memory,assistant_tool",
+      "content_hash": "cdad9fd9ac4b6d94",
+      "timestamp": "2026-06-05T19:05:02.056722+00:00"
+    }
+  },
+  {
+    "id": "mem_20260605_193615_017847",
+    "text": "[agent-memory] Komit v0.4.0 livré : https://github.com/Paul-Carouge/komit/releases/tag/v0.4.0. Refonte complète : palette orange calme (#D4783E terracotta), grid layout 2 colonnes sans FAB avec card \"+\" en fin de grille, Bottom NavBar 3 tabs (habitudes/notes/paramètres icônes seules), onboarding 3 slides, mode binaire oui/non + paliers, time picker pour reminders, animations staggered + HapticFeedback. 19 tests, 0 erreur analyze. APK 59.3 MB.",
+    "metadata": {
+      "timestamp": "2026-06-05T19:36:15.017920+00:00",
+      "type": "note",
+      "content_hash": "f046b1b6f2fe0b1a",
+      "project": "_builtin",
+      "tags": "agent-memory,assistant_tool"
+    }
+  },
+  {
+    "id": "mem_20260605_194505_253139",
+    "text": "[Session turn 6] Q: L'accueil ne marche plus revérifié tout | A: Monsieur. **Komit v0.4.1** est en ligne.\n\n[https://github.com/Paul-Carouge/komit/releases/tag/v0.4.1](https://github.com/Paul-Carouge/komit/releases/tag/v0.4.1)\n\nJ'ai refait une passe complète sur tout le projet :\n\n- `flutter clean` + reconstruction integrale\n- `flutter analyze` → 0 erreur\n- `flutter test` → 19/19 passes\n- APK 59.3 MB signe\n\nL'accueil utilise maintenant une **grille 2 colonnes** avec une card \"+\" a la fin, sans FAB",
+    "metadata": {
+      "project": "_session",
+      "tags": "auto-sync",
+      "content_hash": "0775a1de05f24df8",
+      "type": "learning",
+      "timestamp": "2026-06-05T19:45:05.253243+00:00"
+    }
+  },
+  {
+    "id": "mem_20260605_210531_224603",
+    "text": "[Session turn 3] Q: Refait une bottom appbar fonctionnel et plus belle, sans texte, uniquement en icône | A: **Komit v0.7.0** — publiée.\n\n[https://github.com/Paul-Carouge/komit/releases/tag/v0.7.0](https://github.com/Paul-Carouge/komit/releases/tag/v0.7.0)\n\n### Bottom nav — icônes pures\n\nFini le texte. Un pill flottant avec 3 cercles :\n\n| État | Visuel |\n|------|--------|\n| **Actif** | Cercle rempli primary (alpha 30) + bordure fine + icône primary |\n| **Inactif** | Icône dimmée, pas de fond |\n|",
+    "metadata": {
+      "type": "learning",
+      "tags": "auto-sync",
+      "content_hash": "c2bee3abf2db9cf2",
+      "timestamp": "2026-06-05T21:05:31.224668+00:00",
+      "project": "_session"
+    }
+  },
+  {
+    "id": "mem_20260605_220841_457647",
+    "text": "[Session turn 3] Q: Vas-y je te donne mon accord travaille avec ton équipe pour faire quelque chose de solide | A: **Komit v1.0.0** — publiée. Vérifiée.\n\n[https://github.com/Paul-Carouge/komit/releases/tag/v1.0.0](https://github.com/Paul-Carouge/komit/releases/tag/v1.0.0)\n\n---\n\n## Récapitulatif de la refonte intégrale\n\nL'équipe Orion a travaillé : j'ai orchestré, Apex a designé, Momus a audité (35 problèmes), Sentinel et Forge ont corrigé.\n\n### Design system\n\n| Élément | Avant | Après |\n|-------",
+    "metadata": {
+      "type": "learning",
+      "project": "_session",
+      "content_hash": "dadd8bdbcf685dfb",
+      "tags": "auto-sync",
+      "timestamp": "2026-06-05T22:08:41.457721+00:00"
+    }
+  },
+  {
+    "id": "mem_20260605_225642_440448",
+    "text": "BASE DE CONNAISSANCE DESIGN — Juin 2026. Formation intensive d'Apex (skill orion-team-apex) avec 11 sections exhaustives : 1. Théorie des couleurs (OKLCH, harmonies, WCAG, palettes), 2. Typographie (échelles, rythme vertical, fluid type), 3. Grilles et composition (spacing 4/8px, breakpoints, container queries), 4. Composants et design systems (shadcn/ui, Radix, Ark UI, Tailwind v4), 5. Lois UX (Nielsen, Fitts, Hick, Jakob, Miller, Pareto, Gestalt, Norman), 6. Motion design (easing, spring physi",
+    "metadata": {
+      "tags": "apex,design,formation,ux,ui,color-theory,typography,motion,accessibility",
+      "timestamp": "2026-06-05T22:56:42.440511+00:00",
+      "project": "orion-team",
+      "type": "architecture",
+      "content_hash": "f20c2a9823eb3226"
+    }
+  },
+  {
+    "id": "mem_20260605_225643_701728",
+    "text": "[agent-memory] Formation intensive d'Apex réalisée le 5 juin 2026. Base de connaissance design complète injectée dans le skill orion-team-apex (11 sections : couleurs, typographie, grilles, composants, lois UX, motion, mobile, web, accessibilité, préférences Paul, délégation). Recherche web effectuée sur Material Design, Tailwind v4, shadcn/ui, Radix UI, NNG, Laws of UX, Framer Motion, GSAP, CSS-Tricks, Refactoring UI, Coolors, WCAG. Sources scrapées et synthétisées par 6 subagents en parallèle ",
+    "metadata": {
+      "timestamp": "2026-06-05T22:56:43.701818+00:00",
+      "tags": "agent-memory,assistant_tool",
+      "type": "note",
+      "project": "_builtin",
+      "content_hash": "21bdf4bc7e219603"
+    }
+  },
+  {
+    "id": "mem_20260605_225652_988358",
+    "text": "[Session turn 3] Q: Parfait.\n\nJ'aimerais que l'on commence un projet particulier.\n\nJe veux que tu forme de manière intensive le designer.\n\nJe veux que tu ailles chercher sur internet des design existant, des règles de design pour mobile et pour site web. \n\nJe veux que tu regardes du côté de composants, ne pas les deux couleurs, de théorie des couleurs et de design, d'harmonie, regarder la règle des couleurs, regarder comment construire un bon UI et un bon UX, la règle des hauteurs. \n\nTu peux reg",
+    "metadata": {
+      "tags": "auto-sync",
+      "project": "_session",
+      "timestamp": "2026-06-05T22:56:52.988376+00:00",
+      "type": "learning",
+      "content_hash": "7906aeb0e3e6f5e1"
+    }
+  },
+  {
+    "id": "mem_20260605_230748_915309",
+    "text": "Section 12 ajoutée au skill Apex — Profondeur UI, ombres et Z-axis. Couvre : physique de la lumière (source zénithale 45°, offset Y positif), Material 3 Elevation (6 niveaux 0-12dp, double ombre key+ambient, tokens CSS), hiérarchie spatiale Z-axis (0 à 10+, 3 layers fondamentaux), luminosité comme indicateur de distance (clair=proche, dark mode échelons oklch), Tailwind v4 shadow scale, comparaison design systems (Tailwind, M3, Radix, Geist), overlay/scrim (opacités 5-60%), glassmorphism blur (8",
+    "metadata": {
+      "type": "architecture",
+      "tags": "apex,design,profondeur,z-axis,ombres,elevation,dark-mode,lumière",
+      "project": "orion-team",
+      "timestamp": "2026-06-05T23:07:48.915371+00:00",
+      "content_hash": "3b93130394b6aee1"
+    }
+  },
+  {
+    "id": "mem_20260605_232807_771311",
+    "text": "Focail v0.1.0 livré — application Flutter Pomodoro + prise de notes. Repo: Paul-Carouge/focail. Release: https://github.com/Paul-Carouge/focail/releases/tag/v0.1.0. APK: focail-v0.1.0.apk (61.5 MB, signé). Stack : Flutter 3.44, Riverpod manuel, Drift 2.33, GoRouter 17.3, Material 3. Palette Sage & Terracotta (#98CDAE primary, #E5B69A secondary). Équipe Orion : Apex (thème, design), Forge (data layer), Nova (écrans). Fichiers : 6 écrans (timer, notes, note_form, settings, onboarding), 3 DAOs, 2 r",
+    "metadata": {
+      "project": "focail",
+      "tags": "focail,flutter,pomodoro,notes,release,v0.1.0",
+      "timestamp": "2026-06-05T23:28:07.771372+00:00",
+      "type": "architecture",
+      "content_hash": "fb7203654ffef649"
+    }
+  },
+  {
+    "id": "mem_20260605_233222_982622",
+    "text": "Focail v0.1.1 — Correction crash au lancement. Causes: (1) NotificationService.instance.init() non encapsulé dans try-catch, pouvait planter sur certains devices, (2) goBranch avec initialLocation:true sans guard sur le même tab. Corrections: try-catch dans main.dart, guard if(index==currentIndex) return dans app_router.dart. APK réuploadé sur la même release GitHub.",
+    "metadata": {
+      "timestamp": "2026-06-05T23:32:22.982690+00:00",
+      "type": "bug",
+      "project": "focail",
+      "tags": "focail,bugfix,v0.1.1",
+      "content_hash": "6865ea88bcfaf5ad"
+    }
+  },
+  {
+    "id": "mem_20260605_233226_960056",
+    "text": "[Session turn 6] Q: L'application se lance même pas... | A: Monsieur. **Focail v0.1.1** est en ligne.\n\n[https://github.com/Paul-Carouge/focail/releases/tag/v0.1.1](https://github.com/Paul-Carouge/focail/releases/tag/v0.1.1)\n\n**Deux corrections identifiées :**\n\n| Cause | Correction |\n|---|---|\n| `NotificationService.instance.init()` échouait en release (exception non catchée) | Encapsulé dans try-catch avec continue silencieux |\n| `goBranch` avec `initialLocation: true` sans guard sur le même tab",
+    "metadata": {
+      "content_hash": "e02e0d6a776a608b",
+      "tags": "auto-sync",
+      "project": "_session",
+      "type": "learning",
+      "timestamp": "2026-06-05T23:32:26.960094+00:00"
+    }
+  },
+  {
+    "id": "mem_20260605_233850_155401",
+    "text": "[Session 20260605_174] Aucune trace d'OpenCut dans ma mémoire, Monsieur. | Je connais désormais, Monsieur. Voici ce que j'ai trouvé.\n\n**OpenCut** -- un éditeur vidéo open-source, alternative à CapCut.\n\n| Détail | |\n|--------|-|\n| **Repo** | github.com/OpenCut-app/OpenCut |\n| **Stars** | 54.1k |\n| **License** | MIT |\n| **Stack** | TypeScript 97.9%, CSS 2.1% |\n| **Plateforme | Monsieur. La formation d'Apex est terminée.\n\n## Résumé de l'opération\n\n**6 subagents** ont travaillé en parallèle, effectu",
+    "metadata": {
+      "type": "learning",
+      "project": "_session",
+      "tags": "session-end,auto",
+      "timestamp": "2026-06-05T23:38:50.155415+00:00",
+      "content_hash": "0dc0c9cadbd1da53"
+    }
+  },
+  {
+    "id": "mem_20260605_235456_428277",
+    "text": "DocPlex (docplex) — Projet créé le 5 juin 2026. Agrégateur de documentation officielle pour frameworks, formaté pour ingestion IA. Repo: https://github.com/Paul-Carouge/docplex. 1380 documents de 4 frameworks (Flutter 703, Tailwind CSS 197, Next.js 429, PocketBase 51). Stack: Next.js 16.2.7, Tailwind CSS v4, gray-matter, fuse.js, react-markdown. SSG statique, 1386 pages. Design dark zinc/ambre. Projet dans /home/atlas/docplex.",
+    "metadata": {
+      "content_hash": "e823518515d6477e",
+      "tags": "docplex,documentation,nextjs,tailwind",
+      "timestamp": "2026-06-05T23:54:56.428372+00:00",
+      "type": "architecture",
+      "project": "docplex"
+    }
+  },
+  {
+    "id": "mem_20260605_235459_974741",
+    "text": "[agent-memory] DocPlex : projet créé le 5 juin 2026 dans /home/atlas/docplex. Agrégateur docs pour IA. 1380 docs de 4 frameworks (Flutter 703, Tailwind 197, Next.js 429, PocketBase 51). Next.js 16.2.7 + Tailwind v4. Repo GitHub: Paul-Carouge/docplex. Scripts d'ingestion dans scripts/: fetch-flutter.ts, fetch-tailwind.ts, fetch-nextjs.ts, fetch-pocketbase.ts. Pour re-fetcher: npm run fetch:{flutter|tailwind|nextjs|pocketbase}. Build: 1386 pages SSG.",
+    "metadata": {
+      "tags": "agent-memory,assistant_tool",
+      "project": "_builtin",
+      "content_hash": "40107d7242e07b48",
+      "type": "note",
+      "timestamp": "2026-06-05T23:54:59.974772+00:00"
+    }
+  },
+  {
+    "id": "mem_20260606_001843_770980",
+    "text": "[Session turn 3] Q: J'aimerais que tu fasses un super design avec de belles animations pour le site. | A: Monsieur. **DocPlex v0.2.0** est en ligne.\n\n### Ce qui a changé\n\n**Design**\n- Hero avec gradient subtil et texte en dégradé ambré\n- Cartes framework avec hover-glow et icônes animées (scale + rotate au survol)\n- Noise texture en overlay pour la profondeur\n- Glassmorphism sur la sidebar (backdrop-blur)\n- Typographie Inter (remplace le monospace) — plus lisible\n- Gradient sur les blocs de code",
+    "metadata": {
+      "type": "learning",
+      "content_hash": "b77d1795fcdb5591",
+      "tags": "auto-sync",
+      "timestamp": "2026-06-06T00:18:43.771338+00:00",
+      "project": "_session"
+    }
+  },
+  {
+    "id": "mem_20260606_010433_192514",
+    "text": "5 juin 2026 — Paul a demandé la suppression de 4 repos GitHub et leurs données locales : DocPlex, focail, komit, Vecura. Repos supprimés, projets Vercel associés supprimés (docplex, vecura), fichiers locaux nettoyés. Les références en mémoire (Chromadb) restent pour historique mais les projets ne sont plus actifs.",
+    "metadata": {
+      "type": "note",
+      "content_hash": "9dafdf2c4ce4380e",
+      "timestamp": "2026-06-06T01:04:33.192556+00:00",
+      "tags": "cleanup",
+      "project": "general"
+    }
+  },
+  {
+    "id": "mem_20260606_010436_624691",
+    "text": "[agent-memory] Projets supprimés le 5 juin 2026 à la demande de Paul : DocPlex (/home/atlas/docplex), Komit (/home/atlas/projects/komit), Vecura (ex-Vectr, app web vectorisation), focail. Repos GitHub, projets Vercel et fichiers locaux supprimés.",
+    "metadata": {
+      "tags": "agent-memory,assistant_tool",
+      "project": "_builtin",
+      "content_hash": "6ce8a3df4c1f2eab",
+      "timestamp": "2026-06-06T01:04:36.624752+00:00",
+      "type": "note"
+    }
+  },
+  {
+    "id": "mem_20260606_030412_789321",
+    "text": "Drift: Companion insert requires explicit createdAt field. When using HabitsTableCompanion for insert/update, createdAt must be provided with Value(DateTime.now()). Failing to include it causes test failures.",
+    "metadata": {
+      "content_hash": "09d941a92c27521c",
+      "timestamp": "2026-06-06T03:04:12.789345+00:00",
+      "project": "komit",
+      "type": "learning",
+      "tags": "retro,drift"
+    }
+  },
+  {
+    "id": "mem_20260606_030415_064269",
+    "text": "Flutter test: Intl.defaultLocale must be initialized in setUpAll for date formatting tests. Without locale initialization, date-formatting tests in Flutter fail unpredictably.",
+    "metadata": {
+      "type": "learning",
+      "content_hash": "22b438933f9990fc",
+      "project": "komit",
+      "timestamp": "2026-06-06T03:04:15.064291+00:00",
+      "tags": "retro,flutter-test"
+    }
+  },
+  {
+    "id": "mem_20260606_030417_342677",
+    "text": "Flutter test: Drift in-memory DB testing pattern. Use NativeDatabase.memory() for unit tests. When combining drift with matcher package, use 'hide isNull, isNotNull' to avoid symbol conflicts.",
+    "metadata": {
+      "tags": "retro,drift,flutter-test",
+      "type": "learning",
+      "content_hash": "1f1052a376d6edd9",
+      "project": "komit",
+      "timestamp": "2026-06-06T03:04:17.342698+00:00"
+    }
+  },
+  {
+    "id": "mem_20260606_030426_754325",
+    "text": "Économe P0: Drift schemaVersion=1 prevents migrations. Must upgrade schemaVersion and add beforeOpen with CREATE INDEX statements for transactions(date), transactions(category_id), impulse_items(status). Without this, any schema change breaks the DB.",
+    "metadata": {
+      "timestamp": "2026-06-06T03:04:26.754347+00:00",
+      "type": "learning",
+      "content_hash": "dfbe3fff24ac432c",
+      "tags": "retro,drift,p0",
+      "project": "econome"
+    }
+  },
+  {
+    "id": "mem_20260606_030429_030201",
+    "text": "Économe P0: resolveCategoryIcon dupliqué 4×. Extraire dans core/utils/icon_utils.dart. Icon mapping functions scattered across add_transaction_screen, add_impulse_screen, transactions_screen, dashboard_screen.",
+    "metadata": {
+      "timestamp": "2026-06-06T03:04:29.030224+00:00",
+      "type": "learning",
+      "content_hash": "edc367fa39e229e6",
+      "project": "econome",
+      "tags": "retro,refactor,p0"
+    }
+  },
+  {
+    "id": "mem_20260606_030431_339161",
+    "text": "Économe P0: riverpod_annotation package en dépendance mais jamais utilisé. Tous les providers dans app_providers.dart (132 lignes) sans @riverpod annotation, pas de code généré. Convertir en @riverpod avec autoDispose pour éliminer les fuites mémoire.",
+    "metadata": {
+      "tags": "retro,riverpod,p0",
+      "timestamp": "2026-06-06T03:04:31.339181+00:00",
+      "content_hash": "8292a569095e2c69",
+      "type": "learning",
+      "project": "econome"
+    }
+  },
+  {
+    "id": "mem_20260606_030433_640331",
+    "text": "Pousse: migration flutter_riverpod 2.6.1→3.3.1 et riverpod_annotation 2.6.1→4.0.2 réussie. v1.1.0 release taguée et APK publié sur GitHub. StateNotifier→Notifier migration effectuée. Maintenance package réussie.",
+    "metadata": {
+      "project": "pousse",
+      "tags": "retro,migration",
+      "type": "learning",
+      "timestamp": "2026-06-06T03:04:33.640352+00:00",
+      "content_hash": "5c8793a7c740a6e0"
+    }
+  },
+  {
+    "id": "mem_20260606_030435_879459",
+    "text": "Paul a supprimé plusieurs dépôts GitHub: DocPlex, focail, Komit, Vecura. Il souhaite garder uniquement les projets actifs (pousse, econome). Nettoyage des sessions obsolètes (Supabase, Flowsint, Coolify) demandé.",
+    "metadata": {
+      "tags": "retro,cleanup",
+      "type": "decision",
+      "project": "infrastructure",
+      "timestamp": "2026-06-06T03:04:35.879480+00:00",
+      "content_hash": "7cb0daca9a7c0301"
+    }
+  },
+  {
+    "id": "mem_20260606_030438_161187",
+    "text": "DocPlex: projet de documentation aggregator lancé et abandonné. Problème: design non adapté mobile, rendu pas satisfaisant pour Paul. Leçon: valider le rendu mobile early dans les projets web avec l'équipe Apex/design.",
+    "metadata": {
+      "type": "learning",
+      "content_hash": "adcffef76a6467ba",
+      "project": "docplex",
+      "tags": "retro,docplex,design",
+      "timestamp": "2026-06-06T03:04:38.161250+00:00"
+    }
+  },
+  {
+    "id": "mem_20260606_110100_457624",
+    "text": "6 juin 2026 — Formation Nova et Apex sur les meilleurs repos Flutter open source. 7 repos analysés : AppFlowy (242K lignes, BLoC+GoRouter+Rust+FFI, architecture feature-first, design tokens atomiques), Flutter Gallery (82K, Provider, adaptive breakpoints, golden tests, deferred components), GitJournal (70K, BLoC/Provider, Git-first, Core-centric), inKino (5K, Clean Architecture + Redux pur), flutter_deck (15K, M3 theming), OpenFoodFacts/smooth-app (80K, ThemeExtensions 30+ couleurs, widgets atom",
+    "metadata": {
+      "content_hash": "5dca9e8aed6da6ae",
+      "tags": "nova,apex,flutter,formation",
+      "timestamp": "2026-06-06T11:01:00.457691+00:00",
+      "type": "learning",
+      "project": "orion-team"
+    }
+  },
+  {
+    "id": "mem_20260606_111009_702737",
+    "text": "6 juin 2026 — Analyse design des plus belles apps (9 apps/sites). Flutter : Wonderous (palette cuivrée #E4935D, radius 32px, animations 900-1300ms, pas de box-shadow), Folio (glassmorphism, tokens centralisés), Gallery (NavigationRail/BottomNav adaptatif, SharedAxisTransition), LocalSend (M3 pur, Colors.teal). Web : shadcn/ui (OKLCH, radius system 0.625rem base), Geist (Materials elevation, typographie complète), Linear (dark-first, issue cards), Stripe (bento grid, light-first). Apex enrichi de",
+    "metadata": {
+      "content_hash": "0f8cfca83e3e18f0",
+      "project": "orion-team",
+      "timestamp": "2026-06-06T11:10:09.702802+00:00",
+      "type": "learning",
+      "tags": "apex,design,patterns,analysed"
+    }
+  },
+  {
+    "id": "mem_20260606_111139_498934",
+    "text": "[Session 20260605_233] Monsieur. C'est fait.\n\n### Ce qui a été analysé\n\n**7 repositories clonés et disséqués :**\n\n| Projet | Lignes | Stack | Enseignement |\n|--------|--------|-------|-------------|\n| **AppFlowy** | 242K | BLoC + GoRouter + Rust FFI | Architecture feature-first, design tokens atomiques, monorepo |\n| **Flu | Monsieur. C'est fait. 9 applications analysées, Apex enrichi de 230 lignes de patterns concrets.\n\n## Ce qui a été analysé\n\n**Apps Flutter** (5, clonées et disséquées) :\n\n| Ap",
+    "metadata": {
+      "project": "_session",
+      "tags": "session-end,auto",
+      "timestamp": "2026-06-06T11:11:39.498957+00:00",
+      "content_hash": "e54bb2687e32736b",
+      "type": "learning"
+    }
+  },
+  {
+    "id": "mem_20260606_112157_878036",
+    "text": "Terra — application GPS Flutter. v1.0.0 livrée sur GitHub Paul-Carouge/terra, release v1.0.0. APK téléchargeable. Fonctionnalités : carte OSM (flutter_map), localisation GPS (geolocator), recherche Nominatim, itinéraires OSRM. Stack : Riverpod 3.3 (legacy pour StateProvider/FutureProvider), GoRouter 17, flutter_map 8. Thème dark ambre/zinc (seed #F59E0B). Projet dans /home/atlas/projects/terra. Android permissions ACCESS_FINE_LOCATION + ACCESS_COARSE_LOCATION.",
+    "metadata": {
+      "content_hash": "4213bc32818df0c0",
+      "type": "architecture",
+      "project": "terra",
+      "timestamp": "2026-06-06T11:21:57.878106+00:00"
+    }
+  },
+  {
+    "id": "mem_20260606_112201_971383",
+    "text": "[agent-memory] Terra v1.0.0 livré sur GitHub (Paul-Carouge/terra). App GPS Flutter avec OpenStreetMap. Release: https://github.com/Paul-Carouge/terra/releases/tag/v1.0.0. APK: terra-v1.0.0.apk. Stack : Flutter 3.44, Dart 3.12, Riverpod 3.3 (legacy StateProvider/FutureProvider), GoRouter 17, flutter_map 8, geolocator 13, Nominatim API, OSRM API. Thème dark ambre/zinc seed #F59E0B. Projet dans /home/atlas/projects/terra. Riverpod 3.3 : StateProvider dans legacy.dart, FutureProvider dans flutter_ri",
+    "metadata": {
+      "project": "_builtin",
+      "timestamp": "2026-06-06T11:22:01.971422+00:00",
+      "tags": "agent-memory,assistant_tool",
+      "content_hash": "d819b9bdf6865299",
+      "type": "note"
+    }
+  },
+  {
+    "id": "mem_20260606_114429_076428",
+    "text": "[Session turn 3] Q: Ça fonctionne toujours pas il y a plein de cohérence dans l'application. \n\nN'hésite pas à les copier les repo flutter qui fonctionnent, je veux que tu copies les applications du même style mais en mieux | A: ---\n\n## ✅ Terra v1.0.0 — Réécriture complète\n\n### Ce qui a été corrigé\n\n| Problème | Cause | Correction |\n|---|---|---|\n| **Erreur localisation** | `MaterialApp` sans `localizationsDelegates` | Ajout de `flutter_localizations` + 3 delegates |\n| **GPS ne fonctionne pas** |",
+    "metadata": {
+      "timestamp": "2026-06-06T11:44:29.076450+00:00",
+      "type": "learning",
+      "tags": "auto-sync",
+      "project": "_session",
+      "content_hash": "c0ae528c73914d95"
+    }
+  },
+  {
+    "id": "mem_20260606_121804_442690",
+    "text": "[agent-memory] Terra v1.0.0 supprimé de GitHub (Paul-Carouge/terra) le 6 juin 2026. Projet local conservé dans /home/atlas/projects/terra.",
+    "metadata": {
+      "type": "note",
+      "timestamp": "2026-06-06T12:18:04.442719+00:00",
+      "project": "_builtin",
+      "content_hash": "013d995567aa36fb",
+      "tags": "agent-memory,assistant_tool"
+    }
+  },
+  {
+    "id": "mem_20260606_125053_698072",
+    "text": "[agent-memory] Synapse v1.0.0 — interface 3D de la mémoire ChromaDB. Site: https://synapse-tawny-sigma.vercel.app. Stack : Next.js 16, Three.js (React Three Fiber), Tailwind v4. Force-directed graph 3D des 107 entrées mémoire, couleur par type. Projet dans /home/atlas/synapse. Cron job synchro toutes les 2h (synapse-sync.sh).",
+    "metadata": {
+      "tags": "agent-memory,assistant_tool",
+      "timestamp": "2026-06-06T12:50:53.698141+00:00",
+      "type": "note",
+      "content_hash": "52752a715658c036",
+      "project": "_builtin"
+    }
+  },
+  {
+    "id": "mem_20260606_125103_052592",
+    "text": "[Session turn 6] Q: Tu utilises ChromaDB, j'aimerais que tu crées une application et que tu l'as publies sur vercel qui permet de voir ta mémoire en temps réel via une interface graphique et qu'un système de notes en 3e dans l'espace un peu comme les neurones d'un cerveau | A: ---\n\n## ✅ Synapse — Interface 3D de la mémoire\n\n### En ligne\n**[synapse-tawny-sigma.vercel.app](https://synapse-tawny-sigma.vercel.app)**\n\n### Ce que ça fait\n\n| Fonctionnalité | Détail |\n|---|---|\n| **🧠 Graphe 3D** | 107 n",
+    "metadata": {
+      "timestamp": "2026-06-06T12:51:03.052646+00:00",
+      "tags": "auto-sync",
+      "type": "learning",
+      "content_hash": "74a02b411d7cf435",
+      "project": "_session"
+    }
+  },
+  {
+    "id": "mem_20260606_143932_787613",
+    "text": "[agent-memory] Refero Styles (styles.refero.design) : catalogue de 2000+ design systems complets au format DESIGN.md, lisibles par agents AI. Chaque style inclut palette couleurs, typographie, espacements, radius, ombres, composants, Do/Don't. Designs extraits : Linear (dark, acid-lime), Cursor (light warm paper, ember-orange), Anthropic (research journal). MCP disponible (refero.design/mcp). Utiliser comme référence systématique pour tout nouveau projet de design.",
+    "metadata": {
+      "timestamp": "2026-06-06T14:39:32.787643+00:00",
+      "tags": "agent-memory,assistant_tool",
+      "type": "note",
+      "content_hash": "65f996258c64b122",
+      "project": "_builtin"
+    }
+  },
+  {
+    "id": "mem_20260606_143939_609396",
+    "text": "Refero Styles (styles.refero.design) — catalogue de 2000+ design systems complets au format DESIGN.md pour agents AI. Chaque style inclut : palette nommée (17+ couleurs avec rôles), typographie (police, échelle, weights, tracking), espacements (base 4px), radius par élément, ombres (multi-couches), composants détaillés, Do/Don't, code CSS/Tailwind v4 prêt. Designs de référence extraits : Linear (dark #08090a, acid-lime #e4f222), Cursor (light warm #f7f7f4, ember-orange #f54e00), Anthropic (warm ",
+    "metadata": {
+      "project": "design",
+      "content_hash": "1d6c55993a8d726e",
+      "timestamp": "2026-06-06T14:39:39.609454+00:00",
+      "type": "design"
+    }
+  },
+  {
+    "id": "mem_20260606_143948_554808",
+    "text": "[Session turn 3] Q: C'est ça refero styles : https://styles.refero.design/ | A: Merci pour la correction, Monsieur. **Refero Styles** est exactement ce que je cherchais — un catalogue de **2 000+ design systems complets** au format `DESIGN.md` que les agents AI peuvent lire.\n\n### Ce que j'ai appris\n\nChaque style Refero contient un design system complet :\n\n| Composant | Ce que ça donne |\n|---|---|\n| **Palette** | 12-17 couleurs nommées avec rôle sémantique (Onyx = fond, Slate = texte muet, Acid L",
+    "metadata": {
+      "timestamp": "2026-06-06T14:39:48.554861+00:00",
+      "type": "learning",
+      "tags": "auto-sync",
+      "project": "_session",
+      "content_hash": "88707d8470dfd189"
+    }
+  },
+  {
+    "id": "mem_20260606_145649_175547",
+    "text": "[Session turn 6] Q: C'est pas terrible, refait TOUT le design et l'UI | A: **[synapse-tawny-sigma.vercel.app](https://synapse-tawny-sigma.vercel.app)** — mise à jour.\n\n---\n\n## Ce qui a changé — Refonte complète\n\nL'approche précédente était timide — appliquer des couleurs Linear par-dessus une structure existante ne change pas l'expérience. J'ai tout réécrit avec une vision claire : **le vide cosmique comme métaphore de la mémoire**.\n\n### Architecture visuelle\n\n| Avant | Après |\n|---|---|\n| Split",
+    "metadata": {
+      "project": "_session",
+      "content_hash": "cabcb2d12dfb39a3",
+      "timestamp": "2026-06-06T14:56:49.175614+00:00",
+      "type": "learning",
+      "tags": "auto-sync"
+    }
+  },
+  {
+    "id": "mem_20260606_150738_706325",
+    "text": "[agent-memory] Leçon Synapse : backdrop-filter: blur() ne fonctionne PAS au-dessus d'un canvas WebGL (React Three Fiber). Le Glassmorphism sur les overlays d'une scène 3D n'a aucun effet — il affiche juste un rectangle gris sale. Solution : utiliser des fonds SOLIDES (#0f1011 pour les surfaces, #161718 pour les cartes) avec des bordures fines #23252a, des ombres douces, et une hiérarchie de couleurs claire (Linear-inspired).",
+    "metadata": {
+      "type": "note",
+      "project": "_builtin",
+      "content_hash": "08ae1593fa00ceb5",
+      "timestamp": "2026-06-06T15:07:38.706389+00:00",
+      "tags": "agent-memory,assistant_tool"
+    }
+  },
+  {
+    "id": "mem_20260606_150744_094664",
+    "text": "Leçon critique : backdrop-filter: blur() ne fonctionne pas au-dessus d'un canvas WebGL (React Three Fiber). Les overlays glassmorphism sur une scène 3D n'ont aucun effet visible — le résultat est un rectangle gris terne. Pour les overlays 3D, utiliser des fonds SOLIDES (#0f1011 pour panneaux, #161718 pour cartes) avec bordures fines #23252a, ombres douces shadow-lg, et une hiérarchie de couleurs claire inspirée de Linear.",
+    "metadata": {
+      "type": "learning",
+      "timestamp": "2026-06-06T15:07:44.094722+00:00",
+      "project": "synapse",
+      "content_hash": "58aed7f376eb7d7d"
+    }
+  },
+  {
+    "id": "mem_20260606_150752_057123",
+    "text": "[Session turn 9] Q: Non diagnostic la barre car la elle est trop bas et sans aucun style on dirait quelque chose ne vas pas | A: **[synapse-tawny-sigma.vercel.app](https://synapse-tawny-sigma.vercel.app)**\n\n### Diagnostic\n\nLe problème était fondamental : `backdrop-filter: blur()` ne fonctionne **pas** au-dessus d'un canvas WebGL (React Three Fiber). La scène 3D est rendue dans un contexte WebGL séparé que le CSS ne peut pas traverser. Mes overlays \"glass\" n'avaient rien à blurer — ils affichaien",
+    "metadata": {
+      "content_hash": "0ba9ef026fc32905",
+      "type": "learning",
+      "tags": "auto-sync",
+      "project": "_session",
+      "timestamp": "2026-06-06T15:07:52.057186+00:00"
+    }
+  }
+]

@@ -1,26 +1,84 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-void: #07070a;
+  --color-void-light: #0a0a0f;
+  --color-abyss: #0d0d14;
+  --color-deep-space: #12121c;
+  --color-twilight: #181825;
+  --color-umbra: #1e1e2e;
+  --color-eclipse: #282840;
+  --color-fog: #6b6b7a;
+  --color-mist: #7a7a8a;
+  --color-starlight: #e8e8f0;
+
+  --color-solar-flare: #f5a623;
+  --color-nova-pink: #f472b6;
+  --color-plasma-cyan: #22d3ee;
+  --color-deep-indigo: #6366f1;
+  --color-solar-white: #fefefe;
+
+  --color-success: #34d399;
+  --color-error: #f87171;
+  --color-warning: #fbbf24;
+  --color-info: #60a5fa;
+
+  --font-sans: "Inter Variable", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono Variable", monospace;
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-glow-pulse: glow-pulse 3s ease-in-out infinite;
+  --animate-cosmic-drift: cosmic-drift 12s ease-in-out infinite;
+  --animate-fade-in: fade-in 0.6s ease-out;
+  --animate-aurora: aurora 60s linear infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.4; box-shadow: 0 0 4px rgba(245, 166, 35, 0.2); }
+  50% { opacity: 1; box-shadow: 0 0 12px rgba(245, 166, 35, 0.5); }
+}
+
+@keyframes cosmic-drift {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(4px, -6px) rotate(0.5deg); }
+  50% { transform: translate(-2px, 4px) rotate(-0.3deg); }
+  75% { transform: translate(6px, 2px) rotate(0.4deg); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes aurora {
+  0%, 100% { background-position: 50% 50%, 50% 50%; }
+  50% { background-position: 350% 50%, 350% 50%; }
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; overflow: hidden; }
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #07070a;
+  color: #e8e8f0;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 1.5px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.12); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
