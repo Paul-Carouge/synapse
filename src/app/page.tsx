@@ -189,7 +189,7 @@ export default function Home() {
       </AnimatePresence>
 
       {/* ── TypeFilter pills — Desktop (top-left) / Mobile (inside drawer) ── */}
-      <div className="hidden lg:block fixed" style={{ top: '80px', left: '24px', zIndex: 10, maxWidth: 'calc(100vw - 300px)' }}>
+      <div className="max-lg:hidden fixed" style={{ top: '80px', left: '24px', zIndex: 10, maxWidth: 'calc(100vw - 300px)' }}>
         <TypeFilter entries={entries} activeType={activeType} onTypeChange={setActiveType} />
       </div>
 
