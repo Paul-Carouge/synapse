@@ -58,7 +58,7 @@ export default function SearchOverlay({
       >
         <div className="bg-[#0f1011] sm:rounded-2xl overflow-hidden border border-[#23252a]/80
           shadow-[0_16px_48px_-12px_rgba(0,0,0,0.6)]
-          max-sm:rounded-none max-sm:border-x-0 max-sm:border-t-0 max-sm:h-full max-sm:flex max-sm:flex-col">
+          max-sm:rounded-t-2xl max-sm:border-b max-sm:border-x max-sm:h-full max-sm:flex max-sm:flex-col">
           <div className="flex items-center gap-3 px-5 py-4 border-b border-[#23252a]/60">
             <svg className="w-4 h-4 text-[#62666d]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -68,7 +68,9 @@ export default function SearchOverlay({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Explorer la mémoire..."
-              className="flex-1 bg-transparent text-sm text-[#f7f8f8] outline-none placeholder-[#62666d]"
+              className="flex-1 bg-transparent text-sm text-[#f7f8f8] outline-none placeholder-[#62666d]
+                tracking-[0.01em] font-medium
+                focus:ring-0"
             />
             <kbd className="text-[11px] text-[#62666d] px-2 py-0.5 rounded-md border border-[#23252a] font-mono">
               esc
@@ -81,7 +83,7 @@ export default function SearchOverlay({
                 key="results"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="max-h-72 overflow-y-auto p-2 space-y-0.5"
+                className="max-h-72 sm:max-h-72 overflow-y-auto p-2 space-y-0.5 max-sm:flex-1"
               >
                 {results.map((entry, i) => (
                   <motion.button
