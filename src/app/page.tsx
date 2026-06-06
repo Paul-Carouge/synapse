@@ -281,7 +281,7 @@ export default function Home() {
             <div style={{ padding: '20px' }}>
               <TypeFilter entries={entries} activeType={activeType} onTypeChange={(t) => { setActiveType(t); setActiveTab(null); }} />
               <div className="mt-6 pt-4 border-t border-[#23252a]/40">
-                <LegendBar entries={entries} />
+                <LegendBar entries={entries} compact />
               </div>
             </div>
           </motion.div>
