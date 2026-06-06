@@ -22,6 +22,7 @@ export default function Home() {
   const [activeType, setActiveType] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [showWelcome, setShowWelcome] = useState(true);
+  const [legendOpen, setLegendOpen] = useState(false);
 
   // Load data
   useEffect(() => {
@@ -240,6 +241,69 @@ export default function Home() {
         </svg>
       </motion.button>
 
+      {/* ── Legend Button (top-left) — Desktop & Mobile ── */}
+      <motion.button
+        onClick={() => setLegendOpen((prev) => !prev)}
+        initial={{ opacity: 0, scale: 0.5, y: -8 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ ...spring, delay: 0.35 }}
+        whileHover={{ scale: 1.08, boxShadow: '0 0 20px rgba(245,158,11,0.3)' }}
+        whileTap={buttonTap}
+        className="fixed top-[max(env(safe-area-inset-top,4px),16px)] left-4 z-15 w-10 h-10 rounded-xl
+          bg-[#0f1011] border border-[#23252a]/80
+          flex items-center justify-center
+          shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]
+          tap-highlight-transparent"
+        aria-label="Légende des couleurs"
+      >
+        <svg className="w-4 h-4 text-[#62666d]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <circle cx="12" cy="12" r="3" />
+          <path strokeLinecap="round" d="M12 2v4M12 18v4M2 12h4M18 12h4" />
+        </svg>
+      </motion.button>
+
+      {/* ── Legend Popover ── */}
+      <AnimatePresence>
+        {legendOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -8, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.95 }}
+            transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+            className="fixed z-20"
+            style={{
+              top: 'calc(max(env(safe-area-inset-top,4px),16px) + 48px)',
+              left: '16px',
+              padding: '12px 16px',
+              borderRadius: '12px',
+              backgroundColor: '#0f1011',
+              border: '1px solid rgba(35,37,42,0.6)',
+              boxShadow: '0 12px 40px rgba(0,0,0,0.5)',
+              minWidth: '160px',
+            }}
+          >
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {(() => {
+                const types = getUniqueTypes(entries);
+                const icons: Record<string, string> = {
+                  design: '⚙️', preference: '💡', architecture: '🏛️',
+                  learning: '📚', system: '⚙️', note: '📝', bug: '🐛', decision: '⚖️',
+                };
+                return types.map((t) => (
+                  <div key={t.id} className="flex items-center gap-2.5">
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: getTypeColor(t.id), flexShrink: 0 }} />
+                    <span style={{ fontSize: '12px' }}>{icons[t.id] ?? '📄'}</span>
+                    <span style={{ fontSize: '11px', fontWeight: 600, color: '#8a8f98', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                      {t.label}
+                    </span>
+                  </div>
+                ));
+              })()}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* ── TypeFilter Drawer — Mobile ── */}
       <AnimatePresence>
         {activeTab === 'filters' && (
@@ -391,4 +455,20 @@ export default function Home() {
       `}</style>
     </motion.main>
   );
+}
+
+function getUniqueTypes(entries: MemoryEntry[]) {
+  const seen = new Set<string>();
+  const types: { id: string; label: string }[] = [];
+  for (const e of entries) {
+    const id = e.metadata.type || 'note';
+    if (!seen.has(id)) {
+      seen.add(id);
+      types.push({
+        id,
+        label: id.charAt(0).toUpperCase() + id.slice(1),
+      });
+    }
+  }
+  return types;
 }
