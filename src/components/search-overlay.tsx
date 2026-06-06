@@ -73,8 +73,31 @@ export default function SearchOverlay({
         <div className="bg-[#0f1011] sm:rounded-2xl overflow-hidden border border-[#23252a]/80
           shadow-[0_16px_48px_-12px_rgba(0,0,0,0.6)]
           max-sm:rounded-t-2xl max-sm:border-b max-sm:border-x max-sm:h-full max-sm:flex max-sm:flex-col">
-          <div className="flex items-center gap-3 border-b border-[#23252a]/60"
-            style={{ padding: '16px 20px' }}>
+          <div className="flex items-center gap-2 border-b border-[#23252a]/60"
+            style={{ padding: '14px 16px' }}>
+            {/* Bouton Fermer — visible mobile (bouton X), desktop (kbd) */}
+            <motion.button
+              onClick={onClose}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.9 }}
+              className="flex items-center justify-center shrink-0 lg:hidden"
+              style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '8px',
+                backgroundColor: '#1a1a1e',
+                border: '1px solid #27272a',
+                color: '#8a8f98',
+              }}
+              aria-label="Fermer la recherche"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </motion.button>
+
+            {/* Icône recherche */}
             <svg className="w-4 h-4 text-[#f59e0b]/60 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>

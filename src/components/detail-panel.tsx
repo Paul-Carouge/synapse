@@ -146,16 +146,19 @@ export default function DetailPanel({
           >
             Détail
           </span>
-          <button
+          <motion.button
             onClick={onClose}
-            className="flex items-center justify-center transition-transform duration-300 hover:rotate-90"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.9 }}
+            className="flex items-center gap-1.5 transition-colors"
             style={{
-              width: '28px',
-              height: '28px',
-              borderRadius: '6px',
+              padding: '6px 10px',
+              borderRadius: '8px',
               backgroundColor: '#1a1a1e',
               border: '1px solid #27272a',
               color: '#8a8f98',
+              fontSize: '12px',
+              fontWeight: 500,
             }}
           >
             <svg
@@ -171,7 +174,8 @@ export default function DetailPanel({
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
-          </button>
+            <span>Fermer</span>
+          </motion.button>
         </div>
 
         {/* Contenu */}
