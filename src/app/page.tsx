@@ -5,7 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import NeuronScene from '@/components/neuron-scene';
 import SearchOverlay from '@/components/search-overlay';
 import DetailPanel from '@/components/detail-panel';
-import { loadMemoryData } from '@/lib/memory-data';
+import TypeFilter from '@/components/type-filter';
+import LegendBar from '@/components/legend-bar';
+import StatsBadge from '@/components/stats-badge';
+import { loadMemoryData, getTypeColor } from '@/lib/memory-data';
 import type { MemoryEntry } from '@/lib/memory-data';
 
 export default function Home() {
@@ -15,7 +18,10 @@ export default function Home() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [activeType, setActiveType] = useState<string | null>(null);
+  const [showWelcome, setShowWelcome] = useState(true);
 
+  // Load data
   useEffect(() => {
     let cancelled = false;
     loadMemoryData().then((data) => {
@@ -30,6 +36,15 @@ export default function Home() {
     return () => { cancelled = true; };
   }, []);
 
+  // Auto-dismiss welcome after 5s
+  useEffect(() => {
+    if (!loading && entries.length > 0) {
+      const timer = setTimeout(() => setShowWelcome(false), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [loading, entries]);
+
+  // ⌘K listener
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -55,19 +70,27 @@ export default function Home() {
     setSelectedId(id);
   }, []);
 
-  // Loading State
+  // ── Loading State ──
   if (loading) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-[#070708]">
         <div className="flex flex-col items-center gap-4">
           <div className="w-2 h-2 rounded-full bg-[#f59e0b] animate-glow-pulse" />
-          <p className="text-sm text-[#62666d]">Connexion à la mémoire...</p>
+          <p className="text-sm text-[#62666d] tracking-[0.02em]">
+            Connexion à la mémoire...
+          </p>
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: 120 }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="h-[1px] bg-gradient-to-r from-transparent via-[#f59e0b]/30 to-transparent"
+          />
         </div>
       </div>
     );
   }
 
-  // Error / Empty State
+  // ── Error / Empty State ──
   if (error || entries.length === 0) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-[#070708]">
@@ -96,15 +119,49 @@ export default function Home() {
 
   return (
     <main className="fixed inset-0 bg-[#070708]">
+      {/* ── 3D Scene ── */}
       <NeuronScene
         entries={entries}
         selectedId={selectedId}
+        activeType={activeType}
         onSelect={handleSelect}
         onHover={setHoveredId}
       />
 
-      {/* Search bar */}
-      <div className="fixed top-0 left-0 right-0 z-20 flex justify-center pt-8 pointer-events-none">
+      {/* ── Welcome Message (auto-dismiss) ── */}
+      <AnimatePresence>
+        {showWelcome && !selectedId && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            className="fixed inset-0 z-5 flex items-center justify-center pointer-events-none"
+          >
+            <div className="text-center">
+              <p className="text-sm text-[#62666d] tracking-[0.02em]">
+                Votre espace mémoire vous attend
+              </p>
+              <motion.div
+                className="mt-4 mx-auto w-16 h-[1px]"
+                style={{
+                  background: 'linear-gradient(90deg, transparent, rgba(245,158,11,0.3), transparent)',
+                }}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Type Filter (top-left) ── */}
+      <TypeFilter
+        entries={entries}
+        activeType={activeType}
+        onTypeChange={setActiveType}
+      />
+
+      {/* ── Search Bar (top-center) ── */}
+      <div className="fixed top-6 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
         <button
           onClick={() => setSearchOpen(true)}
           className="pointer-events-auto rounded-xl px-5 py-3 flex items-center gap-3
@@ -113,7 +170,9 @@ export default function Home() {
             shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]
             text-sm text-[#8a8f98] hover:text-[#f7f8f8]
             hover:border-[#f59e0b]/20
-            transition-all duration-300 ease-out"
+            hover:shadow-[0_8px_40px_-12px_rgba(245,158,11,0.15)]
+            transition-all duration-300 ease-out
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f59e0b]/30"
         >
           <svg className="w-4 h-4 text-[#62666d]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -127,14 +186,18 @@ export default function Home() {
         </button>
       </div>
 
-      {/* Hover tooltip */}
+      {/* ── Stats Badge (top-right) ── */}
+      <StatsBadge entries={entries} lastUpdated={entries[0]?.metadata.timestamp} />
+
+      {/* ── Hover Tooltip (bottom-center) ── */}
       <AnimatePresence>
         {hoveredEntry && !selectedId && (
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 4 }}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-20"
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 6, scale: 0.95 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 350 }}
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-10 pointer-events-none"
           >
             <div className="bg-[#0f1011] border border-[#23252a]/60 rounded-xl px-4 py-2.5 max-w-sm shadow-lg">
               <div className="flex items-center gap-2 mb-1">
@@ -152,14 +215,17 @@ export default function Home() {
                 )}
               </div>
               <p className="text-xs text-[#a1a1aa] leading-relaxed line-clamp-1">
-                {hoveredEntry.text}
+                {hoveredEntry.text.slice(0, 120)}
               </p>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Search overlay */}
+      {/* ── Legend Bar (bottom-left) ── */}
+      <LegendBar entries={entries} />
+
+      {/* ── Search Overlay ── */}
       <AnimatePresence>
         {searchOpen && (
           <SearchOverlay
@@ -170,7 +236,7 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* Detail panel */}
+      {/* ── Detail Panel ── */}
       <AnimatePresence>
         {selectedEntry && (
           <DetailPanel
@@ -180,27 +246,13 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* Count badge */}
-      <div className="fixed bottom-6 right-6 z-20">
-        <div className="bg-[#0f1011] border border-[#23252a]/60 rounded-full px-3.5 py-1.5
-          text-[10px] text-[#62666d]">
-          {entries.length} entrées
-        </div>
-      </div>
+      {/* ── Ambient gradient overlay ── */}
+      <div
+        className="fixed top-[-50vh] left-[-50vw] w-[200vw] h-[200vw] pointer-events-none z-0 opacity-[0.02]"
+        style={{
+          background: 'radial-gradient(ellipse at 30% 20%, #f59e0b 0%, transparent 60%)',
+        }}
+      />
     </main>
   );
-}
-
-function getTypeColor(type: string): string {
-  const colors: Record<string, string> = {
-    architecture: '#F59E0B',
-    bug: '#EF4444',
-    decision: '#3B82F6',
-    learning: '#22C55E',
-    preference: '#A855F7',
-    system: '#06B6D4',
-    note: '#71717A',
-    design: '#f54e00',
-  };
-  return colors[type] ?? '#71717A';
 }

@@ -1,7 +1,7 @@
 'use client';
 
-import { useRef, useMemo, useState, useCallback } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { useRef, useMemo, useState, useCallback, useEffect } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Float, Text } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import * as THREE from 'three';
@@ -9,13 +9,14 @@ import { computeGraphLayout, GraphNode, GraphEdge, hashString } from '@/lib/grap
 import type { MemoryEntry } from '@/lib/memory-data';
 
 // ---------------------------------------------------------------------------
-// GlowNode — each brain node rendered as a luminous point (PointsMaterial)
+// GlowNode — luminous 3D node with hover/select states
 // ---------------------------------------------------------------------------
 function GlowNode({
   node,
   isSelected,
   isHovered,
   isDimmed,
+  isFiltered,
   seed,
   onPointerOver,
   onPointerOut,
@@ -25,6 +26,7 @@ function GlowNode({
   isSelected: boolean;
   isHovered: boolean;
   isDimmed: boolean;
+  isFiltered: boolean;
   seed: number;
   onPointerOver: () => void;
   onPointerOut: () => void;
@@ -33,17 +35,17 @@ function GlowNode({
   const color = useMemo(() => new THREE.Color(node.color), [node.color]);
   const baseSize = node.size || 0.3;
 
-  // Déterministe : seeds basés sur l'ID du nœud
   const speed = useMemo(() => 1.5 + ((seed * 13) % 100) * 0.01, [seed]);
   const floatIntensity = useMemo(() => 0.3 + ((seed * 7) % 100) * 0.002, [seed]);
 
-  // Selection / hover scaling
-  const sizeScale = isSelected ? 2.2 : isHovered ? 1.6 : 1.0;
-  const starSize = baseSize * sizeScale;
-  const starOpacity = isDimmed && !isSelected ? 0.2 : isSelected ? 1.0 : 0.9;
-  const haloOpacity = isDimmed && !isSelected ? 0.04 : isSelected ? 0.3 : 0.12;
+  // Hidden when filtered out
+  if (isFiltered && !isSelected) return null;
 
-  // Single-point buffer reused across star + halo
+  const sizeScale = isSelected ? 2.4 : isHovered ? 1.7 : 1.0;
+  const starSize = baseSize * sizeScale;
+  const starOpacity = isDimmed && !isSelected ? 0.15 : isSelected ? 1.0 : 0.85;
+  const haloOpacity = isDimmed && !isSelected ? 0.03 : isSelected ? 0.35 : 0.10;
+
   const pointPos = useMemo(() => new Float32Array([0, 0, 0]), []);
 
   return (
@@ -53,19 +55,14 @@ function GlowNode({
       floatIntensity={floatIntensity}
       position={node.position}
     >
-      {/* -- Core star point (AdditiveBlending) -- */}
+      {/* Core star */}
       <points>
         <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            args={[pointPos, 3]}
-            count={1}
-            itemSize={3}
-          />
+          <bufferAttribute attach="attributes-position" args={[pointPos, 3]} count={1} itemSize={3} />
         </bufferGeometry>
         <pointsMaterial
           size={starSize}
-          color={color}
+          color={isHovered ? '#f59e0b' : color}
           transparent
           opacity={starOpacity}
           blending={THREE.AdditiveBlending}
@@ -74,43 +71,38 @@ function GlowNode({
         />
       </points>
 
-      {/* -- Halo glow around the star -- */}
+      {/* Halo glow */}
       <points>
         <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            args={[pointPos, 3]}
-            count={1}
-            itemSize={3}
-          />
+          <bufferAttribute attach="attributes-position" args={[pointPos, 3]} count={1} itemSize={3} />
         </bufferGeometry>
         <pointsMaterial
           size={starSize * 3.5}
-          color={color}
+          color={isHovered ? '#f59e0b' : color}
           transparent
-          opacity={haloOpacity}
+          opacity={isHovered ? 0.25 : haloOpacity}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
           sizeAttenuation
         />
       </points>
 
-      {/* -- Invisible hitbox for pointer interaction -- */}
+      {/* Hitbox */}
       <mesh
         onPointerOver={onPointerOver}
         onPointerOut={onPointerOut}
         onClick={onClick}
       >
-        <sphereGeometry args={[Math.max(baseSize * 2, 0.35), 12, 12]} />
+        <sphereGeometry args={[Math.max(baseSize * 2.2, 0.4), 12, 12]} />
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
 
-      {/* -- 3D label (visible on hover or permanent when selected) -- */}
+      {/* 3D label */}
       {(isHovered || isSelected) && (
         <Text
-          position={[0, starSize + 0.4, 0]}
-          fontSize={0.3}
-          color="white"
+          position={[0, starSize + 0.5, 0]}
+          fontSize={0.28}
+          color="#f7f8f8"
           anchorX="center"
           anchorY="bottom"
           outlineWidth={0.02}
@@ -124,20 +116,31 @@ function GlowNode({
 }
 
 // ---------------------------------------------------------------------------
-// EdgeLine — dashed connection between two nodes with animated dash offset
+// EdgeLine — connection with animated dash + hover highlight
 // ---------------------------------------------------------------------------
 function EdgeLine({
   edge,
   nodesMap,
+  hoveredId,
+  selectedId,
 }: {
   edge: GraphEdge;
   nodesMap: Map<string, GraphNode>;
+  hoveredId: string | null;
+  selectedId: string | null;
 }) {
   const source = nodesMap.get(edge.source);
   const target = nodesMap.get(edge.target);
   if (!source || !target) return null;
 
   const meshRef = useRef<THREE.Mesh>(null!);
+  const materialRef = useRef<any>(null!);
+
+  const isConnected = hoveredId !== null
+    && (edge.source === hoveredId || edge.target === hoveredId);
+
+  const isSelectedEdge = selectedId !== null
+    && (edge.source === selectedId || edge.target === selectedId);
 
   const points = useMemo(
     () => [
@@ -147,54 +150,46 @@ function EdgeLine({
     [source.position, target.position],
   );
 
-  // Compute the length of the line for the dashed material
   const start = points[0];
   const end = points[1];
-  const mid = useMemo(
-    () => new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5),
-    [],
-  );
-  const direction = useMemo(
-    () => new THREE.Vector3().subVectors(end, start),
-    [],
-  );
-  const length = direction.length();
-  direction.normalize();
+  const mid = useMemo(() => new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5), []);
+  const direction = useMemo(() => {
+    const d = new THREE.Vector3().subVectors(end, start);
+    d.normalize();
+    return d;
+  }, []);
+  const length = start.distanceTo(end);
 
-  // Geometry: a horizontal segment centered at origin, 1 unit long
   const lineGeom = useMemo(() => {
     const g = new THREE.BufferGeometry();
-    const pos = new Float32Array([-0.5, 0, 0, 0.5, 0, 0]);
-    g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    g.setAttribute('position', new THREE.BufferAttribute(new Float32Array([-0.5, 0, 0, 0.5, 0, 0]), 3));
     return g;
   }, []);
 
-  // Animate dash offset via useFrame on the material
-  const materialRef = useRef<any>(null!);
   useFrame(({ clock }) => {
     if (materialRef.current) {
       materialRef.current.dashOffset = clock.elapsedTime * 0.25;
     }
   });
 
+  const edgeOpacity = isSelectedEdge ? 0.7 : isConnected ? 0.5 : 0.25;
+  const edgeColor = isConnected ? '#f59e0b' : '#23252a';
+
   return (
     <mesh
       ref={meshRef}
       position={mid}
-      quaternion={new THREE.Quaternion().setFromUnitVectors(
-        new THREE.Vector3(1, 0, 0),
-        direction,
-      )}
+      quaternion={new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(1, 0, 0), direction)}
       scale={[length, 1, 1]}
     >
       <lineSegments geometry={lineGeom}>
         <lineDashedMaterial
           ref={materialRef}
-          color="#23252a"
-          opacity={0.4}
+          color={edgeColor}
+          opacity={edgeOpacity}
           transparent
-          dashSize={0.15}
-          gapSize={0.08}
+          dashSize={0.12}
+          gapSize={0.06}
         />
       </lineSegments>
     </mesh>
@@ -202,7 +197,7 @@ function EdgeLine({
 }
 
 // ---------------------------------------------------------------------------
-// Particles — subtle background starfield (kept from original)
+// Particles — subtle background starfield
 // ---------------------------------------------------------------------------
 function Particles({ count = 300 }) {
   const ref = useRef<THREE.Points>(null!);
@@ -215,24 +210,19 @@ function Particles({ count = 300 }) {
   }, [count]);
 
   useFrame(({ clock }) => {
-    ref.current.rotation.y = clock.elapsedTime * 0.01;
+    ref.current.rotation.y = clock.elapsedTime * 0.008;
   });
 
   return (
     <points ref={ref}>
       <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          args={[positions, 3]}
-          count={count}
-          itemSize={3}
-        />
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} count={count} itemSize={3} />
       </bufferGeometry>
       <pointsMaterial
-        size={0.03}
+        size={0.025}
         color="#71717a"
         transparent
-        opacity={0.4}
+        opacity={0.3}
         sizeAttenuation
         depthWrite={false}
       />
@@ -241,23 +231,84 @@ function Particles({ count = 300 }) {
 }
 
 // ---------------------------------------------------------------------------
-// SceneContent — wires layout, lighting, effects
+// CameraController — fly-to on selection, autoRotate toggle
+// ---------------------------------------------------------------------------
+function CameraController({
+  selectedNode,
+}: {
+  selectedNode: GraphNode | null;
+}) {
+  const { camera } = useThree();
+  const target = useRef(new THREE.Vector3(0, 0, 0));
+  const isAnimating = useRef(false);
+  const startPos = useRef(new THREE.Vector3());
+  const startTarget = useRef(new THREE.Vector3());
+  const animProgress = useRef(0);
+
+  useEffect(() => {
+    if (!selectedNode) {
+      isAnimating.current = false;
+      animProgress.current = 1;
+      return;
+    }
+
+    const pos = selectedNode.position;
+    const flyPos = new THREE.Vector3(pos[0], pos[1], pos[2] + 5);
+    const flyTarget = new THREE.Vector3(pos[0], pos[1], pos[2]);
+
+    startPos.current.copy(camera.position);
+    startTarget.current.copy(target.current);
+    isAnimating.current = true;
+    animProgress.current = 0;
+
+    const animate = () => {
+      if (!isAnimating.current) return;
+      animProgress.current = Math.min(animProgress.current + 0.025, 1);
+
+      // Ease-out cubic
+      const t = 1 - Math.pow(1 - animProgress.current, 3);
+
+      camera.position.lerpVectors(startPos.current, flyPos, t);
+      target.current.lerpVectors(startTarget.current, flyTarget, t);
+
+      if (animProgress.current < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        isAnimating.current = false;
+      }
+    };
+    animate();
+  }, [selectedNode, camera]);
+
+  return null;
+}
+
+// ---------------------------------------------------------------------------
+// SceneContent
 // ---------------------------------------------------------------------------
 function SceneContent({
   nodes,
   edges,
   selectedId,
+  activeType,
   onSelect,
   onHover,
 }: {
   nodes: GraphNode[];
   edges: GraphEdge[];
   selectedId: string | null;
+  activeType: string | null;
   onSelect: (id: string | null) => void;
   onHover: (id: string | null) => void;
 }) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const controlsRef = useRef<any>(null!);
   const nodesMap = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes]);
+
+  const selectedNode = useMemo(
+    () => nodes.find((n) => n.id === selectedId) || null,
+    [nodes, selectedId],
+  );
 
   const handlePointerOver = useCallback(
     (id: string) => {
@@ -281,21 +332,21 @@ function SceneContent({
 
   return (
     <>
-      {/* Bloom / post-processing */}
       <EffectComposer>
-        <Bloom
-          luminanceThreshold={0.1}
-          luminanceSmoothing={0.9}
-          intensity={0.4}
-        />
+        <Bloom luminanceThreshold={0.1} luminanceSmoothing={0.9} intensity={0.35} />
       </EffectComposer>
 
-      {/* Soft ambient fill */}
       <ambientLight intensity={0.3} />
 
       {/* Edges */}
       {edges.map((edge, i) => (
-        <EdgeLine key={i} edge={edge} nodesMap={nodesMap} />
+        <EdgeLine
+          key={i}
+          edge={edge}
+          nodesMap={nodesMap}
+          hoveredId={hoveredId}
+          selectedId={selectedId}
+        />
       ))}
 
       {/* Nodes */}
@@ -303,6 +354,7 @@ function SceneContent({
         const isSelected = node.id === selectedId;
         const isHovered = node.id === hoveredId;
         const isDimmed = selectedId !== null && !isSelected;
+        const isFiltered = activeType !== null && node.type !== activeType;
 
         return (
           <GlowNode
@@ -312,6 +364,7 @@ function SceneContent({
             isSelected={isSelected}
             isHovered={isHovered}
             isDimmed={isDimmed}
+            isFiltered={isFiltered}
             onPointerOver={() => handlePointerOver(node.id)}
             onPointerOut={handlePointerOut}
             onClick={() => handleClick(node.id)}
@@ -319,39 +372,40 @@ function SceneContent({
         );
       })}
 
-      {/* Background particles */}
       <Particles />
+      <pointLight position={[0, 0, 0]} intensity={0.25} color="#f59e0b" />
+      <CameraController selectedNode={selectedNode} />
 
-      {/* Ambient accent light */}
-      <pointLight position={[0, 0, 0]} intensity={0.3} color="#f59e0b" />
-
-      {/* Controls */}
       <OrbitControls
-        enablePan={false}
-        minDistance={6}
-        maxDistance={20}
-        autoRotate
-        autoRotateSpeed={0.4}
+        ref={controlsRef}
+        enablePan
         enableDamping
         dampingFactor={0.05}
+        minDistance={5}
+        maxDistance={25}
+        autoRotate={selectedId === null}
+        autoRotateSpeed={0.2}
+        rotateSpeed={0.6}
       />
     </>
   );
 }
 
 // ---------------------------------------------------------------------------
-// NeuronScene — default export, entry point
+// NeuronScene — default export
 // ---------------------------------------------------------------------------
 export default function NeuronScene({
   entries,
   selectedId,
+  activeType,
   onSelect,
   onHover,
 }: {
   entries: MemoryEntry[];
   selectedId: string | null;
-  onHover: (id: string | null) => void;
+  activeType: string | null;
   onSelect: (id: string | null) => void;
+  onHover: (id: string | null) => void;
 }) {
   const graph = useMemo(() => computeGraphLayout(entries), [entries]);
 
@@ -373,6 +427,7 @@ export default function NeuronScene({
         nodes={graph.nodes}
         edges={graph.edges}
         selectedId={selectedId}
+        activeType={activeType}
         onSelect={onSelect}
         onHover={onHover}
       />

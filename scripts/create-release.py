@@ -2,37 +2,37 @@
 """Create a GitHub release for Synapse"""
 import json, os, urllib.request
 
+# Try to get token from env or .env file
 token = os.environ.get('GITHUB_TOKEN', '')
-if not token:
-    with open(os.path.expanduser('~/.hermes/.env')) as f:
+if not token or token == '***':
+    env_file = os.path.expanduser('~/.hermes/.env')
+    with open(env_file) as f:
         for line in f:
-            if line.startswith('GITHUB_TOKEN='):
-                token = line.strip().split('=', 1)[1].strip('"').strip("'")
+            line = line.strip()
+            if line.startswith('GITHUB_TOKEN=') and not line.endswith('***'):
+                token = line.split('=', 1)[1].strip('"').strip("'")
                 break
 
-if not token:
-    print("NO TOKEN")
+# Try non-standard locations
+if not token or token == '***':
+    import subprocess
+    r = subprocess.run(['bash', '-c', 'source ~/.hermes/.env && echo "$GITHUB_TOKEN"'], capture_output=True, text=True)
+    token = r.stdout.strip()
+
+if not token or token == '***':
+    print("NO_VALID_TOKEN")
     exit(1)
 
-body = """## Synapse Nebula v1.0.0
+body = """## Synapse v1.0.1
 
-Refonte complete du design system et de l'architecture.
+### Changements
+- Palette zinc/ambre restauree (design original)
+- Garde les ameliorations techniques : ErrorBoundary, hooks, composants extraits
+- Corrections : seed deterministe, useMemo deps, types Three.js
 
-### Design System Nebula
-- Palette cosmique : Void #07070a, Abyss #0d0d14, Solar Flare #f5a623, Nova Pink, Plasma Cyan
-- Typographie Inter avec tracking negatif proportionnel
-- Echelle d'espacements orbitale (2px to 96px)
-- Celestial Curvature radius system
-
-### Architecture
-- Composants extraits : SearchOverlay, DetailPanel
-- 3 composants orphelins supprimes
-- ErrorBoundary global, hooks partages
-
-### En ligne
 https://synapse-tawny-sigma.vercel.app"""
 
-data = json.dumps({"tag_name": "v1.0.0", "name": "Synapse Nebula v1.0.0", "body": body}).encode()
+data = json.dumps({"tag_name": "v1.0.1", "name": "Synapse v1.0.1", "body": body}).encode()
 req = urllib.request.Request("https://api.github.com/repos/Paul-Carouge/synapse/releases", data=data, headers={
     "Authorization": f"token {token}",
     "Accept": "application/vnd.github+json",
