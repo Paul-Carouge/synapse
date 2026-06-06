@@ -71,10 +71,10 @@ export default function SearchOverlay({
                 placeholder="Explorer la mémoire..."
                 className="w-full bg-[#161718] text-sm text-[#f7f8f8] outline-none placeholder-[#62666d]
                   tracking-[0.01em] font-medium
-                  rounded-lg px-3 py-2
-                  border border-[#23252a]/50
+                  rounded-lg border border-[#23252a]/50
                   focus:border-[#f59e0b]/30 focus:bg-[#1a1a1e]
                   transition-all duration-200"
+                style={{ padding: '10px 12px' }}
               />
             </div>
             <kbd className="text-[11px] text-[#62666d] px-2 py-0.5 rounded-md border border-[#23252a] font-mono">
