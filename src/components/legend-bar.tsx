@@ -12,7 +12,7 @@ export default function LegendBar({
 
   return (
     <div className="fixed bottom-6 left-6 z-10">
-      <div className="bg-[#0f1011]/80 border border-[#23252a]/60 rounded-xl px-3.5 py-2 flex items-center gap-3">
+      <div style={{ padding: '8px 14px' }} className="bg-[#0f1011]/80 border border-[#23252a]/60 rounded-xl flex items-center gap-3">
         {types.map((t) => (
           <div key={t.id} className="flex items-center gap-1.5">
             <span

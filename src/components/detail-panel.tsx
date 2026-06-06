@@ -38,7 +38,7 @@ export default function DetailPanel({
           shadow-[-8px_0_32px_-12px_rgba(0,0,0,0.6)]
           overflow-y-auto"
       >
-        <div className="p-5 space-y-4">
+        <div style={{ padding: '20px' }} className="space-y-4">
           <button
             onClick={onClose}
             className="flex items-center gap-2 text-xs text-[#8a8f98] hover:text-[#f7f8f8] transition-colors"
@@ -62,13 +62,14 @@ export default function DetailPanel({
           rounded-t-2xl max-h-[85vh] overflow-y-auto
           pb-[env(safe-area-inset-bottom,16px)]"
       >
-        <div className="sticky top-0 bg-[#0f1011] pt-3 pb-2 px-5 flex items-center justify-between border-b border-[#23252a]/40">
+        <div className="sticky top-0 bg-[#0f1011] pt-3 pb-2 flex items-center justify-between border-b border-[#23252a]/40"
+          style={{ paddingInline: '20px' }}>
           <span className="text-[10px] text-[#62666d] font-medium uppercase tracking-[0.06em]">Détail</span>
-          <button onClick={onClose} className="text-[10px] text-[#8a8f98] px-2 py-1 rounded-md border border-[#23252a] hover:text-[#f7f8f8] transition-colors">
+          <button onClick={onClose} style={{ padding: '4px 8px' }} className="text-[10px] text-[#8a8f98] rounded-md border border-[#23252a] hover:text-[#f7f8f8] transition-colors">
             Fermer
           </button>
         </div>
-        <div className="p-5">
+        <div style={{ padding: '20px' }}>
           <MemoryCard entry={entry} />
         </div>
       </motion.div>

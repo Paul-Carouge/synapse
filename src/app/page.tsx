@@ -94,7 +94,7 @@ export default function Home() {
   if (error || entries.length === 0) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-[#070708]">
-        <div className="max-w-md text-center space-y-4 px-6">
+        <div style={{ padding: '0 24px' }} className="max-w-md text-center space-y-4">
           <div className="w-10 h-10 mx-auto rounded-full bg-[#EF4444]/10 flex items-center justify-center">
             <svg className="w-5 h-5 text-[#EF4444]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
@@ -105,7 +105,8 @@ export default function Home() {
             {error || 'Aucune donnée mémoire disponible.'}
           </p>
           <button onClick={() => window.location.reload()}
-            className="px-5 py-2.5 rounded-lg bg-[#f59e0b] text-[#070708] text-sm font-medium hover:bg-[#d97706] transition-colors">
+            style={{ padding: '10px 20px' }}
+            className="rounded-lg bg-[#f59e0b] text-[#070708] text-sm font-medium hover:bg-[#d97706] transition-colors">
             Réessayer
           </button>
         </div>
@@ -134,7 +135,7 @@ export default function Home() {
             transition={{ duration: 0.6, ease: 'easeOut' }}
             className="fixed inset-0 z-5 flex items-center justify-center pointer-events-none"
           >
-            <div className="text-center px-6">
+            <div style={{ padding: '0 24px' }} className="text-center">
               <p className="text-sm text-[#62666d]">Votre espace mémoire vous attend</p>
               <div className="mt-4 mx-auto w-16 h-[1px] bg-gradient-to-r from-transparent via-[#f59e0b]/30 to-transparent" />
             </div>
@@ -151,7 +152,8 @@ export default function Home() {
       <div className="hidden lg:block fixed top-6 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
         <button
           onClick={() => setSearchOpen(true)}
-          className="pointer-events-auto rounded-xl px-5 py-3 flex items-center gap-3
+          style={{ padding: '12px 20px' }}
+          className="pointer-events-auto rounded-xl flex items-center gap-3
             min-w-[360px] bg-[#0f1011] border border-[#23252a]/80
             shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]
             text-sm text-[#8a8f98] hover:text-[#f7f8f8]
@@ -162,7 +164,7 @@ export default function Home() {
           </svg>
           <span>Explorer la mémoire</span>
           <span className="flex-1" />
-          <kbd className="text-[11px] text-[#62666d] px-2 py-0.5 rounded-md border border-[#23252a] font-mono">⌘K</kbd>
+          <kbd style={{ padding: '2px 8px' }} className="text-[11px] text-[#62666d] rounded-md border border-[#23252a] font-mono">⌘K</kbd>
         </button>
       </div>
 
@@ -192,13 +194,14 @@ export default function Home() {
             className="lg:hidden fixed inset-x-0 bottom-0 z-40 bg-[#0f1011] border-t border-[#23252a]/60
               rounded-t-2xl max-h-[70vh] overflow-y-auto pb-[env(safe-area-inset-bottom,16px)]"
           >
-            <div className="sticky top-0 bg-[#0f1011] pt-4 pb-2 px-5 flex items-center justify-between border-b border-[#23252a]/40">
+            <div className="sticky top-0 bg-[#0f1011] pt-4 pb-2 flex items-center justify-between border-b border-[#23252a]/40"
+              style={{ paddingInline: '20px' }}>
               <span className="text-xs text-[#8a8f98] font-medium uppercase tracking-[0.06em]">Filtres</span>
-              <button onClick={() => setActiveTab(null)} className="text-[10px] text-[#62666d] px-2 py-1 rounded-md border border-[#23252a]">
+              <button onClick={() => setActiveTab(null)} style={{ padding: '4px 8px' }} className="text-[10px] text-[#62666d] rounded-md border border-[#23252a]">
                 Fermer
               </button>
             </div>
-            <div className="p-5">
+            <div style={{ padding: '20px' }}>
               <TypeFilter entries={entries} activeType={activeType} onTypeChange={(t) => { setActiveType(t); setActiveTab(null); }} />
               <div className="mt-6 pt-4 border-t border-[#23252a]/40">
                 <LegendBar entries={entries} />
@@ -219,13 +222,14 @@ export default function Home() {
             className="lg:hidden fixed inset-x-0 bottom-0 z-40 bg-[#0f1011] border-t border-[#23252a]/60
               rounded-t-2xl pb-[env(safe-area-inset-bottom,16px)]"
           >
-            <div className="sticky top-0 bg-[#0f1011] pt-4 pb-2 px-5 flex items-center justify-between border-b border-[#23252a]/40">
+            <div className="sticky top-0 bg-[#0f1011] pt-4 pb-2 flex items-center justify-between border-b border-[#23252a]/40"
+              style={{ paddingInline: '20px' }}>
               <span className="text-xs text-[#8a8f98] font-medium uppercase tracking-[0.06em]">Statistiques</span>
-              <button onClick={() => setActiveTab(null)} className="text-[10px] text-[#62666d] px-2 py-1 rounded-md border border-[#23252a]">
+              <button onClick={() => setActiveTab(null)} style={{ padding: '4px 8px' }} className="text-[10px] text-[#62666d] rounded-md border border-[#23252a]">
                 Fermer
               </button>
             </div>
-            <div className="p-5">
+            <div style={{ padding: '20px' }}>
               <StatsBadge entries={entries} lastUpdated={entries[0]?.metadata.timestamp} big />
             </div>
           </motion.div>
@@ -242,7 +246,7 @@ export default function Home() {
             className="fixed top-24 left-1/2 -translate-x-1/2 z-20 pointer-events-none
               max-sm:top-auto max-sm:bottom-24"
           >
-            <div className="bg-[#0f1011] border border-[#23252a]/60 rounded-xl px-4 py-2.5 max-w-xs shadow-lg">
+            <div style={{ padding: '10px 16px' }} className="bg-[#0f1011] border border-[#23252a]/60 rounded-xl max-w-xs shadow-lg">
               <div className="flex items-center gap-2 mb-1">
                 <span className="w-1.5 h-1.5 rounded-full"
                   style={{ backgroundColor: getTypeColor(hoveredEntry.metadata.type || 'note') }} />

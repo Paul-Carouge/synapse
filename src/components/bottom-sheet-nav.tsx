@@ -23,7 +23,7 @@ export default function BottomSheetNav({
       {/* Fixed bottom nav — mobile only */}
       <nav className="fixed bottom-0 left-0 right-0 z-30 lg:hidden">
         <div className="bg-[#0f1011]/95 border-t border-[#23252a]/60 backdrop-blur-sm">
-          <div className="flex items-center justify-around h-16 px-2 pb-[env(safe-area-inset-bottom,0px)]">
+          <div style={{ padding: '0 8px' }} className="flex items-center justify-around h-16 pb-[env(safe-area-inset-bottom,0px)]">
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
               return (

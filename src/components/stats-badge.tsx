@@ -19,15 +19,15 @@ export default function StatsBadge({
     return (
       <div className="space-y-4">
         <div className="flex items-center gap-3">
-          <div className="flex-1 bg-[#161718] rounded-xl p-4 text-center">
+          <div style={{ padding: '16px' }} className="flex-1 bg-[#161718] rounded-xl text-center">
             <div className="text-2xl font-semibold text-[#f7f8f8] font-mono">{entries.length}</div>
             <div className="text-[10px] text-[#62666d] uppercase tracking-[0.06em] mt-1">Nœuds</div>
           </div>
-          <div className="flex-1 bg-[#161718] rounded-xl p-4 text-center">
+          <div style={{ padding: '16px' }} className="flex-1 bg-[#161718] rounded-xl text-center">
             <div className="text-2xl font-semibold text-[#f7f8f8] font-mono">{edgeCount}</div>
             <div className="text-[10px] text-[#62666d] uppercase tracking-[0.06em] mt-1">Liens</div>
           </div>
-          <div className="flex-1 bg-[#161718] rounded-xl p-4 text-center">
+          <div style={{ padding: '16px' }} className="flex-1 bg-[#161718] rounded-xl text-center">
             <div className="text-2xl font-semibold text-[#f7f8f8] font-mono">
               {entries.filter(e => e.metadata.type).length}
             </div>
@@ -45,7 +45,7 @@ export default function StatsBadge({
 
   return (
     <div className="fixed top-6 right-6 z-10">
-      <div className="bg-[#0f1011]/80 border border-[#23252a]/60 rounded-xl px-3.5 py-2
+      <div style={{ padding: '8px 14px' }} className="bg-[#0f1011]/80 border border-[#23252a]/60 rounded-xl
         text-[10px] text-[#62666d] font-mono flex items-center gap-2">
         <span className="flex items-center gap-1">
           <span className="text-[#8a8f98]">{entries.length}</span>

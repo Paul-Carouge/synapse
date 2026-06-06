@@ -59,7 +59,8 @@ export default function SearchOverlay({
         <div className="bg-[#0f1011] sm:rounded-2xl overflow-hidden border border-[#23252a]/80
           shadow-[0_16px_48px_-12px_rgba(0,0,0,0.6)]
           max-sm:rounded-t-2xl max-sm:border-b max-sm:border-x max-sm:h-full max-sm:flex max-sm:flex-col">
-          <div className="flex items-center gap-3 px-5 py-4 border-b border-[#23252a]/60">
+          <div className="flex items-center gap-3 border-b border-[#23252a]/60"
+            style={{ padding: '16px 20px' }}>
             <svg className="w-4 h-4 text-[#62666d] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
@@ -77,7 +78,7 @@ export default function SearchOverlay({
                 style={{ padding: '10px 12px' }}
               />
             </div>
-            <kbd className="text-[11px] text-[#62666d] px-2 py-0.5 rounded-md border border-[#23252a] font-mono">
+            <kbd style={{ padding: '2px 8px' }} className="text-[11px] text-[#62666d] rounded-md border border-[#23252a] font-mono">
               esc
             </kbd>
           </div>
@@ -88,7 +89,8 @@ export default function SearchOverlay({
                 key="results"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="max-h-72 sm:max-h-72 overflow-y-auto p-2 space-y-0.5 max-sm:flex-1"
+                className="max-h-72 sm:max-h-72 overflow-y-auto max-sm:flex-1"
+              style={{ padding: '8px' }}
               >
                 {results.map((entry, i) => (
                   <motion.button
@@ -97,7 +99,8 @@ export default function SearchOverlay({
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.025, duration: 0.2 }}
                     onClick={() => { onSelect(entry.id); onClose(); }}
-                    className="w-full text-left p-3.5 rounded-xl hover:bg-[#161718] transition-colors"
+                    style={{ padding: '14px' }}
+                    className="w-full text-left rounded-xl hover:bg-[#161718] transition-colors"
                   >
                     <div className="flex items-center gap-2.5 mb-1.5">
                       <span
@@ -108,7 +111,7 @@ export default function SearchOverlay({
                         {entry.metadata.type || 'note'}
                       </span>
                       {entry.metadata.project && (
-                        <span className="text-[10px] text-[#62666d] px-2 py-0.5 rounded-md bg-[#23252a]">
+                        <span style={{ padding: '2px 8px' }} className="text-[10px] text-[#62666d] rounded-md bg-[#23252a]">
                           {entry.metadata.project}
                         </span>
                       )}
@@ -126,7 +129,8 @@ export default function SearchOverlay({
                 key="empty"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="px-6 py-10 text-center"
+                className="text-center"
+              style={{ padding: '40px 24px' }}
               >
                 <p className="text-sm text-[#62666d]">
                   Aucun résultat pour &laquo;&nbsp;{query}&nbsp;&raquo;
@@ -139,7 +143,8 @@ export default function SearchOverlay({
                 key="hint"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="px-6 py-8 text-center"
+                className="text-center"
+              style={{ padding: '32px 24px' }}
               >
                 <p className="text-xs text-[#52525b]">
                   Tapez pour rechercher dans {entries.length} entrées mémoire

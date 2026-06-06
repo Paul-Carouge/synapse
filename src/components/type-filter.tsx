@@ -26,9 +26,10 @@ export default function TypeFilter({
       {/* Mode "Tous" — subtle pill */}
       <button
         onClick={() => onTypeChange(null)}
+        style={{ padding: '6px 12px' }}
         className={`
           inline-flex items-center gap-1.5
-          px-3 py-1.5 rounded-full
+          rounded-full
           text-[10px] font-medium uppercase tracking-[0.06em]
           transition-all duration-200 ease-out
           ${
@@ -48,7 +49,7 @@ export default function TypeFilter({
           onClick={() => onTypeChange(activeType === t.id ? null : t.id)}
           className={`
             inline-flex items-center gap-1.5
-            px-3 py-1.5 rounded-full
+            rounded-full
             text-[10px] font-medium uppercase tracking-[0.06em]
             transition-all duration-200 ease-out
             ${
@@ -58,6 +59,7 @@ export default function TypeFilter({
             }
           `}
           style={{
+            padding: '6px 12px',
             backgroundColor: activeType === t.id ? t.color + '22' : '',
             color: activeType === t.id ? t.color : '',
             borderColor: activeType === t.id ? t.color + '44' : '',

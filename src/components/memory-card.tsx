@@ -18,7 +18,8 @@ export default function MemoryCard({
   return (
     <div
       className={`bg-[#161718] border border-[#23252a]/60 rounded-xl transition-all duration-200
-        hover:bg-[#1a1a1e] hover:border-[#2a2a2e] ${compact ? 'p-4' : 'p-5'}`}
+        hover:bg-[#1a1a1e] hover:border-[#2a2a2e]`}
+      style={{ padding: compact ? '16px' : '20px' }}
     >
       {/* Header */}
       <div className="flex items-center gap-2.5 mb-3">
@@ -35,7 +36,7 @@ export default function MemoryCard({
           </span>
         </div>
         {project && (
-          <span className="text-[11px] text-[#8a8f98] px-2 py-0.5 rounded-md bg-[#23252a] flex-shrink-0">
+          <span style={{ padding: '2px 8px' }} className="text-[11px] text-[#8a8f98] rounded-md bg-[#23252a] flex-shrink-0">
             {project}
           </span>
         )}
