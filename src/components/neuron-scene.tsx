@@ -2,14 +2,17 @@
 
 import { useRef, useMemo, useState, useCallback, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Float, Text } from '@react-three/drei';
+import { OrbitControls, Text } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import * as THREE from 'three';
 import { computeGraphLayout, GraphNode, GraphEdge, hashString } from '@/lib/graph-layout';
+import { getTypeColor } from '@/lib/memory-data';
 import type { MemoryEntry } from '@/lib/memory-data';
 
 // ---------------------------------------------------------------------------
-// GlowNode — luminous 3D node with hover/select states
+// GlowNode — luminous 3D sphere with breathing animation, halo glow, and bloom
+//   Replaces the old PointsMaterial-based node with an organic Mesh sphere
+//   that pulses, glows, and looks like a star / neuron.
 // ---------------------------------------------------------------------------
 function GlowNode({
   node,
@@ -32,75 +35,101 @@ function GlowNode({
   onPointerOut: () => void;
   onClick: () => void;
 }) {
-  const color = useMemo(() => new THREE.Color(node.color), [node.color]);
+  const meshRef = useRef<THREE.Mesh>(null!);
+  const spriteRef = useRef<THREE.Sprite>(null!);
+
   const baseSize = node.size || 0.3;
 
-  const speed = useMemo(() => 1.5 + ((seed * 13) % 100) * 0.01, [seed]);
-  const floatIntensity = useMemo(() => 0.3 + ((seed * 7) % 100) * 0.002, [seed]);
+  // Per-node breathing parameters derived from deterministic seed
+  const speed = useMemo(() => 1.5 + ((seed * 13) % 100) * 0.015, [seed]);
+  const phaseOffset = useMemo(() => ((seed * 0.1) % (Math.PI * 2)), [seed]);
+  const breatheAmplitude = useMemo(() => 0.12 + ((seed * 3) % 100) * 0.002, [seed]);
 
   // Hidden when filtered out
   if (isFiltered && !isSelected) return null;
 
   const sizeScale = isSelected ? 2.4 : isHovered ? 1.7 : 1.0;
-  const starSize = baseSize * sizeScale;
-  const starOpacity = isDimmed && !isSelected ? 0.15 : isSelected ? 1.0 : 0.85;
-  const haloOpacity = isDimmed && !isSelected ? 0.03 : isSelected ? 0.35 : 0.10;
+  const opacity = isDimmed && !isSelected ? 0.15 : isSelected ? 1.0 : 0.85;
+  const haloOpacity = isDimmed && !isSelected ? 0.04 : isSelected ? 0.40 : 0.12;
 
-  const pointPos = useMemo(() => new Float32Array([0, 0, 0]), []);
+  // Generate a circular gradient texture once for the halo sprite
+  const haloTexture = useMemo(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext('2d')!;
+    const center = 32;
+    const gradient = ctx.createRadialGradient(center, center, 0, center, center, center);
+    gradient.addColorStop(0, 'rgba(255,255,255,1)');
+    gradient.addColorStop(0.1, 'rgba(255,255,255,0.75)');
+    gradient.addColorStop(0.3, 'rgba(255,255,255,0.25)');
+    gradient.addColorStop(0.55, 'rgba(255,255,255,0.06)');
+    gradient.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 64, 64);
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.needsUpdate = true;
+    return texture;
+  }, []);
+
+  // Breathing + halo pulsing animation
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime * speed + phaseOffset;
+    const breathe = 1 + Math.sin(t) * breatheAmplitude;
+    const scale = baseSize * sizeScale * breathe;
+
+    if (meshRef.current) {
+      meshRef.current.scale.setScalar(scale);
+    }
+
+    if (spriteRef.current) {
+      const spriteScale = scale * 3.5;
+      spriteRef.current.scale.set(spriteScale, spriteScale, 1);
+      // Halo opacity subtly pulses out of phase with the core
+      spriteRef.current.material.opacity =
+        haloOpacity * (0.7 + 0.3 * Math.sin(t * 0.6 + 1.5));
+    }
+  });
+
+  const finalColor = isHovered ? '#f59e0b' : node.color;
+  const emissiveIntensity = isSelected ? 2.5 : isHovered ? 1.8 : 1.0;
 
   return (
-    <Float
-      speed={speed}
-      rotationIntensity={0.1}
-      floatIntensity={floatIntensity}
-      position={node.position}
-    >
-      {/* Core star */}
-      <points>
-        <bufferGeometry>
-          <bufferAttribute attach="attributes-position" args={[pointPos, 3]} count={1} itemSize={3} />
-        </bufferGeometry>
-        <pointsMaterial
-          size={starSize}
-          color={isHovered ? '#f59e0b' : color}
+    <group position={node.position}>
+      {/* Halo sprite — soft, glowing aureole with AdditiveBlending */}
+      <sprite ref={spriteRef}>
+        <spriteMaterial
+          map={haloTexture}
+          color={finalColor}
           transparent
-          opacity={starOpacity}
+          opacity={haloOpacity}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
-          sizeAttenuation
         />
-      </points>
+      </sprite>
 
-      {/* Halo glow */}
-      <points>
-        <bufferGeometry>
-          <bufferAttribute attach="attributes-position" args={[pointPos, 3]} count={1} itemSize={3} />
-        </bufferGeometry>
-        <pointsMaterial
-          size={starSize * 3.5}
-          color={isHovered ? '#f59e0b' : color}
-          transparent
-          opacity={isHovered ? 0.25 : haloOpacity}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-          sizeAttenuation
-        />
-      </points>
-
-      {/* Hitbox */}
+      {/* Core sphere — emissive Mesh, toneMapped=false for bloom pickup */}
       <mesh
+        ref={meshRef}
         onPointerOver={onPointerOver}
         onPointerOut={onPointerOut}
         onClick={onClick}
       >
-        <sphereGeometry args={[Math.max(baseSize * 2.2, 0.4), 12, 12]} />
-        <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+        <sphereGeometry args={[1, 24, 24]} />
+        <meshStandardMaterial
+          color={finalColor}
+          emissive={finalColor}
+          emissiveIntensity={emissiveIntensity}
+          transparent
+          opacity={opacity}
+          toneMapped={false}
+        />
       </mesh>
 
-      {/* 3D label */}
+      {/* 3D type label on hover/select */}
       {(isHovered || isSelected) && (
         <Text
-          position={[0, starSize + 0.5, 0]}
+          position={[0, baseSize * sizeScale + 0.5, 0]}
           fontSize={0.28}
           color="#f7f8f8"
           anchorX="center"
@@ -111,7 +140,7 @@ function GlowNode({
           {node.type}
         </Text>
       )}
-    </Float>
+    </group>
   );
 }
 
@@ -136,11 +165,13 @@ function EdgeLine({
   const meshRef = useRef<THREE.Mesh>(null!);
   const materialRef = useRef<any>(null!);
 
-  const isConnected = hoveredId !== null
-    && (edge.source === hoveredId || edge.target === hoveredId);
+  const isConnected =
+    hoveredId !== null &&
+    (edge.source === hoveredId || edge.target === hoveredId);
 
-  const isSelectedEdge = selectedId !== null
-    && (edge.source === selectedId || edge.target === selectedId);
+  const isSelectedEdge =
+    selectedId !== null &&
+    (edge.source === selectedId || edge.target === selectedId);
 
   const points = useMemo(
     () => [
@@ -152,7 +183,10 @@ function EdgeLine({
 
   const start = points[0];
   const end = points[1];
-  const mid = useMemo(() => new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5), []);
+  const mid = useMemo(
+    () => new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5),
+    [],
+  );
   const direction = useMemo(() => {
     const d = new THREE.Vector3().subVectors(end, start);
     d.normalize();
@@ -162,7 +196,10 @@ function EdgeLine({
 
   const lineGeom = useMemo(() => {
     const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.BufferAttribute(new Float32Array([-0.5, 0, 0, 0.5, 0, 0]), 3));
+    g.setAttribute(
+      'position',
+      new THREE.BufferAttribute(new Float32Array([-0.5, 0, 0, 0.5, 0, 0]), 3),
+    );
     return g;
   }, []);
 
@@ -179,7 +216,10 @@ function EdgeLine({
     <mesh
       ref={meshRef}
       position={mid}
-      quaternion={new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(1, 0, 0), direction)}
+      quaternion={new THREE.Quaternion().setFromUnitVectors(
+        new THREE.Vector3(1, 0, 0),
+        direction,
+      )}
       scale={[length, 1, 1]}
     >
       <lineSegments geometry={lineGeom}>
@@ -216,7 +256,12 @@ function Particles({ count = 300 }) {
   return (
     <points ref={ref}>
       <bufferGeometry>
-        <bufferAttribute attach="attributes-position" args={[positions, 3]} count={count} itemSize={3} />
+        <bufferAttribute
+          attach="attributes-position"
+          args={[positions, 3]}
+          count={count}
+          itemSize={3}
+        />
       </bufferGeometry>
       <pointsMaterial
         size={0.025}
@@ -333,7 +378,11 @@ function SceneContent({
   return (
     <>
       <EffectComposer>
-        <Bloom luminanceThreshold={0.1} luminanceSmoothing={0.9} intensity={0.35} />
+        <Bloom
+          luminanceThreshold={0.1}
+          luminanceSmoothing={0.9}
+          intensity={0.35}
+        />
       </EffectComposer>
 
       <ambientLight intensity={0.3} />

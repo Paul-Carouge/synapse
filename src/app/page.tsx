@@ -11,6 +11,7 @@ import StatsBadge from '@/components/stats-badge';
 import BottomSheetNav from '@/components/bottom-sheet-nav';
 import { loadMemoryData, getTypeColor } from '@/lib/memory-data';
 import type { MemoryEntry } from '@/lib/memory-data';
+import { spring, easeOut, fadeIn, scaleIn, buttonTap, buttonHover } from '@/lib/motion';
 
 export default function Home() {
   const [entries, setEntries] = useState<MemoryEntry[]>([]);
@@ -70,7 +71,7 @@ export default function Home() {
 
   const handleSelect = useCallback((id: string | null) => {
     setSelectedId(id);
-    setActiveTab(null); // Close mobile drawer on selection
+    setActiveTab(null);
   }, []);
 
   const handleTabChange = useCallback((tab: string | null) => {
@@ -81,41 +82,85 @@ export default function Home() {
   // ── Loading State ──
   if (loading) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-[#070708]">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-2 h-2 rounded-full bg-[#f59e0b] animate-glow-pulse" />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={easeOut}
+        className="fixed inset-0 flex items-center justify-center bg-[#070708]"
+        style={{ padding: 'env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)' }}
+      >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={spring}
+          className="flex flex-col items-center gap-4"
+        >
+          <motion.div
+            animate={{ scale: [1, 1.3, 1] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+            className="w-2 h-2 rounded-full bg-[#f59e0b]"
+            style={{ boxShadow: '0 0 12px rgba(245,158,11,0.5)' }}
+          />
           <p className="text-sm text-[#62666d]">Connexion à la mémoire...</p>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     );
   }
 
   // ── Error / Empty State ──
   if (error || entries.length === 0) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-[#070708]">
-        <div style={{ padding: '0 24px' }} className="max-w-md text-center space-y-4">
-          <div className="w-10 h-10 mx-auto rounded-full bg-[#EF4444]/10 flex items-center justify-center">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={easeOut}
+        className="fixed inset-0 flex items-center justify-center bg-[#070708]"
+        style={{ padding: 'env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)' }}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={spring}
+          style={{ padding: '0 24px' }}
+          className="max-w-md text-center space-y-4"
+        >
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 15, delay: 0.1 }}
+            className="w-10 h-10 mx-auto rounded-full bg-[#EF4444]/10 flex items-center justify-center"
+          >
             <svg className="w-5 h-5 text-[#EF4444]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
             </svg>
-          </div>
+          </motion.div>
           <h2 className="text-base font-semibold text-[#f7f8f8]">Mémoire inaccessible</h2>
           <p className="text-sm text-[#8a8f98] leading-relaxed">
             {error || 'Aucune donnée mémoire disponible.'}
           </p>
-          <button onClick={() => window.location.reload()}
+          <motion.button
+            onClick={() => window.location.reload()}
+            whileHover={{ scale: 1.04, boxShadow: '0 0 20px rgba(245,158,11,0.35)' }}
+            whileTap={buttonTap}
+            transition={spring}
             style={{ padding: '10px 20px' }}
-            className="rounded-lg bg-[#f59e0b] text-[#070708] text-sm font-medium hover:bg-[#d97706] transition-colors">
+            className="rounded-lg bg-[#f59e0b] text-[#070708] text-sm font-medium"
+          >
             Réessayer
-          </button>
-        </div>
-      </div>
+          </motion.button>
+        </motion.div>
+      </motion.div>
     );
   }
 
   return (
-    <main className="fixed inset-0 bg-[#070708] overflow-hidden">
+    <motion.main
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed inset-0 bg-[#070708] overflow-hidden"
+      style={{ padding: 'env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)' }}
+    >
       {/* ── 3D Scene (always fullscreen) ── */}
       <NeuronScene
         entries={entries}
@@ -150,14 +195,22 @@ export default function Home() {
 
       {/* ── Search Bar — Desktop (top-center) ── */}
       <div className="hidden lg:block fixed top-6 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
-        <button
+        <motion.button
           onClick={() => setSearchOpen(true)}
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ ...spring, delay: 0.2 }}
+          whileHover={{
+            scale: 1.02,
+            borderColor: 'rgba(245,158,11,0.4)',
+            boxShadow: '0 0 24px rgba(245,158,11,0.12)',
+          }}
+          whileTap={buttonTap}
           style={{ padding: '12px 20px' }}
           className="pointer-events-auto rounded-xl flex items-center gap-3
             min-w-[360px] bg-[#0f1011] border border-[#23252a]/80
             shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]
-            text-sm text-[#8a8f98] hover:text-[#f7f8f8]
-            hover:border-[#f59e0b]/20 transition-all duration-300 ease-out"
+            text-sm text-[#8a8f98]"
         >
           <svg className="w-4 h-4 text-[#62666d]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -165,23 +218,28 @@ export default function Home() {
           <span>Explorer la mémoire</span>
           <span className="flex-1" />
           <kbd style={{ padding: '2px 8px' }} className="text-[11px] text-[#62666d] rounded-md border border-[#23252a] font-mono">⌘K</kbd>
-        </button>
+        </motion.button>
       </div>
 
       {/* ── Search FAB — Mobile only ── */}
-      <button
+      <motion.button
         onClick={() => setSearchOpen(true)}
-        className="lg:hidden fixed top-4 right-4 z-15 w-10 h-10 rounded-xl
+        initial={{ opacity: 0, scale: 0.5, y: -8 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ ...spring, delay: 0.3 }}
+        whileHover={{ scale: 1.08, boxShadow: '0 0 20px rgba(245,158,11,0.3)' }}
+        whileTap={buttonTap}
+        className="lg:hidden fixed top-[max(env(safe-area-inset-top,4px),16px)] right-4 z-15 w-10 h-10 rounded-xl
           bg-[#0f1011] border border-[#23252a]/80
           flex items-center justify-center
           shadow-[0_4px_16px_-8px_rgba(0,0,0,0.5)]
-          active:scale-90 transition-transform duration-150 tap-highlight-transparent"
+          tap-highlight-transparent"
         aria-label="Rechercher"
       >
         <svg className="w-4 h-4 text-[#62666d]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
-      </button>
+      </motion.button>
 
       {/* ── TypeFilter Drawer — Mobile ── */}
       <AnimatePresence>
@@ -190,16 +248,23 @@ export default function Home() {
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
-            transition={{ type: 'spring', damping: 28, stiffness: 300 }}
+            transition={spring}
             className="lg:hidden fixed inset-x-0 bottom-0 z-40 bg-[#0f1011] border-t border-[#23252a]/60
-              rounded-t-2xl max-h-[70vh] overflow-y-auto pb-[env(safe-area-inset-bottom,16px)]"
+              rounded-t-2xl max-h-[70vh] overflow-y-auto"
+            style={{ paddingBottom: 'env(safe-area-inset-bottom, 16px)' }}
           >
             <div className="sticky top-0 bg-[#0f1011] pt-4 pb-2 flex items-center justify-between border-b border-[#23252a]/40"
               style={{ paddingInline: '20px' }}>
               <span className="text-xs text-[#8a8f98] font-medium uppercase tracking-[0.06em]">Filtres</span>
-              <button onClick={() => setActiveTab(null)} style={{ padding: '4px 8px' }} className="text-[10px] text-[#62666d] rounded-md border border-[#23252a]">
+              <motion.button
+                onClick={() => setActiveTab(null)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={buttonTap}
+                style={{ padding: '4px 8px' }}
+                className="text-[10px] text-[#62666d] rounded-md border border-[#23252a]"
+              >
                 Fermer
-              </button>
+              </motion.button>
             </div>
             <div style={{ padding: '20px' }}>
               <TypeFilter entries={entries} activeType={activeType} onTypeChange={(t) => { setActiveType(t); setActiveTab(null); }} />
@@ -218,16 +283,23 @@ export default function Home() {
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
-            transition={{ type: 'spring', damping: 28, stiffness: 300 }}
+            transition={spring}
             className="lg:hidden fixed inset-x-0 bottom-0 z-40 bg-[#0f1011] border-t border-[#23252a]/60
-              rounded-t-2xl pb-[env(safe-area-inset-bottom,16px)]"
+              rounded-t-2xl"
+            style={{ paddingBottom: 'env(safe-area-inset-bottom, 16px)' }}
           >
             <div className="sticky top-0 bg-[#0f1011] pt-4 pb-2 flex items-center justify-between border-b border-[#23252a]/40"
               style={{ paddingInline: '20px' }}>
               <span className="text-xs text-[#8a8f98] font-medium uppercase tracking-[0.06em]">Statistiques</span>
-              <button onClick={() => setActiveTab(null)} style={{ padding: '4px 8px' }} className="text-[10px] text-[#62666d] rounded-md border border-[#23252a]">
+              <motion.button
+                onClick={() => setActiveTab(null)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={buttonTap}
+                style={{ padding: '4px 8px' }}
+                className="text-[10px] text-[#62666d] rounded-md border border-[#23252a]"
+              >
                 Fermer
-              </button>
+              </motion.button>
             </div>
             <div style={{ padding: '20px' }}>
               <StatsBadge entries={entries} lastUpdated={entries[0]?.metadata.timestamp} big />
@@ -243,6 +315,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 4 }}
+            transition={easeOut}
             className="fixed top-24 left-1/2 -translate-x-1/2 z-20 pointer-events-none
               max-sm:top-auto max-sm:bottom-24"
           >
@@ -295,6 +368,6 @@ export default function Home() {
           />
         )}
       </AnimatePresence>
-    </main>
+    </motion.main>
   );
 }

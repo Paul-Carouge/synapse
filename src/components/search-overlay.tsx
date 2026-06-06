@@ -5,7 +5,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { getTypeColor } from '@/lib/memory-data';
 import { useEscape } from '@/hooks/useEscape';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { springSnappy, easeOut, staggerContainer, staggerItem, buttonTap } from '@/lib/motion';
 import type { MemoryEntry } from '@/lib/memory-data';
+
+const typeIcons: Record<string, string> = {
+  design: '⚙️',
+  preference: '💡',
+  architecture: '🏛️',
+  learning: '📚',
+  system: '⚙️',
+  note: '📝',
+  bug: '🐛',
+  decision: '⚖️',
+};
 
 export default function SearchOverlay({
   entries,
@@ -51,17 +63,19 @@ export default function SearchOverlay({
         initial={{ y: -16, opacity: 0, scale: 0.96 }}
         animate={{ y: 0, opacity: 1, scale: 1 }}
         exit={{ y: -16, opacity: 0, scale: 0.96 }}
-        transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-        className="relative z-10 w-full max-w-lg
-          sm:px-4 sm:pt-[5vh]
-          px-0 max-sm:max-w-full max-sm:h-full max-sm:flex max-sm:flex-col"
+        transition={springSnappy}
+        className="relative z-10 w-full max-w-lg max-sm:max-w-full max-sm:h-full max-sm:flex max-sm:flex-col"
+        style={{
+          padding: '0 clamp(0px, 5vw, 16px)',
+          paddingTop: 'max(5vh, 24px)',
+        }}
       >
         <div className="bg-[#0f1011] sm:rounded-2xl overflow-hidden border border-[#23252a]/80
           shadow-[0_16px_48px_-12px_rgba(0,0,0,0.6)]
           max-sm:rounded-t-2xl max-sm:border-b max-sm:border-x max-sm:h-full max-sm:flex max-sm:flex-col">
           <div className="flex items-center gap-3 border-b border-[#23252a]/60"
             style={{ padding: '16px 20px' }}>
-            <svg className="w-4 h-4 text-[#62666d] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-4 h-4 text-[#f59e0b]/60 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <div className="flex-1 relative">
@@ -78,35 +92,38 @@ export default function SearchOverlay({
                 style={{ padding: '10px 12px' }}
               />
             </div>
-            <kbd style={{ padding: '2px 8px' }} className="text-[11px] text-[#62666d] rounded-md border border-[#23252a] font-mono">
+            <motion.kbd
+              whileHover={{ scale: 1.05 }}
+              style={{ padding: '2px 8px' }}
+              className="text-[11px] text-[#62666d] rounded-md border border-[#23252a] font-mono"
+            >
               esc
-            </kbd>
+            </motion.kbd>
           </div>
 
           <AnimatePresence mode="wait">
             {results.length > 0 && (
               <motion.div
                 key="results"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                variants={staggerContainer}
+                initial="hidden"
+                animate="show"
                 className="max-h-72 sm:max-h-72 overflow-y-auto max-sm:flex-1"
-              style={{ padding: '8px' }}
+                style={{ padding: '8px' }}
               >
                 {results.map((entry, i) => (
                   <motion.button
                     key={entry.id}
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.025, duration: 0.2 }}
+                    variants={staggerItem}
+                    custom={i}
                     onClick={() => { onSelect(entry.id); onClose(); }}
+                    whileHover={{ scale: 1.01, backgroundColor: 'rgba(22,23,24,1)' }}
+                    whileTap={buttonTap}
                     style={{ padding: '14px' }}
-                    className="w-full text-left rounded-xl hover:bg-[#161718] transition-colors"
+                    className="w-full text-left rounded-xl transition-colors"
                   >
                     <div className="flex items-center gap-2.5 mb-1.5">
-                      <span
-                        className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                        style={{ backgroundColor: getTypeColor(entry.metadata.type || 'note') }}
-                      />
+                      <span className="text-xs">{typeIcons[entry.metadata.type || 'note'] || '📄'}</span>
                       <span className="text-[10px] font-medium text-[#8a8f98] uppercase tracking-[0.06em]">
                         {entry.metadata.type || 'note'}
                       </span>
@@ -127,10 +144,11 @@ export default function SearchOverlay({
             {query.length > 0 && results.length === 0 && (
               <motion.div
                 key="empty"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={easeOut}
                 className="text-center"
-              style={{ padding: '40px 24px' }}
+                style={{ padding: '40px 24px' }}
               >
                 <p className="text-sm text-[#62666d]">
                   Aucun résultat pour &laquo;&nbsp;{query}&nbsp;&raquo;
@@ -143,8 +161,9 @@ export default function SearchOverlay({
                 key="hint"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
+                transition={{ delay: 0.2, duration: 0.3 }}
                 className="text-center"
-              style={{ padding: '32px 24px' }}
+                style={{ padding: '32px 24px' }}
               >
                 <p className="text-xs text-[#52525b]">
                   Tapez pour rechercher dans {entries.length} entrées mémoire
