@@ -6,7 +6,6 @@ import NeuronScene from '@/components/neuron-scene';
 import SearchOverlay from '@/components/search-overlay';
 import DetailPanel from '@/components/detail-panel';
 import TypeFilter from '@/components/type-filter';
-import LegendBar from '@/components/legend-bar';
 import StatsBadge from '@/components/stats-badge';
 import BottomSheetNav from '@/components/bottom-sheet-nav';
 import { loadMemoryData, getTypeColor } from '@/lib/memory-data';
@@ -280,9 +279,6 @@ export default function Home() {
             </div>
             <div style={{ padding: '20px' }}>
               <TypeFilter entries={entries} activeType={activeType} onTypeChange={(t) => { setActiveType(t); setActiveTab(null); }} />
-              <div className="mt-6 pt-4 border-t border-[#23252a]/40">
-                <LegendBar entries={entries} compact />
-              </div>
             </div>
           </motion.div>
         )}
@@ -358,11 +354,6 @@ export default function Home() {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* ── LegendBar — Desktop only ── */}
-      <div className="hidden lg:block">
-        <LegendBar entries={entries} />
-      </div>
 
       {/* ── StatsBadge — Desktop only ── */}
       <div className="hidden lg:block">
