@@ -1,27 +1,7 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-void: #07070a;
-  --color-void-light: #0a0a0f;
-  --color-abyss: #0d0d14;
-  --color-deep-space: #12121c;
-  --color-twilight: #181825;
-  --color-umbra: #1e1e2e;
-  --color-eclipse: #282840;
-  --color-fog: #6b6b7a;
-  --color-mist: #7a7a8a;
-  --color-starlight: #e8e8f0;
-
-  --color-solar-flare: #f5a623;
-  --color-nova-pink: #f472b6;
-  --color-plasma-cyan: #22d3ee;
-  --color-deep-indigo: #6366f1;
-  --color-solar-white: #fefefe;
-
-  --color-success: #34d399;
-  --color-error: #f87171;
-  --color-warning: #fbbf24;
-  --color-info: #60a5fa;
+  --color-deep: #070708;
 
   --font-sans: "Inter Variable", system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono Variable", monospace;
@@ -30,7 +10,6 @@
   --animate-glow-pulse: glow-pulse 3s ease-in-out infinite;
   --animate-cosmic-drift: cosmic-drift 12s ease-in-out infinite;
   --animate-fade-in: fade-in 0.6s ease-out;
-  --animate-aurora: aurora 60s linear infinite;
 }
 
 @keyframes float {
@@ -39,8 +18,8 @@
 }
 
 @keyframes glow-pulse {
-  0%, 100% { opacity: 0.4; box-shadow: 0 0 4px rgba(245, 166, 35, 0.2); }
-  50% { opacity: 1; box-shadow: 0 0 12px rgba(245, 166, 35, 0.5); }
+  0%, 100% { opacity: 0.4; box-shadow: 0 0 4px rgba(245, 158, 11, 0.2); }
+  50% { opacity: 1; box-shadow: 0 0 12px rgba(245, 158, 11, 0.5); }
 }
 
 @keyframes cosmic-drift {
@@ -55,16 +34,11 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes aurora {
-  0%, 100% { background-position: 50% 50%, 50% 50%; }
-  50% { background-position: 350% 50%, 350% 50%; }
-}
-
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { height: 100%; overflow: hidden; }
 body {
-  background: #07070a;
-  color: #e8e8f0;
+  background: #070708;
+  color: #f7f8f8;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
