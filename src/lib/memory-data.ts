@@ -46,3 +46,29 @@ export function getTypeIcon(type: string): string {
   };
   return icons[type] ?? 'file-text';
 }
+
+export function getUniqueTypes(entries: MemoryEntry[]): { id: string; label: string }[] {
+  const seen = new Set<string>();
+  const types: { id: string; label: string }[] = [];
+  for (const e of entries) {
+    const id = e.metadata.type || 'note';
+    if (!seen.has(id)) {
+      seen.add(id);
+      types.push({
+        id,
+        label: id.charAt(0).toUpperCase() + id.slice(1),
+      });
+    }
+  }
+  return types;
+}
+
+export function getUniqueProjects(entries: MemoryEntry[]): string[] {
+  const projects = new Set<string>();
+  for (const entry of entries) {
+    if (entry.metadata.project) {
+      projects.add(entry.metadata.project);
+    }
+  }
+  return Array.from(projects).sort();
+}

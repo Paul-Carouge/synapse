@@ -1,9 +1,10 @@
 'use client';
 
-import { useRef, useMemo, useState, useCallback, useEffect } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Text } from '@react-three/drei';
+import { Component, useRef, useMemo, useState, useCallback, useEffect, type ReactNode } from 'react';
+import { Canvas, useFrame, useThree, type RootState } from '@react-three/fiber';
+import { OrbitControls, Text, PerspectiveCamera } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
+import { BlendFunction } from 'postprocessing';
 import * as THREE from 'three';
 import { computeGraphLayout, GraphNode, GraphEdge, hashString } from '@/lib/graph-layout';
 import { getTypeColor } from '@/lib/memory-data';
@@ -11,8 +12,6 @@ import type { MemoryEntry } from '@/lib/memory-data';
 
 // ---------------------------------------------------------------------------
 // GlowNode — luminous 3D sphere with breathing animation, halo glow, and bloom
-//   Replaces the old PointsMaterial-based node with an organic Mesh sphere
-//   that pulses, glows, and looks like a star / neuron.
 // ---------------------------------------------------------------------------
 function GlowNode({
   node,
@@ -37,20 +36,20 @@ function GlowNode({
 }) {
   const meshRef = useRef<THREE.Mesh>(null!);
   const spriteRef = useRef<THREE.Sprite>(null!);
+  const ringRef = useRef<THREE.Mesh>(null!);
 
   const baseSize = node.size || 0.3;
 
-  // Per-node breathing parameters derived from deterministic seed
+  // Per-node breathing parameters from deterministic seed
   const speed = useMemo(() => 1.5 + ((seed * 13) % 100) * 0.015, [seed]);
   const phaseOffset = useMemo(() => ((seed * 0.1) % (Math.PI * 2)), [seed]);
   const breatheAmplitude = useMemo(() => 0.12 + ((seed * 3) % 100) * 0.002, [seed]);
 
-  // Hidden when filtered out
-  if (isFiltered && !isSelected) return null;
+  const isFilteredOut = isFiltered && !isSelected;
 
-  const sizeScale = isSelected ? 2.4 : isHovered ? 1.7 : 1.0;
-  const opacity = isDimmed && !isSelected ? 0.15 : isSelected ? 1.0 : 0.85;
-  const haloOpacity = isDimmed && !isSelected ? 0.04 : isSelected ? 0.40 : 0.12;
+  const sizeScale = isSelected ? 2.6 : isHovered ? 1.8 : 1.0;
+  const opacity = isFilteredOut ? 0.008 : isDimmed && !isSelected ? 0.15 : isSelected ? 1.0 : 0.85;
+  const haloOpacity = isFilteredOut ? 0.001 : isDimmed && !isSelected ? 0.04 : isSelected ? 0.50 : 0.15;
 
   // Generate a circular gradient texture once for the halo sprite
   const haloTexture = useMemo(() => {
@@ -61,9 +60,9 @@ function GlowNode({
     const center = 32;
     const gradient = ctx.createRadialGradient(center, center, 0, center, center, center);
     gradient.addColorStop(0, 'rgba(255,255,255,1)');
-    gradient.addColorStop(0.1, 'rgba(255,255,255,0.75)');
-    gradient.addColorStop(0.3, 'rgba(255,255,255,0.25)');
-    gradient.addColorStop(0.55, 'rgba(255,255,255,0.06)');
+    gradient.addColorStop(0.08, 'rgba(255,255,255,0.8)');
+    gradient.addColorStop(0.25, 'rgba(255,255,255,0.3)');
+    gradient.addColorStop(0.5, 'rgba(255,255,255,0.06)');
     gradient.addColorStop(1, 'rgba(255,255,255,0)');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, 64, 64);
@@ -72,7 +71,7 @@ function GlowNode({
     return texture;
   }, []);
 
-  // Breathing + halo pulsing animation
+  // Breathing animation
   useFrame(({ clock }) => {
     const t = clock.elapsedTime * speed + phaseOffset;
     const breathe = 1 + Math.sin(t) * breatheAmplitude;
@@ -83,20 +82,37 @@ function GlowNode({
     }
 
     if (spriteRef.current) {
-      const spriteScale = scale * 3.5;
+      const spriteScale = scale * 4.0;
       spriteRef.current.scale.set(spriteScale, spriteScale, 1);
-      // Halo opacity subtly pulses out of phase with the core
       spriteRef.current.material.opacity =
         haloOpacity * (0.7 + 0.3 * Math.sin(t * 0.6 + 1.5));
+    }
+
+    if (ringRef.current) {
+      ringRef.current.scale.setScalar(scale * 1.6);
+      const ringMat = ringRef.current.material as THREE.MeshBasicMaterial;
+      ringMat.opacity = isSelected ? 0.25 * (0.8 + 0.2 * Math.sin(t * 0.8)) : 0;
     }
   });
 
   const finalColor = isHovered ? '#f59e0b' : node.color;
-  const emissiveIntensity = isSelected ? 2.5 : isHovered ? 1.8 : 1.0;
+  const emissiveIntensity = isSelected ? 3.0 : isHovered ? 2.0 : 1.0;
 
   return (
     <group position={node.position}>
-      {/* Halo sprite — soft, glowing aureole with AdditiveBlending */}
+      {/* Orbital ring — visible only when selected */}
+      <mesh ref={ringRef} rotation={[Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.9, 1.0, 48]} />
+        <meshBasicMaterial
+          color={finalColor}
+          transparent
+          opacity={0}
+          side={THREE.DoubleSide}
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* Halo sprite */}
       <sprite ref={spriteRef}>
         <spriteMaterial
           map={haloTexture}
@@ -108,14 +124,14 @@ function GlowNode({
         />
       </sprite>
 
-      {/* Core sphere — emissive Mesh, toneMapped=false for bloom pickup */}
+      {/* Core sphere */}
       <mesh
         ref={meshRef}
         onPointerOver={onPointerOver}
         onPointerOut={onPointerOut}
         onClick={onClick}
       >
-        <sphereGeometry args={[1, 24, 24]} />
+        <sphereGeometry args={[1, 32, 32]} />
         <meshStandardMaterial
           color={finalColor}
           emissive={finalColor}
@@ -123,13 +139,15 @@ function GlowNode({
           transparent
           opacity={opacity}
           toneMapped={false}
+          roughness={0.2}
+          metalness={0.1}
         />
       </mesh>
 
       {/* 3D type label on hover/select */}
       {(isHovered || isSelected) && (
         <Text
-          position={[0, baseSize * sizeScale + 0.5, 0]}
+          position={[0, baseSize * sizeScale + 0.6, 0]}
           fontSize={0.28}
           color="#f7f8f8"
           anchorX="center"
@@ -145,18 +163,22 @@ function GlowNode({
 }
 
 // ---------------------------------------------------------------------------
-// EdgeLine — connection with animated dash + hover highlight
+// EdgeLine — connection with animated dash + data-flow pulsation
 // ---------------------------------------------------------------------------
 function EdgeLine({
   edge,
   nodesMap,
   hoveredId,
   selectedId,
+  seed,
+  showEdges,
 }: {
   edge: GraphEdge;
   nodesMap: Map<string, GraphNode>;
   hoveredId: string | null;
   selectedId: string | null;
+  seed: number;
+  showEdges: boolean;
 }) {
   const source = nodesMap.get(edge.source);
   const target = nodesMap.get(edge.target);
@@ -170,6 +192,11 @@ function EdgeLine({
     (edge.source === hoveredId || edge.target === hoveredId);
 
   const isSelectedEdge =
+    selectedId !== null &&
+    (edge.source === selectedId || edge.target === selectedId);
+
+  // Highlight edges connected to selected node
+  const isRelatedToSelected =
     selectedId !== null &&
     (edge.source === selectedId || edge.target === selectedId);
 
@@ -203,14 +230,23 @@ function EdgeLine({
     return g;
   }, []);
 
+  const pulseSpeed = useMemo(() => 0.6 + ((seed * 7) % 100) * 0.004, [seed]);
+  const pulsePhase = useMemo(() => (seed * 0.15) % (Math.PI * 2), [seed]);
+
+  // Visibility: hidden if showEdges is false and not related to selected/hovered
+  const visible = showEdges || isConnected || isSelectedEdge || isRelatedToSelected;
+  const baseOpacity = isSelectedEdge ? 0.8 : isConnected ? 0.6 : isRelatedToSelected ? 0.4 : 0.12;
+
   useFrame(({ clock }) => {
     if (materialRef.current) {
-      materialRef.current.dashOffset = clock.elapsedTime * 0.25;
+      const t = clock.elapsedTime * pulseSpeed + pulsePhase;
+      materialRef.current.dashOffset = clock.elapsedTime * (0.2 + ((seed * 3) % 100) * 0.002);
+      const pulse = 0.6 + 0.4 * Math.sin(t);
+      materialRef.current.opacity = baseOpacity * pulse;
     }
   });
 
-  const edgeOpacity = isSelectedEdge ? 0.7 : isConnected ? 0.5 : 0.25;
-  const edgeColor = isConnected ? '#f59e0b' : '#23252a';
+  if (!visible) return null;
 
   return (
     <mesh
@@ -225,11 +261,12 @@ function EdgeLine({
       <lineSegments geometry={lineGeom}>
         <lineDashedMaterial
           ref={materialRef}
-          color={edgeColor}
-          opacity={edgeOpacity}
+          color={isSelectedEdge || isRelatedToSelected ? '#f59e0b' : '#f59e0b'}
+          opacity={baseOpacity}
           transparent
           dashSize={0.12}
           gapSize={0.06}
+          linewidth={1}
         />
       </lineSegments>
     </mesh>
@@ -237,41 +274,93 @@ function EdgeLine({
 }
 
 // ---------------------------------------------------------------------------
-// Particles — subtle background starfield
+// Particles — subtle background starfield with depth layers
 // ---------------------------------------------------------------------------
-function Particles({ count = 300 }) {
+function Particles({ count = 200 }) {
   const ref = useRef<THREE.Points>(null!);
   const positions = useMemo(() => {
     const pos = new Float32Array(count * 3);
     for (let i = 0; i < count * 3; i++) {
-      pos[i] = (Math.random() - 0.5) * 30;
+      pos[i] = (Math.random() - 0.5) * 40;
     }
     return pos;
   }, [count]);
 
+  const sizes = useMemo(() => {
+    const s = new Float32Array(count);
+    for (let i = 0; i < count; i++) {
+      s[i] = 0.015 + Math.random() * 0.04;
+    }
+    return s;
+  }, [count]);
+
+  // Second layer of distant particles
+  const farPositions = useMemo(() => {
+    const pos = new Float32Array(count * 3);
+    for (let i = 0; i < count * 3; i++) {
+      pos[i] = (Math.random() - 0.5) * 80;
+    }
+    return pos;
+  }, [count]);
+
+  const nearRef = useRef<THREE.Points>(null!);
+  const farRef = useRef<THREE.Points>(null!);
+
   useFrame(({ clock }) => {
-    ref.current.rotation.y = clock.elapsedTime * 0.008;
+    if (nearRef.current) {
+      nearRef.current.rotation.y = clock.elapsedTime * 0.005;
+      nearRef.current.rotation.x = Math.sin(clock.elapsedTime * 0.002) * 0.02;
+    }
+    if (farRef.current) {
+      farRef.current.rotation.y = clock.elapsedTime * 0.002;
+    }
   });
 
   return (
-    <points ref={ref}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          args={[positions, 3]}
-          count={count}
-          itemSize={3}
+    <>
+      <points ref={nearRef}>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            args={[positions, 3]}
+            count={count}
+            itemSize={3}
+          />
+          <bufferAttribute
+            attach="attributes-size"
+            args={[sizes, 1]}
+            count={count}
+            itemSize={1}
+          />
+        </bufferGeometry>
+        <pointsMaterial
+          size={0.03}
+          color="#71717a"
+          transparent
+          opacity={0.35}
+          sizeAttenuation
+          depthWrite={false}
         />
-      </bufferGeometry>
-      <pointsMaterial
-        size={0.025}
-        color="#71717a"
-        transparent
-        opacity={0.3}
-        sizeAttenuation
-        depthWrite={false}
-      />
-    </points>
+      </points>
+      <points ref={farRef}>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            args={[farPositions, 3]}
+            count={count}
+            itemSize={3}
+          />
+        </bufferGeometry>
+        <pointsMaterial
+          size={0.012}
+          color="#52525b"
+          transparent
+          opacity={0.15}
+          sizeAttenuation
+          depthWrite={false}
+        />
+      </points>
+    </>
   );
 }
 
@@ -280,29 +369,43 @@ function Particles({ count = 300 }) {
 // ---------------------------------------------------------------------------
 function CameraController({
   selectedNode,
+  autoRotate,
 }: {
   selectedNode: GraphNode | null;
+  autoRotate: boolean;
 }) {
-  const { camera } = useThree();
-  const target = useRef(new THREE.Vector3(0, 0, 0));
+  const { camera, controls } = useThree();
+  const orbitControls = controls as unknown as { target: THREE.Vector3; update: () => void; autoRotate: boolean } | null;
   const isAnimating = useRef(false);
   const startPos = useRef(new THREE.Vector3());
   const startTarget = useRef(new THREE.Vector3());
   const animProgress = useRef(0);
 
+  // Update autoRotate on the controls
   useEffect(() => {
-    if (!selectedNode) {
-      isAnimating.current = false;
-      animProgress.current = 1;
+    if (orbitControls) {
+      orbitControls.autoRotate = autoRotate;
+    }
+  }, [autoRotate, orbitControls]);
+
+  useEffect(() => {
+    if (!selectedNode || !orbitControls) {
+      if (!selectedNode && orbitControls) {
+        isAnimating.current = false;
+        animProgress.current = 1;
+      }
       return;
     }
 
     const pos = selectedNode.position;
-    const flyPos = new THREE.Vector3(pos[0], pos[1], pos[2] + 5);
+    // Calculate fly-to position based on node size
+    const nodeSize = selectedNode.size || 0.3;
+    const zoomDistance = 3 + nodeSize * 4;
+    const flyPos = new THREE.Vector3(pos[0], pos[1], pos[2] + zoomDistance);
     const flyTarget = new THREE.Vector3(pos[0], pos[1], pos[2]);
 
     startPos.current.copy(camera.position);
-    startTarget.current.copy(target.current);
+    startTarget.current.copy(orbitControls.target);
     isAnimating.current = true;
     animProgress.current = 0;
 
@@ -314,7 +417,8 @@ function CameraController({
       const t = 1 - Math.pow(1 - animProgress.current, 3);
 
       camera.position.lerpVectors(startPos.current, flyPos, t);
-      target.current.lerpVectors(startTarget.current, flyTarget, t);
+      orbitControls.target.lerpVectors(startTarget.current, flyTarget, t);
+      orbitControls.update();
 
       if (animProgress.current < 1) {
         requestAnimationFrame(animate);
@@ -323,9 +427,24 @@ function CameraController({
       }
     };
     animate();
-  }, [selectedNode, camera]);
+  }, [selectedNode, camera, controls]);
 
   return null;
+}
+
+// ---------------------------------------------------------------------------
+// AmbientLighting — rim lights + subtle fill
+// ---------------------------------------------------------------------------
+function AmbientLighting() {
+  return (
+    <>
+      <ambientLight intensity={0.25} color="#404060" />
+      <pointLight position={[5, 5, 5]} intensity={0.4} color="#f59e0b" />
+      <pointLight position={[-5, -3, -5]} intensity={0.2} color="#6366f1" />
+      <pointLight position={[0, 0, 0]} intensity={0.15} color="#f59e0b" />
+      <hemisphereLight args={['#404060', '#070708', 0.3]} />
+    </>
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -336,6 +455,8 @@ function SceneContent({
   edges,
   selectedId,
   activeType,
+  showEdges,
+  autoRotate,
   onSelect,
   onHover,
 }: {
@@ -343,12 +464,25 @@ function SceneContent({
   edges: GraphEdge[];
   selectedId: string | null;
   activeType: string | null;
+  showEdges: boolean;
+  autoRotate: boolean;
   onSelect: (id: string | null) => void;
   onHover: (id: string | null) => void;
 }) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const controlsRef = useRef<any>(null!);
   const nodesMap = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes]);
+
+  // Filter edges
+  const visibleNodeIds = useMemo(() => {
+    if (!activeType) return new Set(nodes.map((n) => n.id));
+    return new Set(nodes.filter((n) => n.type === activeType).map((n) => n.id));
+  }, [nodes, activeType]);
+
+  const visibleEdges = useMemo(
+    () => edges.filter((e) => visibleNodeIds.has(e.source) && visibleNodeIds.has(e.target)),
+    [edges, visibleNodeIds],
+  );
 
   const selectedNode = useMemo(
     () => nodes.find((n) => n.id === selectedId) || null,
@@ -377,24 +511,20 @@ function SceneContent({
 
   return (
     <>
-      <EffectComposer>
-        <Bloom
-          luminanceThreshold={0.1}
-          luminanceSmoothing={0.9}
-          intensity={0.35}
-        />
-      </EffectComposer>
+      <fogExp2 attach="fog" args={['#070708', 0.035]} />
 
-      <ambientLight intensity={0.3} />
+      <AmbientLighting />
 
       {/* Edges */}
-      {edges.map((edge, i) => (
+      {visibleEdges.map((edge, i) => (
         <EdgeLine
           key={i}
           edge={edge}
           nodesMap={nodesMap}
           hoveredId={hoveredId}
           selectedId={selectedId}
+          seed={hashString(edge.source + edge.target)}
+          showEdges={showEdges}
         />
       ))}
 
@@ -422,22 +552,47 @@ function SceneContent({
       })}
 
       <Particles />
-      <pointLight position={[0, 0, 0]} intensity={0.25} color="#f59e0b" />
-      <CameraController selectedNode={selectedNode} />
+
+      <CameraController selectedNode={selectedNode} autoRotate={autoRotate} />
 
       <OrbitControls
         ref={controlsRef}
         enablePan
         enableDamping
         dampingFactor={0.05}
-        minDistance={5}
-        maxDistance={25}
-        autoRotate={selectedId === null}
-        autoRotateSpeed={0.2}
-        rotateSpeed={0.6}
+        minDistance={3}
+        maxDistance={30}
+        autoRotate={autoRotate}
+        autoRotateSpeed={0.15}
+        rotateSpeed={0.5}
+        zoomSpeed={0.8}
       />
     </>
   );
+}
+
+// ---------------------------------------------------------------------------
+// CanvasErrorBoundary
+// ---------------------------------------------------------------------------
+class CanvasErrorBoundary extends Component<{ children: ReactNode; fallback?: ReactNode }> {
+  state = { hasError: false };
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback || (
+        <div style={{
+          position: 'fixed', inset: 0, display: 'flex',
+          alignItems: 'center', justifyContent: 'center',
+          background: '#070708', color: '#52525b', fontSize: '12px',
+        }}>
+          Visualisation 3D indisponible
+        </div>
+      );
+    }
+    return this.props.children;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -447,39 +602,70 @@ export default function NeuronScene({
   entries,
   selectedId,
   activeType,
+  showEdges,
+  autoRotate,
   onSelect,
   onHover,
 }: {
   entries: MemoryEntry[];
   selectedId: string | null;
   activeType: string | null;
+  showEdges: boolean;
+  autoRotate: boolean;
   onSelect: (id: string | null) => void;
   onHover: (id: string | null) => void;
 }) {
   const graph = useMemo(() => computeGraphLayout(entries), [entries]);
 
   return (
-    <Canvas
-      camera={{ position: [0, 0, 10], fov: 50 }}
-      dpr={[1, 1.5]}
-      gl={{ antialias: true, alpha: false }}
-      style={{
-        background: '#070708',
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-      }}
-    >
-      <SceneContent
-        nodes={graph.nodes}
-        edges={graph.edges}
-        selectedId={selectedId}
-        activeType={activeType}
-        onSelect={onSelect}
-        onHover={onHover}
-      />
-    </Canvas>
+    <CanvasErrorBoundary>
+      <Canvas
+        camera={{ position: [0, 0, 12], fov: 50 }}
+        dpr={[1, 1.5]}
+        gl={{
+          antialias: true,
+          alpha: false,
+          powerPreference: 'high-performance',
+        }}
+        onCreated={(state: RootState) => {
+          const gl = state.gl as THREE.WebGLRenderer;
+          gl.domElement.addEventListener('webglcontextlost', (e: Event) => {
+            e.preventDefault();
+          });
+          gl.domElement.addEventListener('webglcontextrestored', () => {
+            state.invalidate();
+          });
+        }}
+        style={{
+          background: '#070708',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+        }}
+      >
+        <SceneContent
+          nodes={graph.nodes}
+          edges={graph.edges}
+          selectedId={selectedId}
+          activeType={activeType}
+          showEdges={showEdges}
+          autoRotate={autoRotate}
+          onSelect={onSelect}
+          onHover={onHover}
+        />
+
+        <EffectComposer>
+          <Bloom
+            blendFunction={BlendFunction.ADD}
+            intensity={0.6}
+            luminanceThreshold={0.3}
+            luminanceSmoothing={0.7}
+            mipmapBlur
+          />
+        </EffectComposer>
+      </Canvas>
+    </CanvasErrorBoundary>
   );
 }

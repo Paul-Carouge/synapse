@@ -7,10 +7,15 @@ import SearchOverlay from '@/components/search-overlay';
 import DetailPanel from '@/components/detail-panel';
 import TypeFilter from '@/components/type-filter';
 import StatsBadge from '@/components/stats-badge';
+import SceneControls from '@/components/scene-controls';
 import BottomSheetNav from '@/components/bottom-sheet-nav';
-import { loadMemoryData, getTypeColor } from '@/lib/memory-data';
+import TimelineSlider from '@/components/timeline-slider';
+import { loadMemoryData, getTypeColor, getUniqueTypes } from '@/lib/memory-data';
+import { computeGraphLayout, findConnectedNodes } from '@/lib/graph-layout';
+import { useEscape } from '@/hooks/useEscape';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import type { MemoryEntry } from '@/lib/memory-data';
-import { spring, easeOut, fadeIn, scaleIn, buttonTap, buttonHover } from '@/lib/motion';
+import { spring, easeOut, buttonTap } from '@/lib/motion';
 
 export default function Home() {
   const [entries, setEntries] = useState<MemoryEntry[]>([]);
@@ -23,6 +28,12 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [showWelcome, setShowWelcome] = useState(true);
   const [legendOpen, setLegendOpen] = useState(false);
+
+  // New state
+  const [showEdges, setShowEdges] = useState(true);
+  const [autoRotate, setAutoRotate] = useState(true);
+  const [timelineRange, setTimelineRange] = useState<{ start: number; end: number } | null>(null);
+  const [showShortcuts, setShowShortcuts] = useState(false);
 
   // Load data
   useEffect(() => {
@@ -47,27 +58,63 @@ export default function Home() {
     }
   }, [loading, entries]);
 
-  // ⌘K listener
+  // ⌘K listener + other shortcuts
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
         setSearchOpen((prev) => !prev);
       }
+      if (e.key === 'Escape') {
+        if (selectedId) setSelectedId(null);
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'r') {
+        e.preventDefault();
+        setAutoRotate((prev) => !prev);
+      }
+      if (e.key === '?' && !searchOpen) {
+        setShowShortcuts((prev) => !prev);
+      }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, []);
+  }, [selectedId, searchOpen]);
+
+  // Filter entries by timeline
+  const filteredEntries = useMemo(() => {
+    if (!timelineRange) return entries;
+    return entries.filter((e) => {
+      const ts = e.metadata.timestamp;
+      if (!ts) return true;
+      const t = new Date(ts).getTime();
+      return t >= timelineRange.start && t <= timelineRange.end;
+    });
+  }, [entries, timelineRange]);
+
+  // Compute graph for filtered entries
+  const graph = useMemo(() => {
+    if (filteredEntries.length === 0) return { nodes: [], edges: [] };
+    return computeGraphLayout(filteredEntries);
+  }, [filteredEntries]);
 
   const selectedEntry = useMemo(
-    () => entries.find((e) => e.id === selectedId) || null,
-    [entries, selectedId],
+    () => filteredEntries.find((e) => e.id === selectedId) || null,
+    [filteredEntries, selectedId],
   );
 
   const hoveredEntry = useMemo(
-    () => entries.find((e) => e.id === hoveredId) || null,
-    [entries, hoveredId],
+    () => filteredEntries.find((e) => e.id === hoveredId) || null,
+    [filteredEntries, hoveredId],
   );
+
+  // Connected entries for the selected node
+  const connectedEntries = useMemo(() => {
+    if (!selectedId || graph.edges.length === 0) return [];
+    const connectedIds = findConnectedNodes(selectedId, graph.edges);
+    return filteredEntries
+      .filter((e) => connectedIds.has(e.id))
+      .slice(0, 12);
+  }, [selectedId, graph.edges, filteredEntries]);
 
   const handleSelect = useCallback((id: string | null) => {
     setSelectedId(id);
@@ -77,6 +124,14 @@ export default function Home() {
   const handleTabChange = useCallback((tab: string | null) => {
     setActiveTab(tab);
     if (tab === 'search') setSearchOpen(true);
+  }, []);
+
+  const handleResetCamera = useCallback(() => {
+    setSelectedId(null);
+  }, []);
+
+  const handleNavigate = useCallback((id: string) => {
+    setSelectedId(id);
   }, []);
 
   // ── Loading State ──
@@ -96,12 +151,12 @@ export default function Home() {
           className="flex flex-col items-center gap-4"
         >
           <motion.div
-            animate={{ scale: [1, 1.3, 1] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+            animate={{ scale: [1, 1.3, 1], opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
             className="w-2 h-2 rounded-full bg-[#f59e0b]"
-            style={{ boxShadow: '0 0 12px rgba(245,158,11,0.5)' }}
+            style={{ boxShadow: '0 0 20px rgba(245,158,11,0.6)' }}
           />
-          <p className="text-sm text-[#62666d]">Connexion à la mémoire...</p>
+          <p className="text-sm text-[#62666d]">Établir connexion synaptique...</p>
         </motion.div>
       </motion.div>
     );
@@ -161,11 +216,13 @@ export default function Home() {
       className="fixed inset-0 bg-[#070708] overflow-hidden"
       style={{ padding: 'env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)' }}
     >
-      {/* ── 3D Scene (always fullscreen) ── */}
+      {/* ── 3D Scene ── */}
       <NeuronScene
-        entries={entries}
+        entries={filteredEntries}
         selectedId={selectedId}
         activeType={activeType}
+        showEdges={showEdges}
+        autoRotate={autoRotate}
         onSelect={handleSelect}
         onHover={setHoveredId}
       />
@@ -188,12 +245,12 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* ── TypeFilter pills — Desktop (top-left) / Mobile (inside drawer) ── */}
-      <div className="desktop-filter-bar" style={{ position: 'fixed', top: '80px', left: '24px', zIndex: 10, maxWidth: 'calc(100vw - 300px)' }}>
-        <TypeFilter entries={entries} activeType={activeType} onTypeChange={setActiveType} />
+      {/* ── TypeFilter pills — Desktop ── */}
+      <div className="hidden lg:block" style={{ position: 'fixed', top: '80px', left: '24px', zIndex: 10, maxWidth: 'calc(100vw - 300px)' }}>
+        <TypeFilter entries={filteredEntries} activeType={activeType} onTypeChange={setActiveType} />
       </div>
 
-      {/* ── Search Bar — Desktop (top-center) ── */}
+      {/* ── Search Bar — Desktop ── */}
       <div className="hidden lg:block fixed top-6 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
         <motion.button
           onClick={() => setSearchOpen(true)}
@@ -206,7 +263,7 @@ export default function Home() {
             boxShadow: '0 0 24px rgba(245,158,11,0.12)',
           }}
           whileTap={buttonTap}
-          style={{ padding: '12px 20px' }}
+          style={{ padding: '11px 18px' }}
           className="pointer-events-auto rounded-xl flex items-center gap-3
             min-w-[360px] bg-[#0f1011] border border-[#23252a]/80
             shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]
@@ -221,7 +278,7 @@ export default function Home() {
         </motion.button>
       </div>
 
-      {/* ── Search FAB — Mobile only ── */}
+      {/* ── Search FAB — Mobile ── */}
       <motion.button
         onClick={() => setSearchOpen(true)}
         initial={{ opacity: 0, scale: 0.5, y: -8 }}
@@ -241,7 +298,7 @@ export default function Home() {
         </svg>
       </motion.button>
 
-      {/* ── Legend Button (top-left) — Desktop & Mobile ── */}
+      {/* ── Legend Button ── */}
       <motion.button
         onClick={() => setLegendOpen((prev) => !prev)}
         initial={{ opacity: 0, scale: 0.5, y: -8 }}
@@ -283,13 +340,12 @@ export default function Home() {
             }}
           >
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {(() => {
-                const types = getUniqueTypes(entries);
+              {getUniqueTypes(filteredEntries).map((t) => {
                 const icons: Record<string, string> = {
                   design: '⚙️', preference: '💡', architecture: '🏛️',
                   learning: '📚', system: '⚙️', note: '📝', bug: '🐛', decision: '⚖️',
                 };
-                return types.map((t) => (
+                return (
                   <div key={t.id} className="flex items-center gap-2.5">
                     <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: getTypeColor(t.id), flexShrink: 0 }} />
                     <span style={{ fontSize: '12px' }}>{icons[t.id] ?? '📄'}</span>
@@ -297,8 +353,8 @@ export default function Home() {
                       {t.label}
                     </span>
                   </div>
-                ));
-              })()}
+                );
+              })}
             </div>
           </motion.div>
         )}
@@ -319,30 +375,23 @@ export default function Home() {
             <div className="sticky top-0 bg-[#0f1011] pt-3 pb-3 flex items-center justify-between border-b border-[#23252a]/40"
               style={{ paddingInline: '20px' }}>
               <span className="text-[10px] font-semibold uppercase tracking-[0.12em]" style={{ color: '#62666d' }}>Filtres</span>
-              <motion.button
+              <button
                 onClick={() => setActiveTab(null)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={buttonTap}
-                className="flex items-center gap-1.5"
                 style={{
-                  padding: '6px 10px',
-                  borderRadius: '8px',
-                  backgroundColor: '#1a1a1e',
-                  border: '1px solid #27272a',
-                  color: '#8a8f98',
-                  fontSize: '12px',
-                  fontWeight: 500,
+                  width: '32px', height: '32px', borderRadius: '8px',
+                  backgroundColor: '#1a1a1e', border: '1px solid #27272a',
+                  color: '#8a8f98', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}
+                aria-label="Fermer les filtres"
               >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
-                <span>Fermer</span>
-              </motion.button>
+              </button>
             </div>
             <div style={{ padding: '20px' }}>
-              <TypeFilter entries={entries} activeType={activeType} onTypeChange={(t) => { setActiveType(t); setActiveTab(null); }} />
+              <TypeFilter entries={filteredEntries} activeType={activeType} onTypeChange={(t) => { setActiveType(t); setActiveTab(null); }} />
             </div>
           </motion.div>
         )}
@@ -363,30 +412,23 @@ export default function Home() {
             <div className="sticky top-0 bg-[#0f1011] pt-3 pb-3 flex items-center justify-between border-b border-[#23252a]/40"
               style={{ paddingInline: '20px' }}>
               <span className="text-[10px] font-semibold uppercase tracking-[0.12em]" style={{ color: '#62666d' }}>Statistiques</span>
-              <motion.button
+              <button
                 onClick={() => setActiveTab(null)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={buttonTap}
-                className="flex items-center gap-1.5"
                 style={{
-                  padding: '6px 10px',
-                  borderRadius: '8px',
-                  backgroundColor: '#1a1a1e',
-                  border: '1px solid #27272a',
-                  color: '#8a8f98',
-                  fontSize: '12px',
-                  fontWeight: 500,
+                  width: '32px', height: '32px', borderRadius: '8px',
+                  backgroundColor: '#1a1a1e', border: '1px solid #27272a',
+                  color: '#8a8f98', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}
+                aria-label="Fermer les statistiques"
               >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
-                <span>Fermer</span>
-              </motion.button>
+              </button>
             </div>
             <div style={{ padding: '20px' }}>
-              <StatsBadge entries={entries} lastUpdated={entries[0]?.metadata.timestamp} big />
+              <StatsBadge entries={filteredEntries} lastUpdated={filteredEntries[0]?.metadata.timestamp} big />
             </div>
           </motion.div>
         )}
@@ -401,7 +443,7 @@ export default function Home() {
             exit={{ opacity: 0, y: 4 }}
             transition={easeOut}
             className="fixed top-24 left-1/2 -translate-x-1/2 z-20 pointer-events-none
-              max-sm:top-auto max-sm:bottom-24"
+              max-sm:top-auto max-sm:bottom-28"
           >
             <div style={{ padding: '10px 16px' }} className="bg-[#0f1011] border border-[#23252a]/60 rounded-xl max-w-xs shadow-lg">
               <div className="flex items-center gap-2 mb-1">
@@ -410,28 +452,81 @@ export default function Home() {
                 <span className="text-[10px] text-[#8a8f98] font-medium uppercase tracking-[0.06em]">
                   {hoveredEntry.metadata.type || 'note'}
                 </span>
+                {hoveredEntry.metadata.project && (
+                  <span style={{ padding: '1px 6px' }} className="text-[9px] text-[#62666d] rounded bg-[#23252a]">
+                    {hoveredEntry.metadata.project}
+                  </span>
+                )}
               </div>
               <p className="text-xs text-[#a1a1aa] leading-relaxed line-clamp-1">
-                {hoveredEntry.text.slice(0, 100)}
+                {hoveredEntry.text.slice(0, 120)}
               </p>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* ── StatsBadge — Desktop only ── */}
+      {/* ── Timeline ── */}
+      <TimelineSlider
+        entries={filteredEntries}
+        active={timelineRange !== null}
+        onRangeChange={setTimelineRange}
+      />
+
+      {/* ── Scene Controls — Desktop ── */}
+      <SceneControls
+        showEdges={showEdges}
+        autoRotate={autoRotate}
+        onToggleEdges={() => setShowEdges((p) => !p)}
+        onToggleAutoRotate={() => setAutoRotate((p) => !p)}
+        onResetCamera={handleResetCamera}
+        onTimelineChange={setTimelineRange}
+        hasTimelineFilter={timelineRange !== null}
+      />
+
+      {/* ── StatsBadge — Desktop ── */}
       <div className="hidden lg:block">
-        <StatsBadge entries={entries} lastUpdated={entries[0]?.metadata.timestamp} />
+        <StatsBadge entries={filteredEntries} lastUpdated={filteredEntries[0]?.metadata.timestamp} />
       </div>
 
-      {/* ── Bottom Sheet Navigation — Mobile only ── */}
+      {/* ── Shortcuts hint — Desktop ── */}
+      <div className="hidden lg:block fixed bottom-6 right-6 z-10">
+        <motion.button
+          onClick={() => setShowShortcuts((p) => !p)}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          style={{
+            padding: '6px 10px',
+            borderRadius: '8px',
+            backgroundColor: 'rgba(15,16,17,0.7)',
+            border: '1px solid rgba(35,37,42,0.5)',
+            color: '#52525b',
+            fontSize: '10px',
+            cursor: 'pointer',
+          }}
+        >
+          <kbd className="font-mono">?</kbd> Raccourcis
+        </motion.button>
+      </div>
+
+      {/* ── Shortcuts Modal ── */}
+      <AnimatePresence>
+        {showShortcuts && (
+          <ShortcutsModal onClose={() => setShowShortcuts(false)} />
+        )}
+      </AnimatePresence>
+
+      {/* ── Bottom Sheet Navigation — Mobile ── */}
       <BottomSheetNav activeTab={activeTab} onTabChange={handleTabChange} />
 
       {/* ── Search Overlay ── */}
       <AnimatePresence>
         {searchOpen && (
           <SearchOverlay
-            entries={entries}
+            entries={filteredEntries}
             onSelect={(id) => { setSelectedId(id); setSearchOpen(false); }}
             onClose={() => setSearchOpen(false)}
           />
@@ -443,7 +538,9 @@ export default function Home() {
         {selectedEntry && (
           <DetailPanel
             entry={selectedEntry}
+            connectedEntries={connectedEntries}
             onClose={() => setSelectedId(null)}
+            onNavigate={handleNavigate}
           />
         )}
       </AnimatePresence>
@@ -457,18 +554,74 @@ export default function Home() {
   );
 }
 
-function getUniqueTypes(entries: MemoryEntry[]) {
-  const seen = new Set<string>();
-  const types: { id: string; label: string }[] = [];
-  for (const e of entries) {
-    const id = e.metadata.type || 'note';
-    if (!seen.has(id)) {
-      seen.add(id);
-      types.push({
-        id,
-        label: id.charAt(0).toUpperCase() + id.slice(1),
-      });
-    }
-  }
-  return types;
+function ShortcutsModal({ onClose }: { onClose: () => void }) {
+  useEscape(onClose);
+  useBodyScrollLock(true);
+
+  const shortcuts = [
+    { key: '⌘K', action: 'Ouvrir la recherche' },
+    { key: '⌘R', action: 'Activer/désactiver rotation' },
+    { key: 'Escape', action: 'Fermer le détail / désélectionner' },
+    { key: '?', action: 'Afficher ces raccourcis' },
+  ];
+
+  return (
+    <>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 bg-black/60"
+        onClick={onClose}
+      />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={spring}
+        className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none"
+      >
+        <div
+          className="pointer-events-auto"
+          style={{
+            padding: '20px',
+            borderRadius: '16px',
+            backgroundColor: '#0f1011',
+            border: '1px solid rgba(35,37,42,0.6)',
+            boxShadow: '0 24px 64px rgba(0,0,0,0.5)',
+            minWidth: '280px',
+          }}
+        >
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.12em]" style={{ color: '#62666d' }}>
+              Raccourcis clavier
+            </span>
+            <button
+              onClick={onClose}
+              style={{
+                width: '28px', height: '28px', borderRadius: '6px',
+                backgroundColor: '#1a1a1e', border: '1px solid #27272a',
+                color: '#8a8f98', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+          <div className="space-y-2">
+            {shortcuts.map((s) => (
+              <div key={s.key} className="flex items-center justify-between">
+                <span className="text-xs text-[#a1a1aa]">{s.action}</span>
+                <kbd style={{ padding: '2px 8px' }} className="text-[10px] text-[#f7f8f8] rounded-md bg-[#23252a] font-mono ml-4">
+                  {s.key}
+                </kbd>
+              </div>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+    </>
+  );
 }

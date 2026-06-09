@@ -1,4 +1,5 @@
-import { MemoryEntry, getTypeColor } from './memory-data';
+import { getTypeColor } from './memory-data';
+import type { MemoryEntry } from './memory-data';
 
 export interface GraphNode {
   id: string;
@@ -44,10 +45,8 @@ export function computeGraphLayout(entries: MemoryEntry[]): {
   nodes: GraphNode[];
   edges: GraphEdge[];
 } {
-  // Assign each node to a cluster center based on type
   const nodePositions: Map<string, [number, number, number]> = new Map();
 
-  // Count how many nodes per type for spreading
   const typeCounts: Record<string, number> = {};
   const typeIndex: Record<string, number> = {};
   for (const entry of entries) {
@@ -63,7 +62,6 @@ export function computeGraphLayout(entries: MemoryEntry[]): {
     typeIndex[t] = idx + 1;
     const total = typeCounts[t] || 1;
 
-    // Spread nodes in a sphere around the cluster center
     const seed = hashString(entry.id);
     const phi = (idx / total) * Math.PI * 2 + seededRandom(seed) * 0.5;
     const theta = Math.acos(2 * (idx / total) - 1) + seededRandom(seed + 1000) * 0.3;
@@ -76,7 +74,7 @@ export function computeGraphLayout(entries: MemoryEntry[]): {
     nodePositions.set(entry.id, [x, y, z]);
   }
 
-  // Create edges: connect nodes that share the same type or same project
+  // Create edges
   const edgeSet = new Set<string>();
   const edges: GraphEdge[] = [];
 
@@ -90,7 +88,7 @@ export function computeGraphLayout(entries: MemoryEntry[]): {
     (entriesByProject[p] ??= []).push(entry);
   }
 
-  // Edges within same type (connect each node to others with some limit)
+  // Edges within same type
   for (const group of Object.values(entriesByType)) {
     for (let i = 0; i < group.length; i++) {
       for (let j = i + 1; j < Math.min(i + 3, group.length); j++) {
@@ -116,7 +114,7 @@ export function computeGraphLayout(entries: MemoryEntry[]): {
     }
   }
 
-  // Compute node sizes based on edge count (importance)
+  // Compute node sizes based on edge count
   const edgeCounts: Record<string, number> = {};
   for (const edge of edges) {
     edgeCounts[edge.source] = (edgeCounts[edge.source] || 0) + 1;
@@ -141,4 +139,17 @@ export function computeGraphLayout(entries: MemoryEntry[]): {
   });
 
   return { nodes, edges };
+}
+
+// Find connected node IDs for a given node
+export function findConnectedNodes(
+  nodeId: string,
+  edges: GraphEdge[],
+): Set<string> {
+  const connected = new Set<string>();
+  for (const edge of edges) {
+    if (edge.source === nodeId) connected.add(edge.target);
+    if (edge.target === nodeId) connected.add(edge.source);
+  }
+  return connected;
 }
