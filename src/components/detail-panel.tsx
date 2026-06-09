@@ -9,6 +9,9 @@ import { useEscape } from '@/hooks/useEscape';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import type { MemoryEntry } from '@/lib/memory-data';
 
+const BORDER = '1px solid rgba(30,31,34,0.8)';
+const SURFACE = '#0f1011';
+
 export default function DetailPanel({
   entry,
   connectedEntries,
@@ -22,249 +25,104 @@ export default function DetailPanel({
 }) {
   useEscape(onClose);
   useBodyScrollLock(true);
-
   const sheetRef = useRef<HTMLDivElement>(null);
-
-  const handleDragEnd = (_: unknown, info: { offset: { y: number } }) => {
-    if (info.offset.y > 150) {
-      onClose();
-    }
-  };
-
   const type = entry.metadata.type || 'note';
   const color = getTypeColor(type);
 
+  const handleDragEnd = (_: unknown, info: { offset: { y: number } }) => {
+    if (info.offset.y > 120) onClose();
+  };
+
   return (
     <>
-      {/* Overlay */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-30"
-        style={{
-          backgroundColor: 'rgba(0,0,0,0.6)',
-          backdropFilter: 'blur(8px)',
-          WebkitBackdropFilter: 'blur(8px)',
-        }}
-        onClick={onClose}
-      />
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-30 bg-black/50" onClick={onClose} />
 
-      {/* Desktop : slide depuis la droite */}
+      {/* Desktop */}
       <motion.div
-        initial={{ x: '100%' }}
-        animate={{ x: 0 }}
-        exit={{ x: '100%' }}
+        initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
         transition={{ type: 'spring', damping: 30, stiffness: 300 }}
         className="hidden lg:block fixed right-0 top-0 bottom-0 z-40 w-full max-w-md overflow-y-auto"
-        style={{
-          backgroundColor: '#0f1011',
-          borderLeft: '1px solid rgba(35,37,42,0.8)',
-          boxShadow: '-8px 0 32px -12px rgba(0,0,0,0.6)',
-        }}
+        style={{ backgroundColor: SURFACE, borderLeft: BORDER }}
       >
-        <div style={{ padding: '24px' }}>
-          {/* Header */}
-          <div className="flex items-center justify-between" style={{ marginBottom: '20px' }}>
+        <div style={{ padding: '20px' }}>
+          <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-              <span className="text-[10px] font-semibold uppercase tracking-[0.12em]" style={{ color: '#62666d' }}>
-                Détail mémoire
-              </span>
+              <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color }} />
+              <span className="text-[9px] font-semibold uppercase tracking-[0.1em] text-[#52525b]">Détail</span>
             </div>
-            <button
-              onClick={onClose}
-              className="flex items-center justify-center transition-transform duration-300 hover:rotate-90"
-              style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '8px',
-                backgroundColor: '#1a1a1e',
-                border: '1px solid #27272a',
-                color: '#8a8f98',
-              }}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
+            <button onClick={onClose} className="w-7 h-7 rounded-md flex items-center justify-center transition-colors hover:bg-[#1a1a1e]" style={{ border: '1px solid #2a2b2e' }}>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8a8f98" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
             </button>
           </div>
-
           <MemoryCard entry={entry} expanded />
-
-          {/* Connected memories */}
-          {connectedEntries.length > 0 && (
-            <ConnectedSection
-              entries={connectedEntries}
-              onNavigate={onNavigate}
-              color={color}
-            />
-          )}
+          {connectedEntries.length > 0 && <ConnectedSection entries={connectedEntries} onNavigate={onNavigate} />}
         </div>
       </motion.div>
 
-      {/* Mobile : bottom sheet avec drag-to-close */}
+      {/* Mobile */}
       <motion.div
-        ref={sheetRef}
-        drag="y"
-        dragConstraints={{ top: 0, bottom: 0 }}
-        dragElastic={0.15}
-        onDragEnd={handleDragEnd}
-        initial={{ y: '100%' }}
-        animate={{ y: 0 }}
-        exit={{ y: '100%' }}
+        ref={sheetRef} drag="y" dragConstraints={{ top: 0, bottom: 0 }} dragElastic={0.15} onDragEnd={handleDragEnd}
+        initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
         transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-        className="lg:hidden fixed inset-x-0 bottom-0 z-40 overflow-y-auto"
-        style={{
-          backgroundColor: '#0f1011',
-          borderTopLeftRadius: '20px',
-          borderTopRightRadius: '20px',
-          maxHeight: '85vh',
-          borderTop: '1px solid rgba(35,37,42,0.6)',
-          paddingBottom: 'env(safe-area-inset-bottom, 16px)',
-        }}
+        className="lg:hidden fixed inset-x-0 bottom-0 z-40 overflow-y-auto rounded-t-xl"
+        style={{ backgroundColor: SURFACE, borderTop: BORDER, maxHeight: '85vh', paddingBottom: 'env(safe-area-inset-bottom, 16px)' }}
       >
-        {/* Drag handle */}
-        <div className="flex justify-center" style={{ padding: '12px 0 4px' }}>
-          <div style={{ width: '36px', height: '4px', borderRadius: '2px', backgroundColor: '#3a3a3e' }} />
-        </div>
-
-        {/* Header sticky */}
-        <div
-          className="sticky top-0 flex items-center justify-between"
-          style={{
-            padding: '4px 20px 12px',
-            backgroundColor: '#0f1011',
-            borderBottom: '1px solid rgba(35,37,42,0.4)',
-          }}
-        >
+        <div className="flex justify-center pt-2 pb-1"><div className="w-7 h-0.5 rounded bg-[#2a2b2e]" /></div>
+        <div className="sticky top-0 flex items-center justify-between px-5 py-2 border-b border-[#1e1f22]/60" style={{ backgroundColor: SURFACE }}>
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.12em]" style={{ color: '#62666d' }}>
-              Détail
-            </span>
+            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color }} />
+            <span className="text-[9px] font-semibold uppercase tracking-[0.1em] text-[#52525b]">Détail</span>
           </div>
-          <motion.button
-            onClick={onClose}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.9 }}
-            className="flex items-center gap-1.5 transition-colors"
-            style={{
-              padding: '6px 10px',
-              borderRadius: '8px',
-              backgroundColor: '#1a1a1e',
-              border: '1px solid #27272a',
-              color: '#8a8f98',
-              fontSize: '12px',
-              fontWeight: 500,
-            }}
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-            <span>Fermer</span>
-          </motion.button>
+          <button onClick={onClose} className="flex items-center gap-1 text-xs text-[#52525b]" style={{ padding: '4px 8px', borderRadius: '6px', border: '1px solid #2a2b2e' }}>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+            Fermer
+          </button>
         </div>
-
-        {/* Contenu */}
-        <div style={{ padding: '20px' }}>
+        <div style={{ padding: '16px 20px' }}>
           <MemoryCard entry={entry} expanded />
-
-          {connectedEntries.length > 0 && (
-            <ConnectedSection
-              entries={connectedEntries}
-              onNavigate={onNavigate}
-              color={color}
-            />
-          )}
+          {connectedEntries.length > 0 && <ConnectedSection entries={connectedEntries} onNavigate={onNavigate} />}
         </div>
       </motion.div>
     </>
   );
 }
 
-function ConnectedSection({
-  entries,
-  onNavigate,
-  color,
-}: {
-  entries: MemoryEntry[];
-  onNavigate: (id: string) => void;
-  color: string;
-}) {
+function ConnectedSection({ entries, onNavigate }: { entries: MemoryEntry[]; onNavigate: (id: string) => void }) {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.2 }}
-      style={{ marginTop: '24px' }}
-    >
-      <div className="flex items-center gap-2" style={{ marginBottom: '14px' }}>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <div style={{ marginTop: '20px' }}>
+      <div className="flex items-center gap-1.5 mb-3">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#52525b" strokeWidth="1.5" strokeLinecap="round">
           <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
           <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
         </svg>
-        <span className="text-[10px] font-semibold uppercase tracking-[0.12em]" style={{ color: '#62666d' }}>
-          Mémoires connectées ({entries.length})
-        </span>
+        <span className="text-[9px] font-semibold uppercase tracking-[0.1em] text-[#52525b]">Connectées ({entries.length})</span>
       </div>
 
-      <motion.div
-        variants={staggerContainer}
-        initial="hidden"
-        animate="show"
-        className="space-y-2"
-      >
+      <div className="space-y-1.5">
         {entries.slice(0, 8).map((connected) => {
-          const connType = connected.metadata.type || 'note';
-          const connColor = getTypeColor(connType);
+          const c = getTypeColor(connected.metadata.type || 'note');
           return (
             <motion.button
               key={connected.id}
-              variants={staggerItem}
               onClick={() => onNavigate(connected.id)}
-              whileHover={{ x: 4 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ x: 3 }}
+              whileTap={{ scale: 0.99 }}
               className="w-full text-left"
-              style={{
-                padding: '10px 12px',
-                borderRadius: '10px',
-                backgroundColor: 'rgba(22,23,24,0.8)',
-                border: '1px solid rgba(35,37,42,0.5)',
-                transition: 'border-color 0.2s',
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = `${connColor}40`;
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = 'rgba(35,37,42,0.5)';
-              }}
+              style={{ padding: '8px 10px', borderRadius: '8px', background: 'rgba(22,23,24,0.8)', border: '1px solid rgba(30,31,34,0.6)' }}
             >
-              <div className="flex items-center gap-2 mb-1">
-                <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: connColor }} />
-                <span className="text-[9px] font-medium uppercase tracking-[0.06em]" style={{ color: connColor }}>
-                  {connType}
-                </span>
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <span className="w-1 h-1 rounded-full" style={{ backgroundColor: c }} />
+                <span className="text-[8px] font-medium uppercase tracking-[0.06em]" style={{ color: c }}>{connected.metadata.type || 'note'}</span>
                 {connected.metadata.project && (
-                  <span style={{ padding: '1px 6px' }} className="text-[9px] text-[#62666d] rounded-md bg-[#23252a]">
-                    {connected.metadata.project}
-                  </span>
+                  <span className="text-[8px] text-[#52525b] px-1.5 rounded" style={{ background: '#1a1a1e' }}>{connected.metadata.project}</span>
                 )}
               </div>
-              <p className="text-[11px] text-[#8a8f98] leading-relaxed line-clamp-2">
-                {connected.text.slice(0, 120)}
-              </p>
+              <p className="text-[10px] text-[#62666d] leading-relaxed line-clamp-2">{connected.text.slice(0, 120)}</p>
             </motion.button>
           );
         })}
-        {entries.length > 8 && (
-          <p className="text-[10px] text-center text-[#52525b] pt-1">
-            +{entries.length - 8} autres connexions
-          </p>
-        )}
-      </motion.div>
-    </motion.div>
+        {entries.length > 8 && <p className="text-[9px] text-center text-[#3a3a3e] pt-1">+{entries.length - 8} autres</p>}
+      </div>
+    </div>
   );
 }

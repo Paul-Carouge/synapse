@@ -1,53 +1,43 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-deep: #070708;
+  --color-deep: #0a0a0b;
+  --color-surface: #0f1011;
+  --color-surface-raised: #161718;
+  --color-border: #1e1f22;
+  --color-border-light: #2a2b2e;
+  --color-text-primary: #ededef;
+  --color-text-secondary: #8a8f98;
+  --color-text-tertiary: #52525b;
+  --color-accent: #f59e0b;
+  --color-accent-subtle: rgba(245, 158, 11, 0.12);
 
   --font-sans: "Inter Variable", system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono Variable", monospace;
-
-  --animate-float: float 6s ease-in-out infinite;
-  --animate-glow-pulse: glow-pulse 3s ease-in-out infinite;
-  --animate-cosmic-drift: cosmic-drift 12s ease-in-out infinite;
-  --animate-fade-in: fade-in 0.6s ease-out;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-@keyframes glow-pulse {
-  0%, 100% { opacity: 0.4; box-shadow: 0 0 4px rgba(245, 158, 11, 0.2); }
-  50% { opacity: 1; box-shadow: 0 0 12px rgba(245, 158, 11, 0.5); }
-}
-
-@keyframes cosmic-drift {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  25% { transform: translate(4px, -6px) rotate(0.5deg); }
-  50% { transform: translate(-2px, 4px) rotate(-0.3deg); }
-  75% { transform: translate(6px, 2px) rotate(0.4deg); }
-}
-
-@keyframes fade-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+/* ── Grid dot pattern ── */
+html {
+  background-color: #0a0a0b;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { height: 100%; overflow: hidden; }
 body {
-  background: #070708;
-  color: #f7f8f8;
+  background: transparent;
+  color: #ededef;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ── Scrollbar minimal ── */
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 1.5px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.12); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.05); border-radius: 1.5px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.1); }
 
 .tap-highlight-transparent {
   -webkit-tap-highlight-color: transparent;
@@ -61,7 +51,6 @@ body {
   }
 }
 
-/* Safe area for notched phones */
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom);

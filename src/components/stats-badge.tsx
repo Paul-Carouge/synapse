@@ -4,6 +4,9 @@ import { useMemo } from 'react';
 import type { MemoryEntry } from '@/lib/memory-data';
 import { relativeTime } from '@/lib/time';
 
+const BORDER = '1px solid rgba(30,31,34,0.8)';
+const SURFACE = 'rgba(15,16,17,0.92)';
+
 export default function StatsBadge({
   entries,
   lastUpdated,
@@ -17,49 +20,36 @@ export default function StatsBadge({
 
   if (big) {
     return (
-      <div className="space-y-4">
-        <div className="flex items-center gap-3">
-          <div style={{ padding: '16px' }} className="flex-1 bg-[#161718] rounded-xl text-center">
-            <div className="text-2xl font-semibold text-[#f7f8f8] font-mono">{entries.length}</div>
-            <div className="text-[10px] text-[#62666d] uppercase tracking-[0.06em] mt-1">Nœuds</div>
-          </div>
-          <div style={{ padding: '16px' }} className="flex-1 bg-[#161718] rounded-xl text-center">
-            <div className="text-2xl font-semibold text-[#f7f8f8] font-mono">{edgeCount}</div>
-            <div className="text-[10px] text-[#62666d] uppercase tracking-[0.06em] mt-1">Liens</div>
-          </div>
-          <div style={{ padding: '16px' }} className="flex-1 bg-[#161718] rounded-xl text-center">
-            <div className="text-2xl font-semibold text-[#f7f8f8] font-mono">
-              {entries.filter(e => e.metadata.type).length}
+      <div className="space-y-3">
+        <div className="flex items-center gap-2">
+          {[
+            { label: 'Nœuds', value: entries.length },
+            { label: 'Liens', value: edgeCount },
+            { label: 'Types', value: entries.filter(e => e.metadata.type).length },
+          ].map((s) => (
+            <div key={s.label} className="flex-1 rounded-lg text-center" style={{ padding: '12px 8px', background: '#161718', border: '1px solid #1e1f22' }}>
+              <div className="text-lg font-semibold text-[#ededef] font-mono">{s.value}</div>
+              <div className="text-[9px] text-[#52525b] uppercase tracking-[0.06em] mt-0.5">{s.label}</div>
             </div>
-            <div className="text-[10px] text-[#62666d] uppercase tracking-[0.06em] mt-1">Types</div>
-          </div>
+          ))}
         </div>
         {lastUpdated && (
-          <p className="text-[10px] text-[#52525b] text-center font-mono">
-            Dernière mise à jour : {relativeTime(lastUpdated)}
-          </p>
+          <p className="text-[9px] text-[#3a3a3e] text-center font-mono">Mis à jour {relativeTime(lastUpdated)}</p>
         )}
       </div>
     );
   }
 
   return (
-    <div className="fixed top-6 right-6 z-10">
-      <div style={{ padding: '8px 14px' }} className="bg-[#0f1011]/80 border border-[#23252a]/60 rounded-xl
-        text-[10px] text-[#62666d] font-mono flex items-center gap-2">
-        <span className="flex items-center gap-1">
-          <span className="text-[#8a8f98]">{entries.length}</span>
-          <span className="text-[#52525b]">nœuds</span>
-        </span>
-        <span className="text-[#3a3a3e]">·</span>
-        <span className="flex items-center gap-1">
-          <span className="text-[#8a8f98]">{edgeCount}</span>
-          <span className="text-[#52525b]">liens</span>
-        </span>
+    <div className="fixed top-5 right-5 z-10">
+      <div style={{ padding: '6px 12px', borderRadius: '8px', fontSize: '9px', color: '#52525b', fontFamily: "'JetBrains Mono Variable', monospace", display: 'flex', alignItems: 'center', gap: '8px', background: SURFACE, border: BORDER }}>
+        <span>{entries.length}<span style={{ color: '#3a3a3e' }}> nœuds</span></span>
+        <span style={{ color: '#1e1f22' }}>·</span>
+        <span>{edgeCount}<span style={{ color: '#3a3a3e' }}> liens</span></span>
         {lastUpdated && (
           <>
-            <span className="text-[#3a3a3e]">·</span>
-            <span className="text-[#52525b]">{relativeTime(lastUpdated)}</span>
+            <span style={{ color: '#1e1f22' }}>·</span>
+            <span style={{ color: '#3a3a3e' }}>{relativeTime(lastUpdated)}</span>
           </>
         )}
       </div>

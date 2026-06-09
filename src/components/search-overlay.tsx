@@ -8,6 +8,18 @@ import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { springSnappy, easeOut, staggerContainer, staggerItem, buttonTap } from '@/lib/motion';
 import type { MemoryEntry } from '@/lib/memory-data';
 
+const colors = {
+  surface: '#0f1011',
+  raised: '#161718',
+  border: '#1e1f22',
+  borderLight: '#2a2b2e',
+  textPrimary: '#ededef',
+  textSecondary: '#8a8f98',
+  textTertiary: '#52525b',
+  accent: '#f59e0b',
+  accentSubtle: 'rgba(245,158,11,0.12)',
+};
+
 const typeEmojis: Record<string, string> = {
   design: '⚙️',
   preference: '💡',
@@ -70,42 +82,76 @@ export default function SearchOverlay({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.15 }}
-      className="fixed inset-0 z-50 flex items-start justify-center pt-[8vh]"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 50,
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        paddingTop: '8vh',
+      }}
     >
-      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
+      <div
+        onClick={onClose}
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundColor: 'rgba(0,0,0,0.6)',
+        }}
+      />
 
       <motion.div
         initial={{ y: -16, opacity: 0, scale: 0.96 }}
         animate={{ y: 0, opacity: 1, scale: 1 }}
         exit={{ y: -16, opacity: 0, scale: 0.96 }}
         transition={springSnappy}
-        className="relative z-10 w-full max-w-lg max-sm:max-w-full max-sm:h-full max-sm:flex max-sm:flex-col"
         style={{
+          position: 'relative',
+          zIndex: 10,
+          width: '100%',
+          maxWidth: '512px',
           padding: '0 clamp(0px, 5vw, 16px)',
           paddingTop: 'max(3vh, 16px)',
         }}
       >
-        <div className="bg-[#0f1011] sm:rounded-2xl overflow-hidden border border-[#23252a]/80
-          shadow-[0_16px_48px_-12px_rgba(0,0,0,0.6)]
-          max-sm:rounded-t-2xl max-sm:border-b max-sm:border-x max-sm:h-full max-sm:flex max-sm:flex-col">
-          
+        <div
+          style={{
+            backgroundColor: colors.surface,
+            border: `1px solid ${colors.border}`,
+            borderRadius: '16px',
+            overflow: 'hidden',
+            boxShadow: '0 16px 48px -12px rgba(0,0,0,0.6)',
+          }}
+        >
           {/* Search input */}
-          <div className="flex items-center gap-2 border-b border-[#23252a]/60"
-            style={{ padding: '12px 16px' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px 16px',
+              borderBottom: `1px solid ${colors.border}`,
+            }}
+          >
             <motion.button
               onClick={onClose}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.9 }}
-              className="flex items-center justify-center shrink-0 lg:hidden"
+              aria-label="Fermer la recherche"
               style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
                 width: '32px',
                 height: '32px',
                 borderRadius: '8px',
-                backgroundColor: '#1a1a1e',
-                border: '1px solid #27272a',
-                color: '#8a8f98',
+                backgroundColor: colors.raised,
+                border: `1px solid ${colors.borderLight}`,
+                color: colors.textSecondary,
+                cursor: 'pointer',
               }}
-              aria-label="Fermer la recherche"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18" />
@@ -113,27 +159,54 @@ export default function SearchOverlay({
               </svg>
             </motion.button>
 
-            <svg className="w-4 h-4 text-[#f59e0b]/60 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg
+              style={{ width: '16px', height: '16px', color: `${colors.accent}99`, flexShrink: 0 }}
+              fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            <div className="flex-1 relative">
+
+            <div style={{ flex: 1, position: 'relative' }}>
               <input
                 ref={inputRef}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Explorer la mémoire..."
-                className="w-full bg-[#161718] text-sm text-[#f7f8f8] outline-none placeholder-[#62666d]
-                  tracking-[0.01em] font-medium
-                  rounded-lg border border-[#23252a]/50
-                  focus:border-[#f59e0b]/30 focus:bg-[#1a1a1e]
-                  transition-all duration-200"
-                style={{ padding: '9px 12px' }}
+                style={{
+                  width: '100%',
+                  padding: '9px 12px',
+                  backgroundColor: colors.raised,
+                  border: `1px solid ${colors.borderLight}`,
+                  borderRadius: '8px',
+                  color: colors.textPrimary,
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  letterSpacing: '0.01em',
+                  outline: 'none',
+                  transition: 'all 0.2s',
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = `${colors.accent}4D`;
+                  e.target.style.backgroundColor = '#1a1a1e';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = colors.borderLight;
+                  e.target.style.backgroundColor = colors.raised;
+                }}
               />
             </div>
+
             <motion.kbd
               whileHover={{ scale: 1.05 }}
-              style={{ padding: '2px 8px' }}
-              className="text-[11px] text-[#62666d] rounded-md border border-[#23252a] font-mono hidden sm:block"
+              style={{
+                padding: '2px 8px',
+                fontSize: '11px',
+                color: colors.textTertiary,
+                borderRadius: '6px',
+                border: `1px solid ${colors.border}`,
+                fontFamily: 'monospace',
+                display: 'none',
+              }}
             >
               esc
             </motion.kbd>
@@ -141,8 +214,13 @@ export default function SearchOverlay({
 
           {/* Filter chips row */}
           {(types.length > 0 || projects.length > 0) && (
-            <div style={{ padding: '10px 16px', borderBottom: '1px solid rgba(35,37,42,0.4)' }}>
-              <div className="flex flex-wrap gap-1.5">
+            <div
+              style={{
+                padding: '10px 16px',
+                borderBottom: `1px solid ${colors.border}`,
+              }}
+            >
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                 {/* Type filters */}
                 {types.map((t) => {
                   const isActive = selectedType === t.id;
@@ -158,9 +236,9 @@ export default function SearchOverlay({
                         fontWeight: 600,
                         textTransform: 'uppercase',
                         letterSpacing: '0.04em',
-                        border: isActive ? `1px solid ${c}55` : '1px solid rgba(35,37,42,0.5)',
+                        border: isActive ? `1px solid ${c}55` : `1px solid ${colors.borderLight}`,
                         backgroundColor: isActive ? `${c}12` : 'transparent',
-                        color: isActive ? c : '#52525b',
+                        color: isActive ? c : colors.textTertiary,
                         transition: 'all 0.15s',
                         cursor: 'pointer',
                       }}
@@ -184,9 +262,9 @@ export default function SearchOverlay({
                         fontWeight: 600,
                         textTransform: 'uppercase',
                         letterSpacing: '0.04em',
-                        border: isActive ? '1px solid #f59e0b55' : '1px solid rgba(35,37,42,0.5)',
-                        backgroundColor: isActive ? 'rgba(245,158,11,0.1)' : 'transparent',
-                        color: isActive ? '#f59e0b' : '#52525b',
+                        border: isActive ? `1px solid ${colors.accent}55` : `1px solid ${colors.borderLight}`,
+                        backgroundColor: isActive ? colors.accentSubtle : 'transparent',
+                        color: isActive ? colors.accent : colors.textTertiary,
                         transition: 'all 0.15s',
                         cursor: 'pointer',
                       }}
@@ -204,7 +282,7 @@ export default function SearchOverlay({
                       borderRadius: '9999px',
                       fontSize: '10px',
                       fontWeight: 600,
-                      color: '#8a8f98',
+                      color: colors.textSecondary,
                       cursor: 'pointer',
                       background: 'transparent',
                       border: 'none',
@@ -225,8 +303,11 @@ export default function SearchOverlay({
                 variants={staggerContainer}
                 initial="hidden"
                 animate="show"
-                className="max-h-80 sm:max-h-80 overflow-y-auto max-sm:flex-1"
-                style={{ padding: '8px' }}
+                style={{
+                  maxHeight: '320px',
+                  overflowY: 'auto',
+                  padding: '8px',
+                }}
               >
                 {results.map((entry, i) => (
                   <motion.button
@@ -234,24 +315,65 @@ export default function SearchOverlay({
                     variants={staggerItem}
                     custom={i}
                     onClick={() => { onSelect(entry.id); }}
-                    whileHover={{ scale: 1.01, backgroundColor: 'rgba(22,23,24,1)' }}
+                    whileHover={{ scale: 1.01, backgroundColor: colors.raised }}
                     whileTap={buttonTap}
-                    style={{ padding: '12px' }}
-                    className="w-full text-left rounded-xl transition-colors"
+                    style={{
+                      width: '100%',
+                      textAlign: 'left',
+                      padding: '12px',
+                      borderRadius: '12px',
+                      cursor: 'pointer',
+                      backgroundColor: 'transparent',
+                      border: 'none',
+                      transition: 'background-color 0.15s',
+                    }}
                   >
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full"
-                        style={{ backgroundColor: getTypeColor(entry.metadata.type || 'note') }} />
-                      <span className="text-[10px] font-medium text-[#8a8f98] uppercase tracking-[0.06em]">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                      <span
+                        style={{
+                          width: '6px',
+                          height: '6px',
+                          borderRadius: '50%',
+                          backgroundColor: getTypeColor(entry.metadata.type || 'note'),
+                          flexShrink: 0,
+                        }}
+                      />
+                      <span
+                        style={{
+                          fontSize: '10px',
+                          fontWeight: 500,
+                          color: colors.textSecondary,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.06em',
+                        }}
+                      >
                         {typeEmojis[entry.metadata.type || 'note'] || '📄'} {entry.metadata.type || 'note'}
                       </span>
                       {entry.metadata.project && (
-                        <span style={{ padding: '1px 7px' }} className="text-[10px] text-[#62666d] rounded-md bg-[#23252a]">
+                        <span
+                          style={{
+                            padding: '1px 7px',
+                            fontSize: '10px',
+                            color: colors.textTertiary,
+                            borderRadius: '6px',
+                            backgroundColor: colors.border,
+                          }}
+                        >
                           {entry.metadata.project}
                         </span>
                       )}
                     </div>
-                    <p className="text-sm text-[#a1a1aa] leading-relaxed line-clamp-2">
+                    <p
+                      style={{
+                        fontSize: '13px',
+                        color: '#a1a1aa',
+                        lineHeight: 1.625,
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                      }}
+                    >
                       {entry.text}
                     </p>
                   </motion.button>
@@ -265,10 +387,9 @@ export default function SearchOverlay({
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={easeOut}
-                className="text-center"
-                style={{ padding: '40px 24px' }}
+                style={{ textAlign: 'center', padding: '40px 24px' }}
               >
-                <p className="text-sm text-[#62666d]">
+                <p style={{ fontSize: '13px', color: colors.textTertiary }}>
                   Aucun résultat pour &laquo;&nbsp;{query}&nbsp;&raquo;
                   {hasFilters && ' avec ces filtres'}
                 </p>
@@ -281,10 +402,9 @@ export default function SearchOverlay({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.3 }}
-                className="text-center"
-                style={{ padding: '24px 24px' }}
+                style={{ textAlign: 'center', padding: '24px 24px' }}
               >
-                <p className="text-xs text-[#52525b]">
+                <p style={{ fontSize: '12px', color: colors.textTertiary }}>
                   Tapez pour rechercher dans {entries.length} entrées mémoire
                 </p>
               </motion.div>

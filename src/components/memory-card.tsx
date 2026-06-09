@@ -3,6 +3,17 @@ import { getTypeColor } from '@/lib/memory-data';
 import { relativeTime } from '@/lib/time';
 import type { MemoryEntry } from '@/lib/memory-data';
 
+// ─── Color tokens ──────────────────────────────────────────────
+const colors = {
+  surface: '#151718',
+  border: '#1e1f22',
+  textPrimary: '#ededef',
+  textSecondary: '#d4d4d8',
+  textTertiary: '#8a8f98',
+  accent: '#f59e0b',
+};
+
+// ─── Type icons ─────────────────────────────────────────────────
 const TYPE_ICONS: Record<string, string> = {
   architecture: '⌘',
   bug: '⚠',
@@ -14,6 +25,40 @@ const TYPE_ICONS: Record<string, string> = {
   design: '◇',
 };
 
+// ─── Dot-grid background helper ──────────────────────────────
+const dotGridBackground = `
+  radial-gradient(circle, ${colors.border} 0.5px, transparent 0.5px)
+  8px 8px / 16px 16px
+`;
+
+// ─── Shared inline styles ──────────────────────────────────────
+const s = {
+  // Label tag style (uppercase, tiny, tertiary)
+  label: {
+    fontSize: '10px',
+    fontWeight: 600,
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.1em',
+    color: colors.textTertiary,
+  } as React.CSSProperties,
+
+  // Value text style
+  value: {
+    fontSize: '13px',
+    color: colors.textSecondary,
+    letterSpacing: '-0.01em',
+  } as React.CSSProperties,
+
+  // Info tile for the metadata grid
+  tile: {
+    padding: '12px',
+    backgroundColor: 'rgba(30, 31, 34, 0.5)',
+    borderRadius: '8px',
+    border: `1px solid ${colors.border}`,
+  } as React.CSSProperties,
+};
+
+// ─── Component ──────────────────────────────────────────────────
 export default function MemoryCard({
   entry,
   compact,
@@ -33,53 +78,76 @@ export default function MemoryCard({
 
   return (
     <motion.div
-      className="grid gap-4"
       style={{
-        gridTemplateColumns: compact ? '1fr' : 'repeat(auto-fit, minmax(280px, 1fr))',
-        backgroundColor: '#151718',
-        border: '1px solid #27272a',
-        borderRadius: '16px',
-        padding: compact ? '16px' : '20px',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+        background: `${dotGridBackground}, ${colors.surface}`,
+        border: `1px solid ${colors.border}`,
+        borderRadius: '12px',
+        padding: compact ? '14px' : '18px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: compact ? '10px' : '14px',
       }}
       whileHover={{
-        y: -2,
-        boxShadow: '0 8px 32px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.4)',
+        borderColor: 'rgba(237, 237, 239, 0.08)',
         transition: { duration: 0.2 },
       }}
     >
-      {/* Header — full width : icône + type + date */}
+      {/* ─── Header: type dot + icon + label + date ─────── */}
       <div
-        className="col-span-full flex items-center gap-2.5"
-        style={{ marginBottom: '4px' }}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+        }}
       >
-        <div className="flex items-center gap-2 min-w-0">
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            minWidth: 0,
+          }}
+        >
           <span
-            className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-            style={{ backgroundColor: color }}
+            style={{
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              backgroundColor: color,
+              flexShrink: 0,
+            }}
           />
           <span
-            className="text-xs font-semibold uppercase tracking-[0.06em]"
-            style={{ color }}
+            style={{
+              fontSize: '12px',
+              fontWeight: 600,
+              color,
+              letterSpacing: '0.02em',
+            }}
           >
             {icon} {type}
           </span>
         </div>
         <span
-          className="ml-auto text-xs flex-shrink-0"
-          style={{ color: '#62666d', letterSpacing: '-0.01em' }}
+          style={{
+            marginLeft: 'auto',
+            fontSize: '11px',
+            color: colors.textTertiary,
+            flexShrink: 0,
+          }}
         >
           {relativeTime(timestamp)}
         </span>
       </div>
 
-      {/* Contenu — full width */}
+      {/* ─── Content text ───────────────────────────────── */}
       <p
-        className="col-span-full text-sm"
         style={{
-          color: '#d4d4d8',
-          lineHeight: '1.7',
+          fontSize: '13px',
+          color: colors.textPrimary,
+          lineHeight: '1.65',
           letterSpacing: '-0.01em',
+          margin: 0,
         }}
       >
         {compact && entry.text.length > 100
@@ -87,57 +155,58 @@ export default function MemoryCard({
           : entry.text}
       </p>
 
-      {/* Grille métadonnées / info (2 colonnes) */}
+      {/* ─── Metadata grid (expanded / default) ─────────── */}
       {showDetails && (
-        <>
-          {/* Métadonnées */}
-          <div
-            style={{
-              padding: '12px',
-              backgroundColor: 'rgba(39,39,42,0.3)',
-              borderRadius: '10px',
-            }}
-          >
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '10px',
+          }}
+        >
+          {/* Tile — Type + Tags */}
+          <div style={s.tile}>
+            <span style={s.label}>Type</span>
+            <p style={{ ...s.value, margin: '6px 0 0 0' }}>{icon} {type}</p>
+
             <span
-              className="text-[10px] font-medium uppercase tracking-[0.08em]"
-              style={{ color: '#62666d' }}
-            >
-              Type
-            </span>
-            <p
-              className="text-sm mt-1"
-              style={{ color: '#d4d4d8', letterSpacing: '-0.01em' }}
-            >
-              {icon} {type}
-            </p>
-            <span
-              className="text-[10px] font-medium uppercase tracking-[0.08em] mt-3 block"
-              style={{ color: '#62666d' }}
+              style={{
+                ...s.label,
+                marginTop: '14px',
+                display: 'block',
+              }}
             >
               Tags
             </span>
-            <div className="flex flex-wrap gap-1.5 mt-1">
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '6px',
+                marginTop: '6px',
+              }}
+            >
               <span
-                className="text-[11px]"
                 style={{
+                  fontSize: '11px',
                   padding: '2px 10px',
                   borderRadius: '6px',
-                  backgroundColor: `${color}20`,
+                  backgroundColor: `${color}15`,
                   color,
-                  border: `1px solid ${color}40`,
+                  border: `1px solid ${color}30`,
                 }}
               >
                 {type}
               </span>
               {project && (
                 <span
-                  className="text-[11px]"
                   style={{
+                    fontSize: '11px',
                     padding: '2px 10px',
                     borderRadius: '6px',
-                    backgroundColor: '#27272a',
-                    color: '#a1a1aa',
-                    border: '1px solid #3a3a3e',
+                    backgroundColor: colors.border,
+                    color: colors.textTertiary,
+                    border: `1px solid ${colors.border}`,
                   }}
                 >
                   {project}
@@ -146,40 +215,27 @@ export default function MemoryCard({
             </div>
           </div>
 
-          {/* Info */}
-          <div
-            style={{
-              padding: '12px',
-              backgroundColor: 'rgba(39,39,42,0.3)',
-              borderRadius: '10px',
-            }}
-          >
-            <span
-              className="text-[10px] font-medium uppercase tracking-[0.08em]"
-              style={{ color: '#62666d' }}
-            >
-              Projet
-            </span>
-            <p
-              className="text-sm mt-1"
-              style={{ color: '#d4d4d8', letterSpacing: '-0.01em' }}
-            >
+          {/* Tile — Project + Date */}
+          <div style={s.tile}>
+            <span style={s.label}>Project</span>
+            <p style={{ ...s.value, margin: '6px 0 0 0' }}>
               {project || '—'}
             </p>
+
             <span
-              className="text-[10px] font-medium uppercase tracking-[0.08em] mt-3 block"
-              style={{ color: '#62666d' }}
+              style={{
+                ...s.label,
+                marginTop: '14px',
+                display: 'block',
+              }}
             >
               Date
             </span>
-            <p
-              className="text-sm mt-1"
-              style={{ color: '#d4d4d8', letterSpacing: '-0.01em' }}
-            >
+            <p style={{ ...s.value, margin: '6px 0 0 0' }}>
               {relativeTime(timestamp)}
             </p>
           </div>
-        </>
+        </div>
       )}
     </motion.div>
   );

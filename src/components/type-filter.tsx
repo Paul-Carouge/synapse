@@ -1,9 +1,16 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { spring } from '@/lib/motion';
 import { getTypeColor } from '@/lib/memory-data';
 import type { MemoryEntry } from '@/lib/memory-data';
+
+const SURFACE = '#0f1011';
+const BORDER = '#1e1f22';
+const TEXT_PRIMARY = '#ededef';
+const TEXT_SECONDARY = '#8a8f98';
+const TEXT_TERTIARY = '#52525b';
+const ACCENT = '#f59e0b';
 
 interface TypeCount {
   id: string;
@@ -70,31 +77,26 @@ function FilterChip({
     <motion.button
       initial={{ opacity: 0, y: 8, scale: 0.92 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{
-        type: 'spring',
-        stiffness: 300,
-        damping: 22,
-        delay,
-      }}
+      transition={{ ...spring, delay }}
       whileHover={{ scale: 1.04, y: -1 }}
       whileTap={{ scale: 0.95 }}
       onClick={onToggle}
       style={{
         display: 'inline-flex',
         alignItems: 'center',
-        gap: '6px',
+        gap: '5px',
         flexShrink: 0,
         scrollSnapAlign: 'start',
-        padding: '7px 13px',
+        padding: '6px 12px',
         borderRadius: '9999px',
         cursor: 'pointer',
         border: isActive
-          ? `1px solid ${activeColor}55`
-          : '1px solid rgba(35,37,42,0.6)',
+          ? `1px solid ${activeColor}`
+          : `0.5px solid ${BORDER}`,
         backgroundColor: isActive
-          ? `${activeColor}0d`
+          ? `${activeColor}12`
           : 'transparent',
-        color: isActive ? activeColor : '#52525b',
+        color: isActive ? activeColor : TEXT_TERTIARY,
         fontSize: '11px',
         fontWeight: 600,
         textTransform: 'uppercase',
@@ -102,7 +104,7 @@ function FilterChip({
         transition: 'border-color 0.2s, background-color 0.2s, color 0.2s',
       }}
     >
-      <span style={{ fontSize: '13px', lineHeight: 1, opacity: isActive ? 1 : 0.7 }}>
+      <span style={{ fontSize: '12px', lineHeight: 1, opacity: isActive ? 1 : 0.6 }}>
         {icon}
       </span>
       <span>{label}</span>
@@ -110,7 +112,7 @@ function FilterChip({
         style={{
           fontSize: '9px',
           fontWeight: 700,
-          opacity: 0.5,
+          opacity: 0.45,
           marginLeft: '1px',
         }}
       >
@@ -129,26 +131,19 @@ export default function TypeFilter({
   activeType: string | null;
   onTypeChange: (type: string | null) => void;
 }) {
-  const scrollRef = useRef<HTMLDivElement>(null);
   const types = buildTypeCounts(entries);
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        width: '100%',
-      }}
-    >
+    <div style={{ position: 'relative', width: '100%' }}>
       <div
-        ref={scrollRef}
         style={{
           display: 'flex',
-          gap: '6px',
+          gap: '5px',
           overflowX: 'auto',
           overflowY: 'hidden',
           scrollSnapType: 'x mandatory',
           WebkitOverflowScrolling: 'touch',
-          padding: '6px 0',
+          padding: '4px 0',
           scrollbarWidth: 'none',
         }}
         className="no-scrollbar"
@@ -158,7 +153,7 @@ export default function TypeFilter({
           label="Tous"
           count={entries.length}
           isActive={activeType === null}
-          activeColor="#f59e0b"
+          activeColor={ACCENT}
           onToggle={() => onTypeChange(null)}
           delay={0}
         />
