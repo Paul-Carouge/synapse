@@ -4,8 +4,8 @@ import { Component, useRef, useMemo, useState, useCallback, useEffect, type Reac
 import { Canvas, useFrame, useThree, type RootState } from '@react-three/fiber';
 import { OrbitControls, Text } from '@react-three/drei';
 import * as THREE from 'three';
+import { tokens } from '@/lib/tokens';
 import { computeGraphLayout, GraphNode, GraphEdge, hashString } from '@/lib/graph-layout';
-import { getTypeColor } from '@/lib/memory-data';
 import type { MemoryEntry } from '@/lib/memory-data';
 
 // ---------------------------------------------------------------------------
@@ -56,7 +56,7 @@ function GraphNode3D({
     }
   });
 
-  const finalColor = isHovered ? '#f59e0b' : node.color;
+  const finalColor = isHovered ? tokens.accent : node.color;
   const emissiveIntensity = isSelected ? 1.2 : isHovered ? 0.8 : 0.3;
 
   return (
@@ -99,7 +99,7 @@ function GraphNode3D({
         <Text
           position={[0, baseSize * sizeScale + 0.5, 0]}
           fontSize={0.24}
-          color="#8a8f98"
+          color={tokens.textSecondary}
           anchorX="center"
           anchorY="bottom"
         >
@@ -205,7 +205,7 @@ function EdgeLine({
       <lineSegments geometry={lineGeom}>
         <lineDashedMaterial
           ref={materialRef}
-          color="#a1a1aa"
+          color={tokens.textTertiary}
           opacity={baseOpacity}
           transparent
           dashSize={0.08}
@@ -219,7 +219,7 @@ function EdgeLine({
 // ---------------------------------------------------------------------------
 // Particles — clean background dots
 // ---------------------------------------------------------------------------
-function Particles({ count = 80 }) {
+function Particles({ count = 60 }) {
   const ref = useRef<THREE.Points>(null!);
   const positions = useMemo(() => {
     const pos = new Float32Array(count * 3);
@@ -245,7 +245,7 @@ function Particles({ count = 80 }) {
       </bufferGeometry>
       <pointsMaterial
         size={0.02}
-        color="#52525b"
+        color={tokens.borderLight}
         transparent
         opacity={0.2}
         sizeAttenuation
@@ -323,7 +323,7 @@ function Lighting() {
   return (
     <>
       <ambientLight intensity={0.4} />
-      <pointLight position={[0, 0, 5]} intensity={0.15} color="#f59e0b" />
+      <pointLight position={[0, 0, 5]} intensity={0.15} color={tokens.accent} />
     </>
   );
 }
@@ -446,7 +446,7 @@ class CanvasErrorBoundary extends Component<{ children: ReactNode; fallback?: Re
         <div style={{
           position: 'fixed', inset: 0, display: 'flex',
           alignItems: 'center', justifyContent: 'center',
-          background: 'transparent', color: '#52525b', fontSize: '12px',
+          background: 'transparent', color: tokens.textTertiary, fontSize: '12px',
         }}>
           Visualisation 3D indisponible
         </div>

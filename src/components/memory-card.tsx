@@ -2,16 +2,7 @@ import { motion } from 'framer-motion';
 import { getTypeColor } from '@/lib/memory-data';
 import { relativeTime } from '@/lib/time';
 import type { MemoryEntry } from '@/lib/memory-data';
-
-// ─── Color tokens ──────────────────────────────────────────────
-const colors = {
-  surface: '#151718',
-  border: '#1e1f22',
-  textPrimary: '#ededef',
-  textSecondary: '#d4d4d8',
-  textTertiary: '#8a8f98',
-  accent: '#f59e0b',
-};
+import { tokens } from '@/lib/tokens';
 
 // ─── Type icons ─────────────────────────────────────────────────
 const TYPE_ICONS: Record<string, string> = {
@@ -27,34 +18,31 @@ const TYPE_ICONS: Record<string, string> = {
 
 // ─── Dot-grid background helper ──────────────────────────────
 const dotGridBackground = `
-  radial-gradient(circle, ${colors.border} 0.5px, transparent 0.5px)
+  radial-gradient(circle, ${tokens.border} 0.5px, transparent 0.5px)
   8px 8px / 16px 16px
 `;
 
 // ─── Shared inline styles ──────────────────────────────────────
 const s = {
-  // Label tag style (uppercase, tiny, tertiary)
   label: {
-    fontSize: '10px',
+    fontSize: `${tokens.label}px`,
     fontWeight: 600,
     textTransform: 'uppercase' as const,
     letterSpacing: '0.1em',
-    color: colors.textTertiary,
+    color: tokens.textTertiary,
   } as React.CSSProperties,
 
-  // Value text style
   value: {
-    fontSize: '13px',
-    color: colors.textSecondary,
+    fontSize: `${tokens.bodySm}px`,
+    color: tokens.textSecondary,
     letterSpacing: '-0.01em',
   } as React.CSSProperties,
 
-  // Info tile for the metadata grid
   tile: {
-    padding: '12px',
-    backgroundColor: 'rgba(30, 31, 34, 0.5)',
-    borderRadius: '8px',
-    border: `1px solid ${colors.border}`,
+    padding: `${tokens.spacing.px12}px`,
+    backgroundColor: tokens.raised,
+    borderRadius: `${tokens.radius.md}px`,
+    border: `1px solid ${tokens.border}`,
   } as React.CSSProperties,
 };
 
@@ -79,16 +67,16 @@ export default function MemoryCard({
   return (
     <motion.div
       style={{
-        background: `${dotGridBackground}, ${colors.surface}`,
-        border: `1px solid ${colors.border}`,
-        borderRadius: '12px',
-        padding: compact ? '14px' : '18px',
+        background: `${dotGridBackground}, ${tokens.raised}`,
+        border: `1px solid ${tokens.border}`,
+        borderRadius: `${tokens.radius.lg}px`,
+        padding: compact ? `${tokens.spacing.px14}px` : `${tokens.spacing.px18}px`,
         display: 'flex',
         flexDirection: 'column',
-        gap: compact ? '10px' : '14px',
+        gap: compact ? `${tokens.spacing.px10}px` : `${tokens.spacing.px14}px`,
       }}
       whileHover={{
-        borderColor: 'rgba(237, 237, 239, 0.08)',
+        borderColor: tokens.borderLight,
         transition: { duration: 0.2 },
       }}
     >
@@ -97,14 +85,14 @@ export default function MemoryCard({
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '10px',
+          gap: `${tokens.spacing.px10}px`,
         }}
       >
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '8px',
+            gap: `${tokens.spacing.px8}px`,
             minWidth: 0,
           }}
         >
@@ -119,7 +107,7 @@ export default function MemoryCard({
           />
           <span
             style={{
-              fontSize: '12px',
+              fontSize: `${tokens.bodySm}px`,
               fontWeight: 600,
               color,
               letterSpacing: '0.02em',
@@ -131,8 +119,8 @@ export default function MemoryCard({
         <span
           style={{
             marginLeft: 'auto',
-            fontSize: '11px',
-            color: colors.textTertiary,
+            fontSize: `${tokens.label}px`,
+            color: tokens.textTertiary,
             flexShrink: 0,
           }}
         >
@@ -143,8 +131,8 @@ export default function MemoryCard({
       {/* ─── Content text ───────────────────────────────── */}
       <p
         style={{
-          fontSize: '13px',
-          color: colors.textPrimary,
+          fontSize: `${tokens.bodySm}px`,
+          color: tokens.textPrimary,
           lineHeight: '1.65',
           letterSpacing: '-0.01em',
           margin: 0,
@@ -161,7 +149,7 @@ export default function MemoryCard({
           style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
-            gap: '10px',
+            gap: `${tokens.spacing.px10}px`,
           }}
         >
           {/* Tile — Type + Tags */}
@@ -172,7 +160,7 @@ export default function MemoryCard({
             <span
               style={{
                 ...s.label,
-                marginTop: '14px',
+                marginTop: `${tokens.spacing.px14}px`,
                 display: 'block',
               }}
             >
@@ -182,15 +170,15 @@ export default function MemoryCard({
               style={{
                 display: 'flex',
                 flexWrap: 'wrap',
-                gap: '6px',
-                marginTop: '6px',
+                gap: `${tokens.spacing.px6}px`,
+                marginTop: `${tokens.spacing.px6}px`,
               }}
             >
               <span
                 style={{
-                  fontSize: '11px',
-                  padding: '2px 10px',
-                  borderRadius: '6px',
+                  fontSize: `${tokens.label}px`,
+                  padding: `2px ${tokens.spacing.px10}px`,
+                  borderRadius: `${tokens.radius.md}px`,
                   backgroundColor: `${color}15`,
                   color,
                   border: `1px solid ${color}30`,
@@ -201,12 +189,12 @@ export default function MemoryCard({
               {project && (
                 <span
                   style={{
-                    fontSize: '11px',
-                    padding: '2px 10px',
-                    borderRadius: '6px',
-                    backgroundColor: colors.border,
-                    color: colors.textTertiary,
-                    border: `1px solid ${colors.border}`,
+                    fontSize: `${tokens.label}px`,
+                    padding: `2px ${tokens.spacing.px10}px`,
+                    borderRadius: `${tokens.radius.md}px`,
+                    backgroundColor: tokens.border,
+                    color: tokens.textTertiary,
+                    border: `1px solid ${tokens.border}`,
                   }}
                 >
                   {project}
@@ -225,7 +213,7 @@ export default function MemoryCard({
             <span
               style={{
                 ...s.label,
-                marginTop: '14px',
+                marginTop: `${tokens.spacing.px14}px`,
                 display: 'block',
               }}
             >

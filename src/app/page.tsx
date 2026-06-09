@@ -14,12 +14,9 @@ import { loadMemoryData, getTypeColor, getUniqueTypes } from '@/lib/memory-data'
 import { computeGraphLayout, findConnectedNodes } from '@/lib/graph-layout';
 import { useEscape } from '@/hooks/useEscape';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { tokens, border, borderLight } from '@/lib/tokens';
 import type { MemoryEntry } from '@/lib/memory-data';
 import { spring, easeOut, buttonTap } from '@/lib/motion';
-
-const BORDER = '1px solid rgba(30,31,34,0.8)';
-const SURFACE = 'rgba(15,16,17,0.92)';
-const BG = '#0a0a0b';
 
 export default function Home() {
   const [entries, setEntries] = useState<MemoryEntry[]>([]);
@@ -101,47 +98,34 @@ export default function Home() {
   // ── Loading ──
   if (loading) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center" style={{ background: BG }}>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="flex flex-col items-center gap-3"
-        >
-          <motion.div
-            animate={{ scale: [1, 1.2, 1] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-            className="w-1.5 h-1.5 rounded-full bg-[#f59e0b]"
-          />
-          <p className="text-xs text-[#52525b]">Chargement...</p>
+      <div className="fixed inset-0 flex items-center justify-center" style={{ background: tokens.deep }}>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center gap-3">
+          <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }} className="w-1.5 h-1.5 rounded-full" style={{ background: tokens.accent }} />
+          <p className="text-xs" style={{ color: tokens.textTertiary }}>Chargement...</p>
         </motion.div>
       </div>
     );
   }
 
-  // ── Error / Empty ──
+  // ── Error ──
   if (error || entries.length === 0) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center" style={{ background: BG }}>
+      <div className="fixed inset-0 flex items-center justify-center" style={{ background: tokens.deep }}>
         <div className="text-center max-w-xs" style={{ padding: '0 24px' }}>
-          <div className="w-8 h-8 mx-auto rounded-full bg-[#EF4444]/10 flex items-center justify-center mb-3">
+          <div className="w-8 h-8 mx-auto rounded-full flex items-center justify-center mb-3" style={{ background: '#EF444410' }}>
             <svg className="w-4 h-4 text-[#EF4444]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
             </svg>
           </div>
-          <p className="text-sm text-[#8a8f98] mb-4">{error || 'Aucune donnée mémoire disponible.'}</p>
-          <button onClick={() => window.location.reload()} className="text-xs text-[#f59e0b] font-medium hover:underline">
-            Réessayer
-          </button>
+          <p className="text-sm" style={{ color: tokens.textSecondary, marginBottom: '16px' }}>{error || 'Aucune donnée mémoire disponible.'}</p>
+          <button onClick={() => window.location.reload()} className="text-xs" style={{ color: tokens.accent, fontWeight: 500 }}>Réessayer</button>
         </div>
       </div>
     );
   }
 
   return (
-    <main
-      className="fixed inset-0 overflow-hidden"
-      style={{ background: BG }}
-    >
+    <main className="fixed inset-0 overflow-hidden" style={{ background: tokens.deep }}>
       {/* 3D Scene */}
       <NeuronScene
         entries={filteredEntries}
@@ -157,12 +141,10 @@ export default function Home() {
       <AnimatePresence>
         {showWelcome && !selectedId && (
           <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="fixed inset-0 z-5 flex items-center justify-center pointer-events-none text-xs text-[#52525b]"
-            style={{ padding: '0 24px' }}
+            className="fixed inset-0 z-5 flex items-center justify-center pointer-events-none"
+            style={{ color: tokens.textTertiary, fontSize: `${tokens.caption}px`, padding: '0 24px' }}
           >
             {filteredEntries.length} entrées mémoire
           </motion.p>
@@ -170,7 +152,7 @@ export default function Home() {
       </AnimatePresence>
 
       {/* TypeFilter — Desktop */}
-      <div className="hidden lg:block" style={{ position: 'fixed', top: '20px', left: '20px', zIndex: 10, maxWidth: 'calc(100vw - 320px)' }}>
+      <div className="hidden lg:block" style={{ position: 'fixed', top: '16px', left: '16px', zIndex: 10, maxWidth: 'calc(100vw - 340px)' }}>
         <TypeFilter entries={filteredEntries} activeType={activeType} onTypeChange={setActiveType} />
       </div>
 
@@ -181,17 +163,17 @@ export default function Home() {
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...spring, delay: 0.15 }}
-          whileHover={{ borderColor: 'rgba(245,158,11,0.25)' }}
+          whileHover={{ borderColor: tokens.accent + '40' }}
           whileTap={buttonTap}
-          style={{ padding: '9px 16px', border: BORDER, background: SURFACE, minWidth: '340px' }}
-          className="pointer-events-auto rounded-xl flex items-center gap-3 shadow-sm text-sm text-[#52525b]"
+          style={{ padding: '8px 14px', border, background: tokens.surface, minWidth: '320px', borderRadius: `${tokens.radius.md}px` }}
+          className="pointer-events-auto flex items-center gap-3 text-xs"
         >
-          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="w-3 h-3" style={{ color: tokens.textTertiary }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
-          <span>Rechercher</span>
+          <span style={{ color: tokens.textTertiary }}>Rechercher</span>
           <span className="flex-1" />
-          <kbd style={{ padding: '1px 6px', fontSize: '10px' }} className="rounded border border-[#1e1f22] text-[#3a3a3e] font-mono">⌘K</kbd>
+          <kbd style={{ padding: '1px 5px', fontSize: '9px', borderRadius: '4px', border: `1px solid ${tokens.border}`, color: tokens.textTertiary }} className="font-mono">⌘K</kbd>
         </motion.button>
       </div>
 
@@ -202,19 +184,27 @@ export default function Home() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.2 }}
         whileTap={buttonTap}
-        className="lg:hidden fixed top-[max(env(safe-area-inset-top,4px),12px)] right-3 z-15 w-9 h-9 rounded-lg flex items-center justify-center"
-        style={{ background: SURFACE, border: BORDER }}
+        className="lg:hidden fixed top-[max(env(safe-area-inset-top,4px),12px)] right-3 z-15 w-8 h-8 flex items-center justify-center"
+        style={{ background: tokens.surface, border, borderRadius: `${tokens.radius.md}px` }}
         aria-label="Rechercher"
       >
-        <svg className="w-3.5 h-3.5 text-[#52525b]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg className="w-3 h-3" style={{ color: tokens.textTertiary }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
       </motion.button>
 
-      {/* Legend + Shortcuts buttons */}
+      {/* Top-left buttons */}
       <div className="fixed top-[max(env(safe-area-inset-top,4px),12px)] left-3 z-15 flex gap-1.5">
-        <ActionBtn icon="circle" onClick={() => setLegendOpen((p) => !p)} label="Légende" />
-        <ActionBtn icon="info" onClick={() => setShowShortcuts(true)} label="Raccourcis" className="hidden lg:flex" />
+        <MiniBtn onClick={() => setLegendOpen((p) => !p)} label="Légende">
+          <svg className="w-3 h-3" style={{ color: tokens.textTertiary }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <circle cx="12" cy="12" r="3" /><path strokeLinecap="round" d="M12 2v4M12 18v4M2 12h4M18 12h4" />
+          </svg>
+        </MiniBtn>
+        <MiniBtn onClick={() => setShowShortcuts(true)} label="Raccourcis" className="hidden lg:flex">
+          <svg className="w-3 h-3" style={{ color: tokens.textTertiary }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <circle cx="12" cy="12" r="10" /><path strokeLinecap="round" d="M12 16v-4M12 8h.01" />
+          </svg>
+        </MiniBtn>
       </div>
 
       {/* Legend */}
@@ -225,15 +215,15 @@ export default function Home() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -4, scale: 0.96 }}
             transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-            style={{ top: '52px', left: '12px', padding: '10px 14px', minWidth: '140px', background: SURFACE, border: BORDER }}
-            className="fixed z-20 rounded-xl shadow-sm"
+            style={{ top: '48px', left: '12px', padding: '8px 12px', minWidth: '130px', background: tokens.surface, border, borderRadius: `${tokens.radius.lg}px` }}
+            className="fixed z-20"
           >
             {getUniqueTypes(filteredEntries).map((t) => {
               const c = getTypeColor(t.id);
               return (
-                <div key={t.id} className="flex items-center gap-2 py-1">
-                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: c }} />
-                  <span className="text-[10px] font-medium text-[#52525b] uppercase tracking-[0.06em]">{t.label}</span>
+                <div key={t.id} className="flex items-center gap-2 py-0.5">
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ background: c }} />
+                  <span style={{ fontSize: `${tokens.caption}px`, fontWeight: 500, color: tokens.textTertiary, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{t.label}</span>
                 </div>
               );
             })}
@@ -250,18 +240,18 @@ export default function Home() {
             exit={{ opacity: 0, y: 2 }}
             className="fixed top-20 left-1/2 -translate-x-1/2 z-20 pointer-events-none max-sm:top-auto max-sm:bottom-24"
           >
-            <div style={{ padding: '8px 12px', background: SURFACE, border: BORDER }} className="rounded-lg text-xs shadow-sm max-w-[260px]">
+            <div style={{ padding: '6px 10px', background: tokens.surface, border, borderRadius: `${tokens.radius.md}px` }} className="max-w-[240px]">
               <div className="flex items-center gap-1.5 mb-0.5">
-                <span className="w-1 h-1 rounded-full" style={{ backgroundColor: getTypeColor(hoveredEntry.metadata.type || 'note') }} />
-                <span className="text-[9px] text-[#52525b] uppercase tracking-[0.06em]">{hoveredEntry.metadata.type || 'note'}</span>
+                <span className="w-1 h-1 rounded-full" style={{ background: getTypeColor(hoveredEntry.metadata.type || 'note') }} />
+                <span style={{ fontSize: `${tokens.caption}px`, color: tokens.textTertiary, textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 500 }}>{hoveredEntry.metadata.type || 'note'}</span>
               </div>
-              <p className="text-[11px] text-[#62666d] leading-relaxed line-clamp-1">{hoveredEntry.text.slice(0, 100)}</p>
+              <p style={{ fontSize: `${tokens.bodySm}px`, color: tokens.textSecondary, lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{hoveredEntry.text.slice(0, 100)}</p>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Bottom sheets mobile */}
+      {/* Mobile sheets */}
       <AnimatePresence>{activeTab === 'filters' && <MobileSheet title="Filtres" onClose={() => setActiveTab(null)}><TypeFilter entries={filteredEntries} activeType={activeType} onTypeChange={(t) => { setActiveType(t); setActiveTab(null); }} /></MobileSheet>}</AnimatePresence>
       <AnimatePresence>{activeTab === 'stats' && <MobileSheet title="Statistiques" onClose={() => setActiveTab(null)}><StatsBadge entries={filteredEntries} lastUpdated={filteredEntries[0]?.metadata.timestamp} big /></MobileSheet>}</AnimatePresence>
 
@@ -277,55 +267,37 @@ export default function Home() {
       />
 
       {/* Stats — Desktop */}
-      <div className="hidden lg:block">
-        <StatsBadge entries={filteredEntries} lastUpdated={filteredEntries[0]?.metadata.timestamp} />
-      </div>
+      <div className="hidden lg:block"><StatsBadge entries={filteredEntries} lastUpdated={filteredEntries[0]?.metadata.timestamp} /></div>
 
       {/* Shortcuts */}
-      <AnimatePresence>
-        {showShortcuts && <ShortcutsModal onClose={() => setShowShortcuts(false)} />}
-      </AnimatePresence>
+      <AnimatePresence>{showShortcuts && <ShortcutsModal onClose={() => setShowShortcuts(false)} />}</AnimatePresence>
 
       {/* Mobile nav */}
       <BottomSheetNav activeTab={activeTab} onTabChange={handleTabChange} />
 
       {/* Search */}
       <AnimatePresence>
-        {searchOpen && (
-          <SearchOverlay entries={filteredEntries} onSelect={(id) => { setSelectedId(id); setSearchOpen(false); }} onClose={() => setSearchOpen(false)} />
-        )}
+        {searchOpen && <SearchOverlay entries={filteredEntries} onSelect={(id) => { setSelectedId(id); setSearchOpen(false); }} onClose={() => setSearchOpen(false)} />}
       </AnimatePresence>
 
       {/* Detail */}
       <AnimatePresence>
-        {selectedEntry && (
-          <DetailPanel entry={selectedEntry} connectedEntries={connectedEntries} onClose={() => setSelectedId(null)} onNavigate={handleNavigate} />
-        )}
+        {selectedEntry && <DetailPanel entry={selectedEntry} connectedEntries={connectedEntries} onClose={() => setSelectedId(null)} onNavigate={handleNavigate} />}
       </AnimatePresence>
     </main>
   );
 }
 
-// ── Components ──
-
-function ActionBtn({ icon, onClick, label, className }: { icon: string; onClick: () => void; label: string; className?: string }) {
+function MiniBtn({ children, onClick, label, className }: { children: React.ReactNode; onClick: () => void; label: string; className?: string }) {
   return (
     <motion.button
       onClick={onClick}
       whileTap={buttonTap}
-      className={`w-9 h-9 rounded-lg flex items-center justify-center ${className || ''}`}
-      style={{ background: SURFACE, border: BORDER }}
+      className={`w-8 h-8 flex items-center justify-center ${className || ''}`}
+      style={{ background: tokens.surface, border, borderRadius: `${tokens.radius.md}px` }}
       aria-label={label}
     >
-      {icon === 'circle' ? (
-        <svg className="w-3.5 h-3.5 text-[#52525b]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <circle cx="12" cy="12" r="3" /><path strokeLinecap="round" d="M12 2v4M12 18v4M2 12h4M18 12h4" />
-        </svg>
-      ) : (
-        <svg className="w-3.5 h-3.5 text-[#52525b]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <circle cx="12" cy="12" r="10" /><path strokeLinecap="round" d="M12 16v-4M12 8h.01" />
-        </svg>
-      )}
+      {children}
     </motion.button>
   );
 }
@@ -333,20 +305,17 @@ function ActionBtn({ icon, onClick, label, className }: { icon: string; onClick:
 function MobileSheet({ title, children, onClose }: { title: string; children: React.ReactNode; onClose: () => void }) {
   return (
     <motion.div
-      initial={{ y: '100%' }}
-      animate={{ y: 0 }}
-      exit={{ y: '100%' }}
-      transition={spring}
+      initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }} transition={spring}
       className="lg:hidden fixed inset-x-0 bottom-0 z-40 rounded-t-xl max-h-[70vh] overflow-y-auto"
-      style={{ background: '#0f1011', borderTop: BORDER, paddingBottom: 'env(safe-area-inset-bottom, 16px)' }}
+      style={{ background: tokens.surface, borderTop: border, paddingBottom: 'env(safe-area-inset-bottom, 16px)', borderRadius: `${tokens.radius.lg}px ${tokens.radius.lg}px 0 0` }}
     >
-      <div className="sticky top-0 flex items-center justify-between py-2.5 px-5 border-b border-[#1e1f22]/60" style={{ background: '#0f1011' }}>
-        <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#52525b]">{title}</span>
-        <button onClick={onClose} className="w-7 h-7 rounded-md flex items-center justify-center" style={{ background: '#1a1a1e', border: '1px solid #27272a' }}>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8a8f98" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+      <div className="sticky top-0 flex items-center justify-between py-2.5 px-5" style={{ background: tokens.surface, borderBottom: `1px solid ${tokens.border}` }}>
+        <span style={{ fontSize: `${tokens.caption}px`, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: tokens.textTertiary }}>{title}</span>
+        <button onClick={onClose} className="w-6 h-6 flex items-center justify-center" style={{ border: borderLight, borderRadius: `${tokens.radius.sm}px` }}>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={tokens.textTertiary} strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
         </button>
       </div>
-      <div style={{ padding: '16px 20px' }}>{children}</div>
+      <div style={{ padding: '14px 20px' }}>{children}</div>
     </motion.div>
   );
 }
@@ -354,7 +323,7 @@ function MobileSheet({ title, children, onClose }: { title: string; children: Re
 function ShortcutsModal({ onClose }: { onClose: () => void }) {
   useEscape(onClose);
   useBodyScrollLock(true);
-  const shortcuts = [
+  const items = [
     { key: '⌘K', action: 'Recherche' },
     { key: '⌘R', action: 'Rotation auto' },
     { key: 'Escape', action: 'Désélectionner' },
@@ -362,24 +331,23 @@ function ShortcutsModal({ onClose }: { onClose: () => void }) {
   ];
   return (
     <>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-black/50" onClick={onClose} />
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50" style={{ background: '#0c0a0980' }} onClick={onClose} />
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
-        transition={spring}
+        initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={spring}
         className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none"
       >
-        <div className="pointer-events-auto rounded-xl p-5 shadow-sm" style={{ background: SURFACE, border: BORDER, minWidth: '260px' }}>
+        <div className="pointer-events-auto p-5" style={{ background: tokens.surface, border, borderRadius: `${tokens.radius.lg}px`, minWidth: '240px' }}>
           <div className="flex items-center justify-between mb-3">
-            <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#52525b]">Raccourcis</span>
-            <button onClick={onClose} className="w-6 h-6 rounded flex items-center justify-center" style={{ background: '#1a1a1e', border: '1px solid #27272a' }}>
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8a8f98" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+            <span style={{ fontSize: `${tokens.caption}px`, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: tokens.textTertiary }}>Raccourcis</span>
+            <button onClick={onClose} className="w-6 h-6 flex items-center justify-center" style={{ border: borderLight, borderRadius: `${tokens.radius.sm}px` }}>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={tokens.textTertiary} strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
             </button>
           </div>
           <div className="space-y-2">
-            {shortcuts.map((s) => (
+            {items.map((s) => (
               <div key={s.key} className="flex items-center justify-between">
-                <span className="text-xs text-[#62666d]">{s.action}</span>
-                <kbd style={{ padding: '1px 6px' }} className="text-[10px] text-[#8a8f98] rounded bg-[#1a1a1e] border border-[#27272a] font-mono">{s.key}</kbd>
+                <span style={{ fontSize: `${tokens.bodySm}px`, color: tokens.textSecondary }}>{s.action}</span>
+                <kbd style={{ padding: '1px 5px', borderRadius: '4px', background: tokens.raised, border: `1px solid ${tokens.border}`, fontSize: `${tokens.caption}px`, color: tokens.textSecondary }} className="font-mono">{s.key}</kbd>
               </div>
             ))}
           </div>

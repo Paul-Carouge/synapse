@@ -4,13 +4,7 @@ import { motion } from 'framer-motion';
 import { spring } from '@/lib/motion';
 import { getTypeColor } from '@/lib/memory-data';
 import type { MemoryEntry } from '@/lib/memory-data';
-
-const SURFACE = '#0f1011';
-const BORDER = '#1e1f22';
-const TEXT_PRIMARY = '#ededef';
-const TEXT_SECONDARY = '#8a8f98';
-const TEXT_TERTIARY = '#52525b';
-const ACCENT = '#f59e0b';
+import { tokens } from '@/lib/tokens';
 
 interface TypeCount {
   id: string;
@@ -87,17 +81,17 @@ function FilterChip({
         gap: '5px',
         flexShrink: 0,
         scrollSnapAlign: 'start',
-        padding: '6px 12px',
-        borderRadius: '9999px',
+        padding: `${tokens.spacing.px6}px ${tokens.spacing.px12}px`,
+        borderRadius: `${tokens.radius.md}px`,
         cursor: 'pointer',
         border: isActive
           ? `1px solid ${activeColor}`
-          : `0.5px solid ${BORDER}`,
+          : `0.5px solid ${tokens.border}`,
         backgroundColor: isActive
-          ? `${activeColor}12`
+          ? tokens.accentSubtle
           : 'transparent',
-        color: isActive ? activeColor : TEXT_TERTIARY,
-        fontSize: '11px',
+        color: isActive ? activeColor : tokens.textTertiary,
+        fontSize: `${tokens.label}px`,
         fontWeight: 600,
         textTransform: 'uppercase',
         letterSpacing: '0.06em',
@@ -110,7 +104,7 @@ function FilterChip({
       <span>{label}</span>
       <span
         style={{
-          fontSize: '9px',
+          fontSize: `${tokens.caption}px`,
           fontWeight: 700,
           opacity: 0.45,
           marginLeft: '1px',
@@ -153,7 +147,7 @@ export default function TypeFilter({
           label="Tous"
           count={entries.length}
           isActive={activeType === null}
-          activeColor={ACCENT}
+          activeColor={tokens.accent}
           onToggle={() => onTypeChange(null)}
           delay={0}
         />

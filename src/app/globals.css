@@ -1,43 +1,47 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-deep: #0a0a0b;
-  --color-surface: #0f1011;
-  --color-surface-raised: #161718;
-  --color-border: #1e1f22;
-  --color-border-light: #2a2b2e;
-  --color-text-primary: #ededef;
-  --color-text-secondary: #8a8f98;
-  --color-text-tertiary: #52525b;
+  --color-deep: #0c0a09;
+  --color-surface: #141315;
+  --color-surface-raised: #1c1b1e;
+  --color-border: #272629;
+  --color-border-light: #3b3a3d;
+  --color-text-primary: #e8e7e8;
+  --color-text-secondary: #a1a0a4;
+  --color-text-tertiary: #636266;
   --color-accent: #f59e0b;
   --color-accent-subtle: rgba(245, 158, 11, 0.12);
 
   --font-sans: "Inter Variable", system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono Variable", monospace;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
 }
 
 /* ── Grid dot pattern ── */
 html {
-  background-color: #0a0a0b;
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-  background-size: 24px 24px;
+  background-color: #0c0a09;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { height: 100%; overflow: hidden; }
 body {
   background: transparent;
-  color: #ededef;
+  color: #e8e7e8;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* ── Scrollbar minimal ── */
-::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar { width: 2px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.05); border-radius: 1.5px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.1); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.04); border-radius: 1px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.08); }
 
 .tap-highlight-transparent {
   -webkit-tap-highlight-color: transparent;

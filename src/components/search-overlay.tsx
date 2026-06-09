@@ -8,16 +8,18 @@ import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { springSnappy, easeOut, staggerContainer, staggerItem, buttonTap } from '@/lib/motion';
 import type { MemoryEntry } from '@/lib/memory-data';
 
-const colors = {
-  surface: '#0f1011',
-  raised: '#161718',
-  border: '#1e1f22',
-  borderLight: '#2a2b2e',
-  textPrimary: '#ededef',
-  textSecondary: '#8a8f98',
-  textTertiary: '#52525b',
+const tokens = {
+  deep: '#0c0a09',
+  surface: '#141315',
+  raised: '#1c1b1e',
+  border: '#272629',
+  borderLight: '#3b3a3d',
+  textPrimary: '#e8e7e8',
+  textSecondary: '#a1a0a4',
+  textTertiary: '#636266',
   accent: '#f59e0b',
-  accentSubtle: 'rgba(245,158,11,0.12)',
+  accentSubtle: 'rgba(245, 158, 11, 0.12)',
+  radius: { sm: 4, md: 6, lg: 10 },
 };
 
 const typeEmojis: Record<string, string> = {
@@ -57,11 +59,8 @@ export default function SearchOverlay({
 
   const results = useMemo(() => {
     return entries.filter((e) => {
-      // Type filter
       if (selectedType && (e.metadata.type || 'note') !== selectedType) return false;
-      // Project filter
       if (selectedProject && e.metadata.project !== selectedProject) return false;
-      // Text search
       if (query.trim()) {
         const q = query.toLowerCase();
         return (
@@ -117,11 +116,10 @@ export default function SearchOverlay({
       >
         <div
           style={{
-            backgroundColor: colors.surface,
-            border: `1px solid ${colors.border}`,
-            borderRadius: '16px',
+            backgroundColor: tokens.surface,
+            border: `1px solid ${tokens.border}`,
+            borderRadius: `${tokens.radius.lg}px`,
             overflow: 'hidden',
-            boxShadow: '0 16px 48px -12px rgba(0,0,0,0.6)',
           }}
         >
           {/* Search input */}
@@ -131,7 +129,7 @@ export default function SearchOverlay({
               alignItems: 'center',
               gap: '8px',
               padding: '12px 16px',
-              borderBottom: `1px solid ${colors.border}`,
+              borderBottom: `1px solid ${tokens.border}`,
             }}
           >
             <motion.button
@@ -146,10 +144,10 @@ export default function SearchOverlay({
                 flexShrink: 0,
                 width: '32px',
                 height: '32px',
-                borderRadius: '8px',
-                backgroundColor: colors.raised,
-                border: `1px solid ${colors.borderLight}`,
-                color: colors.textSecondary,
+                borderRadius: `${tokens.radius.md}px`,
+                backgroundColor: tokens.raised,
+                border: `1px solid ${tokens.borderLight}`,
+                color: tokens.textSecondary,
                 cursor: 'pointer',
               }}
             >
@@ -160,7 +158,7 @@ export default function SearchOverlay({
             </motion.button>
 
             <svg
-              style={{ width: '16px', height: '16px', color: `${colors.accent}99`, flexShrink: 0 }}
+              style={{ width: '16px', height: '16px', color: `${tokens.accent}99`, flexShrink: 0 }}
               fill="none" viewBox="0 0 24 24" stroke="currentColor"
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -175,10 +173,10 @@ export default function SearchOverlay({
                 style={{
                   width: '100%',
                   padding: '9px 12px',
-                  backgroundColor: colors.raised,
-                  border: `1px solid ${colors.borderLight}`,
-                  borderRadius: '8px',
-                  color: colors.textPrimary,
+                  backgroundColor: tokens.raised,
+                  border: `1px solid ${tokens.borderLight}`,
+                  borderRadius: `${tokens.radius.md}px`,
+                  color: tokens.textPrimary,
                   fontSize: '13px',
                   fontWeight: 500,
                   letterSpacing: '0.01em',
@@ -186,12 +184,12 @@ export default function SearchOverlay({
                   transition: 'all 0.2s',
                 }}
                 onFocus={(e) => {
-                  e.target.style.borderColor = `${colors.accent}4D`;
-                  e.target.style.backgroundColor = '#1a1a1e';
+                  e.target.style.borderColor = `${tokens.accent}4D`;
+                  e.target.style.backgroundColor = tokens.deep;
                 }}
                 onBlur={(e) => {
-                  e.target.style.borderColor = colors.borderLight;
-                  e.target.style.backgroundColor = colors.raised;
+                  e.target.style.borderColor = tokens.borderLight;
+                  e.target.style.backgroundColor = tokens.raised;
                 }}
               />
             </div>
@@ -201,9 +199,9 @@ export default function SearchOverlay({
               style={{
                 padding: '2px 8px',
                 fontSize: '11px',
-                color: colors.textTertiary,
-                borderRadius: '6px',
-                border: `1px solid ${colors.border}`,
+                color: tokens.textTertiary,
+                borderRadius: `${tokens.radius.md}px`,
+                border: `1px solid ${tokens.border}`,
                 fontFamily: 'monospace',
                 display: 'none',
               }}
@@ -217,7 +215,7 @@ export default function SearchOverlay({
             <div
               style={{
                 padding: '10px 16px',
-                borderBottom: `1px solid ${colors.border}`,
+                borderBottom: `1px solid ${tokens.border}`,
               }}
             >
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
@@ -236,9 +234,9 @@ export default function SearchOverlay({
                         fontWeight: 600,
                         textTransform: 'uppercase',
                         letterSpacing: '0.04em',
-                        border: isActive ? `1px solid ${c}55` : `1px solid ${colors.borderLight}`,
+                        border: isActive ? `1px solid ${c}55` : `1px solid ${tokens.borderLight}`,
                         backgroundColor: isActive ? `${c}12` : 'transparent',
-                        color: isActive ? c : colors.textTertiary,
+                        color: isActive ? c : tokens.textTertiary,
                         transition: 'all 0.15s',
                         cursor: 'pointer',
                       }}
@@ -262,9 +260,9 @@ export default function SearchOverlay({
                         fontWeight: 600,
                         textTransform: 'uppercase',
                         letterSpacing: '0.04em',
-                        border: isActive ? `1px solid ${colors.accent}55` : `1px solid ${colors.borderLight}`,
-                        backgroundColor: isActive ? colors.accentSubtle : 'transparent',
-                        color: isActive ? colors.accent : colors.textTertiary,
+                        border: isActive ? `1px solid ${tokens.accent}55` : `1px solid ${tokens.borderLight}`,
+                        backgroundColor: isActive ? tokens.accentSubtle : 'transparent',
+                        color: isActive ? tokens.accent : tokens.textTertiary,
                         transition: 'all 0.15s',
                         cursor: 'pointer',
                       }}
@@ -282,7 +280,7 @@ export default function SearchOverlay({
                       borderRadius: '9999px',
                       fontSize: '10px',
                       fontWeight: 600,
-                      color: colors.textSecondary,
+                      color: tokens.textSecondary,
                       cursor: 'pointer',
                       background: 'transparent',
                       border: 'none',
@@ -315,13 +313,13 @@ export default function SearchOverlay({
                     variants={staggerItem}
                     custom={i}
                     onClick={() => { onSelect(entry.id); }}
-                    whileHover={{ scale: 1.01, backgroundColor: colors.raised }}
+                    whileHover={{ scale: 1.01, backgroundColor: tokens.raised }}
                     whileTap={buttonTap}
                     style={{
                       width: '100%',
                       textAlign: 'left',
                       padding: '12px',
-                      borderRadius: '12px',
+                      borderRadius: `${tokens.radius.md}px`,
                       cursor: 'pointer',
                       backgroundColor: 'transparent',
                       border: 'none',
@@ -342,7 +340,7 @@ export default function SearchOverlay({
                         style={{
                           fontSize: '10px',
                           fontWeight: 500,
-                          color: colors.textSecondary,
+                          color: tokens.textSecondary,
                           textTransform: 'uppercase',
                           letterSpacing: '0.06em',
                         }}
@@ -354,9 +352,9 @@ export default function SearchOverlay({
                           style={{
                             padding: '1px 7px',
                             fontSize: '10px',
-                            color: colors.textTertiary,
-                            borderRadius: '6px',
-                            backgroundColor: colors.border,
+                            color: tokens.textTertiary,
+                            borderRadius: `${tokens.radius.md}px`,
+                            backgroundColor: tokens.border,
                           }}
                         >
                           {entry.metadata.project}
@@ -366,7 +364,7 @@ export default function SearchOverlay({
                     <p
                       style={{
                         fontSize: '13px',
-                        color: '#a1a1aa',
+                        color: tokens.textSecondary,
                         lineHeight: 1.625,
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
@@ -389,7 +387,7 @@ export default function SearchOverlay({
                 transition={easeOut}
                 style={{ textAlign: 'center', padding: '40px 24px' }}
               >
-                <p style={{ fontSize: '13px', color: colors.textTertiary }}>
+                <p style={{ fontSize: '13px', color: tokens.textTertiary }}>
                   Aucun résultat pour &laquo;&nbsp;{query}&nbsp;&raquo;
                   {hasFilters && ' avec ces filtres'}
                 </p>
@@ -404,7 +402,7 @@ export default function SearchOverlay({
                 transition={{ delay: 0.2, duration: 0.3 }}
                 style={{ textAlign: 'center', padding: '24px 24px' }}
               >
-                <p style={{ fontSize: '12px', color: colors.textTertiary }}>
+                <p style={{ fontSize: '12px', color: tokens.textTertiary }}>
                   Tapez pour rechercher dans {entries.length} entrées mémoire
                 </p>
               </motion.div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { tokens } from '@/lib/tokens';
 
 const tabs = [
   { id: 'filters', label: 'Filtres', icon: 'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4' },
@@ -13,7 +14,12 @@ export default function BottomSheetNav({ activeTab, onTabChange }: { activeTab: 
     <>
       <div className="lg:hidden h-14" />
       <nav className="fixed bottom-0 left-0 right-0 z-30 lg:hidden">
-        <div className="border-t border-[#1e1f22]/60" style={{ background: 'rgba(15,16,17,0.95)' }}>
+        <div
+          style={{
+            background: tokens.surface,
+            borderTop: `1px solid ${tokens.border}`,
+          }}
+        >
           <div className="flex items-center justify-around h-14 pb-[env(safe-area-inset-bottom,0px)] px-2">
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
@@ -23,14 +29,54 @@ export default function BottomSheetNav({ activeTab, onTabChange }: { activeTab: 
                   onClick={() => onTabChange(isActive ? null : tab.id)}
                   className="relative flex flex-col items-center justify-center gap-0.5 w-14 h-full tap-highlight-transparent"
                   aria-label={tab.label}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: 0,
+                    fontFamily: 'inherit',
+                  }}
                 >
                   {isActive && (
-                    <motion.div layoutId="nav-indicator" className="absolute -top-px w-6 h-0.5 rounded-full bg-[#f59e0b]" transition={{ type: 'spring', stiffness: 400, damping: 30 }} />
+                    <motion.div
+                      layoutId="nav-indicator"
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        width: '24px',
+                        height: '2px',
+                        borderRadius: `${tokens.radius.sm}px`,
+                        backgroundColor: tokens.accent,
+                      }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    />
                   )}
-                  <svg className={`w-4 h-4 transition-colors ${isActive ? 'text-[#ededef]' : 'text-[#3a3a3e]'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <svg
+                    style={{
+                      width: '16px',
+                      height: '16px',
+                      transition: 'color 0.15s',
+                      color: isActive ? tokens.textPrimary : tokens.textTertiary,
+                    }}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                  >
                     <path strokeLinecap="round" d={tab.icon} />
                   </svg>
-                  <span className={`text-[8px] font-medium uppercase tracking-[0.06em] transition-colors ${isActive ? 'text-[#ededef]' : 'text-[#3a3a3e]'}`}>{tab.label}</span>
+                  <span
+                    style={{
+                      fontSize: `${tokens.caption}px`,
+                      fontWeight: 500,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.06em',
+                      transition: 'color 0.15s',
+                      color: isActive ? tokens.textPrimary : tokens.textTertiary,
+                    }}
+                  >
+                    {tab.label}
+                  </span>
                 </button>
               );
             })}

@@ -3,6 +3,7 @@
 import { useMemo, useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
 import type { MemoryEntry } from '@/lib/memory-data';
+import { tokens } from '@/lib/tokens';
 
 interface TimelineSliderProps {
   entries: MemoryEntry[];
@@ -86,41 +87,110 @@ export default function TimelineSlider({ entries, active, onRangeChange }: Timel
         animate={{ opacity: active ? 1 : 0.5, y: active ? 0 : 4 }}
         whileHover={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.15 }}
-        style={{ padding: '12px 16px 8px', borderRadius: '12px', background: 'rgba(15,16,17,0.92)', border: '1px solid rgba(30,31,34,0.8)', minWidth: '380px' }}
+        style={{
+          padding: `${tokens.spacing.px12}px ${tokens.spacing.px16}px ${tokens.spacing.px8}px`,
+          borderRadius: `${tokens.radius.lg}px`,
+          background: tokens.surface,
+          border: `1px solid ${tokens.border}`,
+          minWidth: '380px',
+        }}
       >
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-1.5">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="1.5" strokeLinecap="round">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={tokens.accent} strokeWidth="1.5" strokeLinecap="round">
               <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
             </svg>
-            <span className="text-[9px] font-semibold uppercase tracking-[0.1em] text-[#52525b]">Timeline</span>
-            {hasChanged && <span className="text-[9px] text-[#f59e0b] font-mono">{visibleCount}/{entries.length}</span>}
+            <span
+              style={{
+                fontSize: `${tokens.caption}px`,
+                fontWeight: 600,
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                color: tokens.textTertiary,
+              }}
+            >
+              Timeline
+            </span>
+            {hasChanged && (
+              <span style={{ fontSize: `${tokens.caption}px`, color: tokens.accent, fontFamily: "'JetBrains Mono Variable', monospace" }}>
+                {visibleCount}/{entries.length}
+              </span>
+            )}
           </div>
           {hasChanged && (
-            <button onClick={(e) => { e.stopPropagation(); clearFilter(); }}
-              className="text-[9px] text-[#52525b] hover:text-[#8a8f98] transition-colors"
-            >Réinitialiser</button>
+            <button
+              onClick={(e) => { e.stopPropagation(); clearFilter(); }}
+              style={{
+                fontSize: `${tokens.caption}px`,
+                color: tokens.textTertiary,
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: 0,
+                fontFamily: 'inherit',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = tokens.textSecondary; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = tokens.textTertiary; }}
+            >
+              Réinitialiser
+            </button>
           )}
         </div>
 
         {/* Histogram */}
         <div className="flex items-end gap-[2px]" style={{ height: '16px', marginBottom: '6px' }}>
           {histogram.map((h, i) => (
-            <div key={i} style={{ flex: 1, height: `${Math.max(3, h * 0.6)}%`, borderRadius: '1px', backgroundColor: i * 10 >= minPercent && (i + 1) * 10 <= maxPercent ? 'rgba(245,158,11,0.2)' : 'rgba(30,31,34,0.6)' }} />
+            <div
+              key={i}
+              style={{
+                flex: 1,
+                height: `${Math.max(3, h * 0.6)}%`,
+                borderRadius: `${tokens.radius.sm}px`,
+                backgroundColor: i * 10 >= minPercent && (i + 1) * 10 <= maxPercent
+                  ? tokens.accentSubtle
+                  : tokens.border,
+              }}
+            />
           ))}
         </div>
 
         {/* Slider */}
         <div className="relative" style={{ height: '18px' }}>
-          <div style={{ position: 'absolute', left: 0, right: 0, top: '50%', transform: 'translateY(-50%)', height: '2px', borderRadius: '1px', backgroundColor: '#1e1f22' }} />
-          <div style={{ position: 'absolute', left: `${minPercent}%`, width: `${maxPercent - minPercent}%`, top: '50%', transform: 'translateY(-50%)', height: '2px', borderRadius: '1px', backgroundColor: '#f59e0b' }} />
+          <div
+            style={{
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              height: '2px',
+              borderRadius: `${tokens.radius.sm}px`,
+              backgroundColor: tokens.border,
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              left: `${minPercent}%`,
+              width: `${maxPercent - minPercent}%`,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              height: '2px',
+              borderRadius: `${tokens.radius.sm}px`,
+              backgroundColor: tokens.accent,
+            }}
+          />
           <Handle pos={minPercent} onDrag={(v) => setMinPercent(Math.max(0, Math.min(maxPercent - 5, v)))} onEnd={applyRange} />
           <Handle pos={maxPercent} onDrag={(v) => setMaxPercent(Math.min(100, Math.max(minPercent + 5, v)))} onEnd={applyRange} />
         </div>
 
         <div className="flex items-center justify-between mt-1">
-          <span className="text-[8px] text-[#3a3a3e] font-mono">{formatDate(minPercent)}</span>
-          <span className="text-[8px] text-[#3a3a3e] font-mono">{formatDate(maxPercent)}</span>
+          <span style={{ fontSize: '8px', color: tokens.textTertiary, fontFamily: "'JetBrains Mono Variable', monospace" }}>
+            {formatDate(minPercent)}
+          </span>
+          <span style={{ fontSize: '8px', color: tokens.textTertiary, fontFamily: "'JetBrains Mono Variable', monospace" }}>
+            {formatDate(maxPercent)}
+          </span>
         </div>
       </motion.div>
     </div>
@@ -131,7 +201,14 @@ function Handle({ pos, onDrag, onEnd }: { pos: number; onDrag: (v: number) => vo
   return (
     <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2" style={{ left: `${pos}%`, zIndex: 2 }}>
       <div
-        className="w-3 h-3 rounded-full border-2 border-[#f59e0b] bg-[#0f1011] cursor-ew-resize"
+        style={{
+          width: '12px',
+          height: '12px',
+          borderRadius: `${tokens.radius.md}px`,
+          border: `2px solid ${tokens.accent}`,
+          backgroundColor: tokens.deep,
+          cursor: 'ew-resize',
+        }}
         onMouseDown={(e) => {
           e.stopPropagation();
           const startX = e.clientX;

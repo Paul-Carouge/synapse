@@ -3,9 +3,7 @@
 import { useMemo } from 'react';
 import type { MemoryEntry } from '@/lib/memory-data';
 import { relativeTime } from '@/lib/time';
-
-const BORDER = '1px solid rgba(30,31,34,0.8)';
-const SURFACE = 'rgba(15,16,17,0.92)';
+import { tokens } from '@/lib/tokens';
 
 export default function StatsBadge({
   entries,
@@ -20,36 +18,94 @@ export default function StatsBadge({
 
   if (big) {
     return (
-      <div className="space-y-3">
-        <div className="flex items-center gap-2">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           {[
             { label: 'Nœuds', value: entries.length },
             { label: 'Liens', value: edgeCount },
             { label: 'Types', value: entries.filter(e => e.metadata.type).length },
           ].map((s) => (
-            <div key={s.label} className="flex-1 rounded-lg text-center" style={{ padding: '12px 8px', background: '#161718', border: '1px solid #1e1f22' }}>
-              <div className="text-lg font-semibold text-[#ededef] font-mono">{s.value}</div>
-              <div className="text-[9px] text-[#52525b] uppercase tracking-[0.06em] mt-0.5">{s.label}</div>
+            <div
+              key={s.label}
+              style={{
+                flex: 1,
+                padding: '12px 8px',
+                background: tokens.raised,
+                border: `1px solid ${tokens.border}`,
+                borderRadius: `${tokens.radius.lg}px`,
+                textAlign: 'center',
+              }}
+            >
+              <div
+                style={{
+                  fontSize: '18px',
+                  fontWeight: 600,
+                  color: tokens.textPrimary,
+                  fontFamily: "'JetBrains Mono Variable', monospace",
+                }}
+              >
+                {s.value}
+              </div>
+              <div
+                style={{
+                  fontSize: `${tokens.caption}px`,
+                  color: tokens.textTertiary,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.06em',
+                  marginTop: '2px',
+                }}
+              >
+                {s.label}
+              </div>
             </div>
           ))}
         </div>
         {lastUpdated && (
-          <p className="text-[9px] text-[#3a3a3e] text-center font-mono">Mis à jour {relativeTime(lastUpdated)}</p>
+          <p
+            style={{
+              fontSize: `${tokens.caption}px`,
+              color: tokens.textTertiary,
+              textAlign: 'center',
+              fontFamily: "'JetBrains Mono Variable', monospace",
+              margin: 0,
+            }}
+          >
+            Mis à jour {relativeTime(lastUpdated)}
+          </p>
         )}
       </div>
     );
   }
 
   return (
-    <div className="fixed top-5 right-5 z-10">
-      <div style={{ padding: '6px 12px', borderRadius: '8px', fontSize: '9px', color: '#52525b', fontFamily: "'JetBrains Mono Variable', monospace", display: 'flex', alignItems: 'center', gap: '8px', background: SURFACE, border: BORDER }}>
-        <span>{entries.length}<span style={{ color: '#3a3a3e' }}> nœuds</span></span>
-        <span style={{ color: '#1e1f22' }}>·</span>
-        <span>{edgeCount}<span style={{ color: '#3a3a3e' }}> liens</span></span>
+    <div style={{ position: 'fixed', top: '20px', right: '20px', zIndex: 10 }}>
+      <div
+        style={{
+          padding: `${tokens.spacing.px6}px ${tokens.spacing.px12}px`,
+          borderRadius: `${tokens.radius.md}px`,
+          fontSize: `${tokens.caption}px`,
+          color: tokens.textTertiary,
+          fontFamily: "'JetBrains Mono Variable', monospace",
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          background: tokens.surface,
+          border: `1px solid ${tokens.border}`,
+        }}
+      >
+        <span>
+          {entries.length}
+          <span style={{ color: tokens.textTertiary }}> nœuds</span>
+        </span>
+        <span style={{ color: tokens.border }}>·</span>
+        <span>
+          {edgeCount}
+          <span style={{ color: tokens.textTertiary }}> liens</span>
+        </span>
         {lastUpdated && (
           <>
-            <span style={{ color: '#1e1f22' }}>·</span>
-            <span style={{ color: '#3a3a3e' }}>{relativeTime(lastUpdated)}</span>
+            <span style={{ color: tokens.border }}>·</span>
+            <span style={{ color: tokens.textTertiary }}>{relativeTime(lastUpdated)}</span>
           </>
         )}
       </div>

@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { spring, buttonTap } from '@/lib/motion';
+import { tokens } from '@/lib/tokens';
 
 export default function SceneControls({
   showEdges,
@@ -29,9 +30,9 @@ export default function SceneControls({
         className="flex items-center gap-0.5"
         style={{
           padding: '3px',
-          borderRadius: '10px',
-          backgroundColor: 'rgba(15,16,17,0.92)',
-          border: '1px solid rgba(30,31,34,0.8)',
+          borderRadius: `${tokens.radius.lg}px`,
+          backgroundColor: tokens.surface,
+          border: `1px solid ${tokens.border}`,
         }}
       >
         <CtrlBtn active={hasTimelineFilter} onClick={() => onTimelineChange(hasTimelineFilter ? null : { start: 0, end: Date.now() })} tooltip="Timeline">
@@ -39,7 +40,7 @@ export default function SceneControls({
             <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
           </svg>
         </CtrlBtn>
-        <div className="w-px h-3.5 bg-[#1e1f22]" />
+        <div style={{ width: '1px', height: '14px', backgroundColor: tokens.border }} />
         <CtrlBtn active={showEdges} onClick={onToggleEdges} tooltip={showEdges ? 'Masquer liens' : 'Afficher liens'}>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" />
@@ -71,15 +72,24 @@ function CtrlBtn({ children, active, onClick, tooltip }: { children: React.React
       style={{
         width: '30px',
         height: '30px',
-        borderRadius: '7px',
-        color: active ? '#ededef' : '#52525b',
+        borderRadius: `${tokens.radius.md}px`,
+        color: active ? tokens.textPrimary : tokens.textTertiary,
         transition: 'color 0.15s',
       }}
       aria-label={tooltip}
     >
       {children}
       <div className="absolute -top-7 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-        <div style={{ padding: '2px 6px', borderRadius: '4px', fontSize: '9px', color: '#8a8f98', background: 'rgba(15,16,17,0.95)', border: '1px solid rgba(30,31,34,0.8)' }}>
+        <div
+          style={{
+            padding: '2px 6px',
+            borderRadius: `${tokens.radius.sm}px`,
+            fontSize: `${tokens.caption}px`,
+            color: tokens.textSecondary,
+            background: tokens.surface,
+            border: `1px solid ${tokens.border}`,
+          }}
+        >
           {tooltip}
         </div>
       </div>
